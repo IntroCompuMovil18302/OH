@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">oh</string>
+    <string name="title_activity_rol">RolActivity</string>
+    <string name="title_activity_perfil">PerfilActivity</string>
+    <string name="title_activity_crear_negocio">CrearNegocioActivity</string>
+    <string name="hint_search">Buscar</string>
+    <string name="que_buscas">¿Qué buscas?</string>
+    <string name="negocios">Negocios</string>
+    <string name="alojamientos">Alojamientos</string>
+    <string name="title_activity_buscar">Buscar</string>
+    <string name="description">Descripción</string>
+    <string name="comments">Comentarios</string>
+    <string name="price">$ 500.000</string>
+    <string name="btnRes">Reservar</string>
+    <string name="btnExplorar">Explorar</string>
+    <string name="btnHistorial">Historial</string>
+    <string name="btnPerfil">Perfil</string>
+    <string name="filters">FILTROS</string>
+    <string name="horMa">Horario mañana</string>
+    <string name="horTar">Horario Tarde</string>
+    <string name="horNoch">Horario noche</string>
+    <string name="wifi">WIFI</string>
+    <string name="tv">TV</string>
+    <string name="priceFilter">Precio</string>
+    <string name="priceFilterInit">$ 300000</string>
+    <string name="aplicar">Aplicar</string>
+
+
+    <string name="hotelExample">Nuestro hotel de 4 estrellas en Barcelona le ofrece todos los servicios necesarios para que su estancia sea una experiencia única. El Hotel Barcelona Universal ofrece a todos sus clientes conexión a internet wifi gratis, así como 2 Business Centers gratuitos con conexión a internet de Banda Ancha. Uno de ellos está ubicado en el mismo lobby del hotel y el otro en la novena planta, por si necesita trabajar en un ambiente más tranquilo.</string>
+    <string name="commentExample">Es la primera vez que hago una reserva a través de Airbnb, encuentro un alojamiento para el fin de semana que encaja en mi presupuesto, solicito reserva y el dueño la acepta. Por lo que todo ok, cojo los vuelos.</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="genero">
+        <item>Femenino</item>
+        <item>Masculino</item>
+        <item>Otro</item>
+    </string-array>
+
+    <string-array name="alojamientos">
+        <item>Habitacion</item>
+        <item>Apartamento</item>
+        <item>Casa</item>
+    </string-array>
+    <string name="title_activity_calificar_alojamiento">CalificarAlojamientoActivity</string>
+    <string name="title_activity_reservar">ReservarActivity</string>
+</resources>

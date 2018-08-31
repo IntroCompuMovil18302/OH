@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".ExplorarActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:id="@+id/scrollView3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="300dp">
+
+                <EditText
+                    android:id="@+id/txtInBuscar"
+                    android:layout_width="318dp"
+                    android:layout_height="49dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/hint"
+                    android:drawableLeft="@drawable/ic_search"
+                    android:drawableStart="@drawable/ic_search"
+                    android:ems="10"
+                    android:hint="@string/hint_search"
+                    android:inputType="textPersonName"
+                    android:textColorHint="@color/hint"
+                    android:textColor="@color/text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageAlojamiento"
+                    android:layout_width="116dp"
+                    android:layout_height="80dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="110dp"
+                    android:background="#FFFFFF"
+                    android:contentDescription="TODO"
+                    android:padding="2dp"
+                    android:onClick="onClickSearch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/alojamiento" />
+
+                <ImageView
+                    android:id="@+id/imageNegocio"
+                    android:layout_width="116dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="110dp"
+                    android:background="#FFFFFF"
+                    android:padding="2dp"
+                    android:onClick="onClickSearch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/negocios" />
+
+                <TextView
+                    android:id="@+id/txtVwNegocios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/negocios"
+                    android:textColor="@color/text"
+                    app:layout_constraintEnd_toEndOf="@+id/imageNegocio"
+                    app:layout_constraintStart_toStartOf="@+id/imageNegocio"
+                    app:layout_constraintTop_toBottomOf="@+id/imageNegocio" />
+
+                <TextView
+                    android:id="@+id/txtVwAlojamientos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/alojamientos"
+                    android:textColor="@color/text"
+                    app:layout_constraintEnd_toEndOf="@+id/imageAlojamiento"
+                    app:layout_constraintStart_toStartOf="@+id/imageAlojamiento"
+                    app:layout_constraintTop_toBottomOf="@+id/imageAlojamiento" />
+
+                <TextView
+                    android:id="@+id/textVwQueBuscas"
+                    android:layout_width="129dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/que_buscas"
+                    android:textColor="@color/title"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtInBuscar" />
+
+                <Space
+                    android:id="@+id/space2"
+                    android:layout_width="match_parent"
+                    android:layout_height="7dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtVwNegocios" />
+
+                <android.support.v4.widget.NestedScrollView
+                    android:id="@+id/scrollViewExplorar"
+                    android:layout_width="match_parent"
+                    android:layout_height="295dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/space2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <LinearLayout
+                            android:id="@+id/layAlojamientos"
+                            android:layout_width="match_parent"
+                            android:layout_height="286dp"
+                            android:background="@color/darkBackgroud"
+                            android:orientation="vertical"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:id="@+id/txtVwAlojamientosScroll"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/alojamientos"
+                                android:textColor="@color/title"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                tools:layout_editor_absoluteX="8dp"
+                                tools:layout_editor_absoluteY="368dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageViewGrid1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/alojamiento" />
+
+                                <ImageView
+                                    android:id="@+id/imageViewGrid2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/alojamiento" />
+
+                                <ImageView
+                                    android:id="@+id/imageGrid3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/alojamiento" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageViewGrid4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/alojamiento" />
+
+                                <ImageView
+                                    android:id="@+id/imageViewGrid5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/alojamiento" />
+
+                                <ImageView
+                                    android:id="@+id/imageGrid6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/alojamiento" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageViewGrid7"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/alojamiento" />
+
+                                <ImageView
+                                    android:id="@+id/imageViewGrid8"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/alojamiento" />
+
+                                <ImageView
+                                    android:id="@+id/imageViewGrid9"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/alojamiento" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/layNegocios"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/darkBackgroud"
+                            android:orientation="vertical"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:id="@+id/txtVwNegociosScroll"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/negocios"
+                                android:textColor="@color/title"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                tools:layout_editor_absoluteX="8dp"
+                                tools:layout_editor_absoluteY="368dp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageViewGridNegocios1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/negocios" />
+
+                                <ImageView
+                                    android:id="@+id/imageViewGridNegocios2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/negocios" />
+
+                                <ImageView
+                                    android:id="@+id/imageGridNegocios3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/negocios" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageViewGridNegocios4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/negocios" />
+
+                                <ImageView
+                                    android:id="@+id/imageViewGridNegocios5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/negocios" />
+
+                                <ImageView
+                                    android:id="@+id/imageGridNegocios6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/negocios" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageViewGridNegocios7"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/negocios" />
+
+                                <ImageView
+                                    android:id="@+id/imageViewGridNegocios8"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/negocios" />
+
+                                <ImageView
+                                    android:id="@+id/imageViewGridNegocios9"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="80dp"
+                                    android:layout_weight="1"
+                                    android:background="#FFFFFF"
+                                    android:onClick="onClickItem"
+                                    android:padding="2dp"
+                                    app:srcCompat="@drawable/negocios" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="83dp">
+
+            <Button
+                android:id="@+id/explorar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btnExplorar" />
+
+            <Button
+                android:id="@+id/historial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btnHistorial" />
+
+            <Button
+                android:id="@+id/perfil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btnPerfil" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="oh.javeriana.co.oh">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".InicioActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ExplorarActivity" />
+        <activity android:name=".RolActivity" />
+        <activity android:name=".ItemActivity" />
+        <activity android:name=".AgregarAlojamientoActivity" />
+        <activity android:name=".CrearNegocioActivity" />
+        <activity android:name=".EditarAlojamientoActivity" />
+        <activity android:name=".HistorialActivity" />
+        <activity android:name=".PerfilActivity" />
+        <activity android:name=".RegistroActivity" />
+        <activity
+            android:name=".BuscarActivity"
+            android:label="@string/title_activity_buscar"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CalificarAlojamientoActivity"
+            android:label="@string/title_activity_calificar_alojamiento"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ReservarActivity"
+            android:label="@string/title_activity_reservar"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+    </application>
+
+</manifest>
