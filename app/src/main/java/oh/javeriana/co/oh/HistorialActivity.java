@@ -3,6 +3,9 @@ package oh.javeriana.co.oh;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -40,13 +43,16 @@ public class HistorialActivity extends Activity {
             }
         });
 
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setSelectedItemId(R.id.navigationRecord);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        Button perfil = findViewById(R.id.perfil);
-        Button explorar = findViewById(R.id.explorar);
+       // Button perfil = findViewById(R.id.perfil);
+       // Button explorar = findViewById(R.id.explorar);
         TextView tituloHistorial = findViewById(R.id.tituloHistorial);
 
         if(!rol.equals("huesped")){
-            explorar.setVisibility(View.GONE);
+           // explorar.setVisibility(View.GONE);
             //botonCalificar.setVisibility(View.GONE);
             if(rol.equals("propietarioAlojamiento")){
                 tituloHistorial.setText("Historial de alojamientos publicados");
@@ -57,7 +63,7 @@ public class HistorialActivity extends Activity {
             tituloHistorial.setText("Historial de reservaciones");
         }
 
-        perfil.setOnClickListener(new View.OnClickListener() {
+/*        perfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),PerfilActivity.class);
@@ -72,7 +78,7 @@ public class HistorialActivity extends Activity {
                 Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     class CustomAdapter extends BaseAdapter {
@@ -123,5 +129,42 @@ public class HistorialActivity extends Activity {
             return view;
         }
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Intent intent;
+            switch (item.getItemId()) {
+
+                case R.id.navigationExplore:
+                    intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                    intent.putExtra("rol","huesped");
+                    startActivity(intent);
+                    return true;
+
+                //mTextMessage.setText(R.string.title_home);
+                //return true;
+                case R.id.navigationRecord:
+                    //intent = new Intent(getApplicationContext(),HistorialActivity.class);
+                    //intent.putExtra("rol","huesped");
+                    //startActivity(intent);
+                    return true;
+                //mTextMessage.setText(R.string.title_dashboard);
+                //return true;
+                case R.id.navigationProfile:
+                    //mTextMessage.setText(R.string.title_notifications);
+                    //return true;
+                    intent = new Intent(getApplicationContext(),PerfilActivity.class);
+                    intent.putExtra("rol","huesped");
+                    startActivity(intent);
+                    return true;
+                //break;
+            }
+            //return false;
+            return false;
+        }
+    };
 
 }

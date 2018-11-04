@@ -48,4 +48,8 @@
     </string-array>
     <string name="title_activity_calificar_alojamiento">CalificarAlojamientoActivity</string>
     <string name="title_activity_reservar">ReservarActivity</string>
+
+    <string name="title_explore">Explorar</string>
+    <string name="title_record">Historial</string>
+    <string name="title_profile">Perfil</string>
 </resources>

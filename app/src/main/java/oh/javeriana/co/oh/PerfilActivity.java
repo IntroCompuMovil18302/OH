@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,9 +24,9 @@ public class PerfilActivity extends Activity {
         setContentView(R.layout.activity_perfil);
         botonGestionar=findViewById(R.id.gestionar);
         botonAgregar=findViewById(R.id.agregar);
-        explorar = findViewById(R.id.explorar);
-        historial = findViewById(R.id.historial);
-        perfil = findViewById(R.id.perfil);
+       // explorar = findViewById(R.id.explorar);
+       // historial = findViewById(R.id.historial);
+       // perfil = findViewById(R.id.perfil);
 
         final String rol =  getIntent().getStringExtra("rol");
 
@@ -40,7 +43,7 @@ public class PerfilActivity extends Activity {
             botonGestionar.setVisibility(View.GONE);
         }
 
-        explorar.setOnClickListener(new View.OnClickListener() {
+       /* explorar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent;
@@ -70,8 +73,7 @@ public class PerfilActivity extends Activity {
                 }
                 startActivity(intent);
             }
-        });
-
+        });*/
         botonGestionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,6 +83,39 @@ public class PerfilActivity extends Activity {
         });
 
 
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setSelectedItemId(R.id.navigationProfile);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Intent intent;
+            switch (item.getItemId()) {
+                case R.id.navigationExplore:
+                    intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                    intent.putExtra("rol","huesped");
+                    startActivity(intent);
+                    return true;
+
+                case R.id.navigationRecord:
+                    intent = new Intent(getApplicationContext(),HistorialActivity.class);
+                    intent.putExtra("rol","huesped");
+                    startActivity(intent);
+                    return true;
+                //mTextMessage.setText(R.string.title_dashboard);
+                //return true;
+                case R.id.navigationProfile:
+                    return true;
+                //break;
+            }
+            //return false;
+            return false;
+        }
+    };
 
 }
