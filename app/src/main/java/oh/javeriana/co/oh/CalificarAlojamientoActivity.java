@@ -1,10 +1,14 @@
 package oh.javeriana.co.oh;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -34,6 +38,38 @@ public class CalificarAlojamientoActivity extends AppCompatActivity {
 
            }
        });
+
+       BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+       navigation.getMenu().getItem(0).setCheckable(false);
+       navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Intent intent;
+            switch (item.getItemId()) {
+                case R.id.navigationExplore:
+                    intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                    intent.putExtra("rol","huesped");
+                    startActivity(intent);
+                    return true;
+                case R.id.navigationRecord:
+                    intent = new Intent(getApplicationContext(),HistorialActivity.class);
+                    intent.putExtra("rol","huesped");
+                    startActivity(intent);
+                    return true;
+                case R.id.navigationProfile:
+                    intent = new Intent(getApplicationContext(),PerfilActivity.class);
+                    intent.putExtra("rol","huesped");
+                    startActivity(intent);
+                    return true;
+            }
+            return false;
+        }
+    };
 
 }

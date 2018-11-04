@@ -17,6 +17,7 @@ public class PerfilActivity extends Activity {
     Button explorar;
     Button historial;
     Button perfil;
+    String rol="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,43 +25,28 @@ public class PerfilActivity extends Activity {
         setContentView(R.layout.activity_perfil);
         botonGestionar=findViewById(R.id.gestionar);
         botonAgregar=findViewById(R.id.agregar);
-       // explorar = findViewById(R.id.explorar);
-       // historial = findViewById(R.id.historial);
-       // perfil = findViewById(R.id.perfil);
 
-        final String rol =  getIntent().getStringExtra("rol");
+        rol =  getIntent().getStringExtra("rol");
 
-        if(rol.equals("propietarioAlojamiento")){
-            botonAgregar.setText("Agregar alojamiento");
-            botonGestionar.setText("Gestionar alojamientos");
-            explorar.setVisibility(View.GONE);
-        }else if(rol.equals("propietarioNegocio")){
-            botonAgregar.setText("Agregar Negocio");
-            botonGestionar.setText("Gestionar Negocio");
-            explorar.setVisibility(View.GONE);
+        BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);
+        BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);;
+
+        if(!rol.equals("huesped")){
+            guest_navigation.setVisibility(View.GONE);
+            host_navigation.setSelectedItemId(R.id.navigationProfile);
+            host_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+            if(rol.equals("propietarioAlojamiento")){
+                botonAgregar.setText("Agregar alojamiento");
+                botonGestionar.setText("Gestionar alojamientos");
+            }else{
+                botonAgregar.setText("Agregar Negocio");
+                botonGestionar.setText("Gestionar Negocio");
+            }
         }else{
-            botonAgregar.setVisibility(View.GONE);
-            botonGestionar.setVisibility(View.GONE);
+            host_navigation.setVisibility(View.GONE);
+            guest_navigation.setSelectedItemId(R.id.navigationProfile);
+            guest_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         }
-
-       /* explorar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent;
-                intent = new Intent(getApplicationContext(),ExplorarActivity.class );
-                startActivity(intent);
-            }
-        });
-
-        historial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent;
-                intent = new Intent(getApplicationContext(),HistorialActivity.class );
-                intent.putExtra("rol",rol);
-                startActivity(intent);
-            }
-        });
 
         botonAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +59,8 @@ public class PerfilActivity extends Activity {
                 }
                 startActivity(intent);
             }
-        });*/
+        });
+
         botonGestionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,13 +68,7 @@ public class PerfilActivity extends Activity {
                 startActivity(intent2);
             }
         });
-
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setSelectedItemId(R.id.navigationProfile);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -98,22 +79,19 @@ public class PerfilActivity extends Activity {
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
                     intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                    intent.putExtra("rol","huesped");
+                    intent.putExtra("rol",rol);
                     startActivity(intent);
                     return true;
 
                 case R.id.navigationRecord:
                     intent = new Intent(getApplicationContext(),HistorialActivity.class);
-                    intent.putExtra("rol","huesped");
+                    intent.putExtra("rol",rol);
                     startActivity(intent);
                     return true;
-                //mTextMessage.setText(R.string.title_dashboard);
-                //return true;
+
                 case R.id.navigationProfile:
                     return true;
-                //break;
             }
-            //return false;
             return false;
         }
     };

@@ -43,25 +43,29 @@ public class HistorialActivity extends Activity {
             }
         });
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setSelectedItemId(R.id.navigationRecord);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-       // Button perfil = findViewById(R.id.perfil);
-       // Button explorar = findViewById(R.id.explorar);
+        BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);
+        BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);
         TextView tituloHistorial = findViewById(R.id.tituloHistorial);
 
         if(!rol.equals("huesped")){
-           // explorar.setVisibility(View.GONE);
-            //botonCalificar.setVisibility(View.GONE);
-            if(rol.equals("propietarioAlojamiento")){
+            guest_navigation.setVisibility(View.GONE);
+            host_navigation.setSelectedItemId(R.id.navigationRecord);
+            host_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+            if(rol.equals("propietarioAlojamiento")) {
                 tituloHistorial.setText("Historial de alojamientos publicados");
-            }else{
+            }else {
                 tituloHistorial.setText("Historial de negocios publicados");
             }
         }else{
+            host_navigation.setVisibility(View.GONE);
+            guest_navigation.setSelectedItemId(R.id.navigationRecord);
+            guest_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
             tituloHistorial.setText("Historial de reservaciones");
         }
+
+
+       // Button perfil = findViewById(R.id.perfil);
+       // Button explorar = findViewById(R.id.explorar);
 
 /*        perfil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,32 +141,19 @@ public class HistorialActivity extends Activity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
             switch (item.getItemId()) {
-
                 case R.id.navigationExplore:
                     intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                    intent.putExtra("rol","huesped");
+                    intent.putExtra("rol",rol);
                     startActivity(intent);
                     return true;
-
-                //mTextMessage.setText(R.string.title_home);
-                //return true;
                 case R.id.navigationRecord:
-                    //intent = new Intent(getApplicationContext(),HistorialActivity.class);
-                    //intent.putExtra("rol","huesped");
-                    //startActivity(intent);
                     return true;
-                //mTextMessage.setText(R.string.title_dashboard);
-                //return true;
                 case R.id.navigationProfile:
-                    //mTextMessage.setText(R.string.title_notifications);
-                    //return true;
                     intent = new Intent(getApplicationContext(),PerfilActivity.class);
-                    intent.putExtra("rol","huesped");
+                    intent.putExtra("rol",rol);
                     startActivity(intent);
                     return true;
-                //break;
             }
-            //return false;
             return false;
         }
     };

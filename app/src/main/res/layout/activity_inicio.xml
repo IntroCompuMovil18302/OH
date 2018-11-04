@@ -73,8 +73,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.507"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/correoElectronico"
-                        tools:ignore="MissingConstraints" />
+                        app:layout_constraintTop_toBottomOf="@+id/correoElectronico" />
 
                     <EditText
                         android:id="@+id/correoElectronico"
@@ -89,8 +88,7 @@
                         android:textColor="@color/text"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="MissingConstraints" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
                         android:id="@+id/iniciarSesion"
@@ -112,7 +110,6 @@
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
                         android:layout_marginTop="4dp"
                         android:text="Olvidé mi contraseña"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -124,7 +121,6 @@
                         android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="44dp"
                         android:layout_marginTop="40dp"
                         android:text="Selecciona tu rol"
                         android:textColor="@color/title"
@@ -143,8 +139,7 @@
                         android:visibility="invisible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView"
-                        tools:ignore="MissingConstraints">
+                        app:layout_constraintTop_toBottomOf="@+id/textView">
 
                         <RadioButton
                             android:id="@+id/huesped"
