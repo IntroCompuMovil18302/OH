@@ -20,6 +20,7 @@ import java.io.InputStream;
 public class RegistroActivity extends Activity {
 
     private ImageButton next;
+    private ImageButton prev;
     private Button botonRegistrarse;
     private Button camara;
     private Button galeria;
@@ -47,6 +48,7 @@ public class RegistroActivity extends Activity {
         camara = (Button) findViewById(R.id.camara);
 
         next = (ImageButton)findViewById(R.id.next);
+        prev = (ImageButton) findViewById(R.id.prev);
         foto = (ImageView) findViewById(R.id.foto);
 
         correo = (EditText)findViewById(R.id.correoElectronico);
@@ -94,6 +96,7 @@ public class RegistroActivity extends Activity {
                     camara.setVisibility(View.VISIBLE);
                     galeria.setVisibility(View.VISIBLE);
                     foto.setVisibility(View.VISIBLE);
+                    prev.setVisibility(View.VISIBLE);
 
                     if(rol.equals("huesped")){
                         Spinner genero = (Spinner) findViewById(R.id.genero);
@@ -102,6 +105,35 @@ public class RegistroActivity extends Activity {
                         nacionalidad.setVisibility(View.VISIBLE);
                     }
                 }
+            }
+        });
+
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                datosAcceso.setVisibility(View.VISIBLE);
+                correo.setVisibility(View.VISIBLE);
+                contraseña.setVisibility(View.VISIBLE);
+                contraseña2.setVisibility(View.VISIBLE);
+                next.setVisibility(View.VISIBLE);
+
+                datosPersonales.setVisibility(View.GONE);
+                nombre.setVisibility(View.GONE);
+                fechaNacimiento.setVisibility(View.GONE);
+                botonRegistrarse.setVisibility(View.GONE);
+                camara.setVisibility(View.GONE);
+                galeria.setVisibility(View.GONE);
+                foto.setVisibility(View.GONE);
+                prev.setVisibility(View.GONE);
+
+                if(rol.equals("huesped")){
+                    Spinner genero = (Spinner) findViewById(R.id.genero);
+                    EditText nacionalidad = (EditText) findViewById(R.id.nacionalidad);
+                    genero.setVisibility(View.GONE);
+                    nacionalidad.setVisibility(View.GONE);
+                }
+
             }
         });
     }
