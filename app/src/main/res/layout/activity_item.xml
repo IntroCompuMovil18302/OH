@@ -11,12 +11,11 @@
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="425dp"
+        app:layout_constraintBottom_toTopOf="@+id/host_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -117,7 +116,7 @@
                 <TextView
                     android:id="@+id/txtVwDescription"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="243dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
@@ -148,9 +147,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="4dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:background="@color/button"
+                    android:onClick="onClick"
                     android:text="@string/btnRes"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -158,17 +160,14 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintStart_toEndOf="@+id/txtVwPrice"
-                    app:layout_constraintTop_toBottomOf="@+id/txtVwDescription"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginLeft="8dp"
-                    android:onClick="onClick"/>
+                    app:layout_constraintTop_toBottomOf="@+id/txtVwDescription" />
 
             </android.support.constraint.ConstraintLayout>
 
             <ImageView
                 android:id="@+id/imageView6"
                 android:layout_width="373dp"
-                android:layout_height="wrap_content"
+                android:layout_height="266dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
@@ -235,6 +234,11 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:orientation="horizontal"></LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/Comment1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -258,6 +262,11 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="21dp"
+                        android:orientation="horizontal"></LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/CommentUser"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -267,19 +276,27 @@
                         <EditText
                             android:id="@+id/editText2"
                             android:layout_width="wrap_content"
-                            android:layout_height="100dp"
+                            android:layout_height="63dp"
                             android:layout_weight="1"
                             android:background="@color/text"
                             android:ems="10"
+                            android:hint="Escriba aqui su comentario"
                             android:inputType="textMultiLine" />
 
                         <ImageView
                             android:id="@+id/imageView10"
-                            android:layout_width="72dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.1"
                             app:srcCompat="@drawable/ic_user" />
 
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="21dp"
+                        android:orientation="horizontal">
 
                     </LinearLayout>
 
@@ -290,7 +307,7 @@
     </ScrollView>
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
+        android:id="@+id/guest_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
@@ -298,5 +315,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/guest_navigation" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/host_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/host_navigation" />
 
 </android.support.constraint.ConstraintLayout>

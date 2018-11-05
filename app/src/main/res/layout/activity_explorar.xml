@@ -441,37 +441,6 @@
                 app:menu="@menu/guest_navigation" />
         </LinearLayout>
 
-
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="10"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="83dp">
-
-            <Button
-                android:id="@+id/explorar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btnExplorar" />
-
-            <Button
-                android:id="@+id/historial"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btnHistorial" />
-
-            <Button
-                android:id="@+id/perfil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btnPerfil" />
-        </LinearLayout> -->
-
     </LinearLayout>
 
 

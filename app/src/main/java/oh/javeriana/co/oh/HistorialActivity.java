@@ -39,6 +39,7 @@ public class HistorialActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getBaseContext(), ItemActivity.class);
+                intent.putExtra("rol",rol);
                 startActivity(intent);
             }
         });
@@ -62,27 +63,6 @@ public class HistorialActivity extends Activity {
             guest_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
             tituloHistorial.setText("Historial de reservaciones");
         }
-
-
-       // Button perfil = findViewById(R.id.perfil);
-       // Button explorar = findViewById(R.id.explorar);
-
-/*        perfil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),PerfilActivity.class);
-                intent.putExtra("rol",rol);
-                startActivity(intent);
-            }
-        });
-
-        explorar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                startActivity(intent);
-            }
-        });*/
     }
 
     class CustomAdapter extends BaseAdapter {
@@ -121,6 +101,7 @@ public class HistorialActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(),CalificarAlojamientoActivity.class);
+                    intent.putExtra("rol",rol);
                     startActivity(intent);
                 }
             });

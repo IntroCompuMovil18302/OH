@@ -3,7 +3,10 @@ package oh.javeriana.co.oh;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,6 +58,10 @@ public class CrearNegocioActivity extends Activity {
         producto = (EditText) findViewById(R.id.producto);
         agregar =(Button) findViewById(R.id.agregar);
         publicar = (Button) findViewById(R.id.publicar);
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.getMenu().getItem(0).setCheckable(false);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         grupoTipos.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -129,4 +136,25 @@ public class CrearNegocioActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Intent intent;
+            switch (item.getItemId()) {
+                case R.id.navigationRecord:
+                    intent = new Intent(getApplicationContext(),HistorialActivity.class);
+                    intent.putExtra("rol","propietarioNegocio");
+                    startActivity(intent);
+                    return true;
+                case R.id.navigationProfile:
+                    intent = new Intent(getApplicationContext(),PerfilActivity.class);
+                    intent.putExtra("rol","propietarioNegocio");
+                    startActivity(intent);
+                    return true;
+            }
+            return false;
+        }
+    };
 }

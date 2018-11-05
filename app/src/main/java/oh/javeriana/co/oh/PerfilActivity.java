@@ -43,6 +43,8 @@ public class PerfilActivity extends Activity {
                 botonGestionar.setText("Gestionar Negocio");
             }
         }else{
+            botonAgregar.setVisibility(View.GONE);
+            botonGestionar.setVisibility(View.GONE);
             host_navigation.setVisibility(View.GONE);
             guest_navigation.setSelectedItemId(R.id.navigationProfile);
             guest_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
