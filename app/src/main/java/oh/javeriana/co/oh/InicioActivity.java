@@ -43,18 +43,50 @@ public class InicioActivity extends AppCompatActivity {
     Button olvidarContraseña = null;
     Button crearCuenta = null;
 
-    /*@Override
-    public void onStart() {
+    @Override
+    protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
-    private void updateUI(FirebaseUser currentUser) {
-        Intent intent = new Intent(getApplicationContext(), ExplorarActivity.class);
-        startActivity(intent);
-    }*/
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    public void sessionUser() {
+        myRef = database.getReference("usuarios");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    //usr = singleSnapshot.getValue(Huesped.class);
+                    Log.i("sngle", singleSnapshot.getValue().toString());
+                    String mail = singleSnapshot.child("email").getValue().toString();
+                    if(mail.compareToIgnoreCase(user.getEmail()) == 0) {
+                        String rol = singleSnapshot.child("rol").getValue().toString();
+
+                        if (rol.compareTo("huesped") == 0) {
+                            Intent intent = new Intent(getApplicationContext(), ExplorarActivity.class);
+                            startActivity(intent);
+                        } else if (rol.compareTo("propietarioAlojamiento") == 0) {
+                            Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
+                            intent.putExtra("rol", "propietarioAlojamiento");
+                            startActivity(intent);
+                        } else
+                            Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("ERROR", "error en la consulta", databaseError.toException());
+            }
+        });
+    }
 
     public void loadUsers() {
         myRef = database.getReference("usuarios");
@@ -174,6 +206,22 @@ public class InicioActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                Log.i("State", "Ciclo");
+                user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    loadUsers();
+                } else {
+                    // User is signed out
+                    //startActivity(new Intent(getApplicationContext(), InicioActivity.class));
+                }
+            }
+        };
+
     }
 
     private boolean validateForm() {

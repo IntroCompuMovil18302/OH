@@ -10,13 +10,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class PerfilActivity extends Activity {
+    private FirebaseAuth mAuth;
 
     Button botonGestionar;
     Button botonAgregar;
     Button explorar;
     Button historial;
     Button perfil;
+    Button btnSignOut;
     String rol="";
 
     @Override
@@ -25,6 +29,9 @@ public class PerfilActivity extends Activity {
         setContentView(R.layout.activity_perfil);
         botonGestionar=findViewById(R.id.gestionar);
         botonAgregar=findViewById(R.id.agregar);
+        btnSignOut=findViewById(R.id.btnSignOut);
+
+        mAuth = FirebaseAuth.getInstance();
 
         rol =  getIntent().getStringExtra("rol");
 
@@ -70,7 +77,18 @@ public class PerfilActivity extends Activity {
                 startActivity(intent2);
             }
         });
+
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                Intent intent = new Intent(getApplicationContext(), InicioActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
     }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
