@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "975539227848",
+    "firebase_url": "https://oh-project-71969.firebaseio.com",
+    "project_id": "oh-project-71969",
+    "storage_bucket": "oh-project-71969.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975539227848:android:23cc50d8954fab59",
+        "android_client_info": {
+          "package_name": "oh.javeriana.co.oh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975539227848-anefokb3ll16od7c51c29rp6bdvoid4p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD667-CmgiecvRNP7MxojqnJSeAXrIDsXI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

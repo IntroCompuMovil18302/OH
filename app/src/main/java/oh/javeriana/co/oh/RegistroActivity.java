@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,9 +15,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.ParseException;
 
 public class RegistroActivity extends Activity {
 
@@ -25,21 +37,32 @@ public class RegistroActivity extends Activity {
     private Button camara;
     private Button galeria;
     private EditText correo;
-    private EditText contraseña;
-    private EditText contraseña2;
+    private EditText contrasena;
+    private EditText contrasena2;
     private EditText nombre;
     private EditText fechaNacimiento;
     private TextView datosAcceso;
     private TextView datosPersonales;
     private ImageView foto;
     private String rol ="";
+    private Spinner genero;
+    private EditText nacionalidad;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private FirebaseAuth mAuth;
     private final int IMAGE_PICKER_REQUEST = 1;
+    public static final String PATH_USERS_HUESPED="usuarios/huesped/";
+    public static final String PATH_USERS_PROPIETARIOALOJAMIENTO="usuarios/propietarioAlojamiento/";
+    public static final String PATH_USERS_PROPIETARIONEGOCIO="usuarios/propietarioNegocio/";
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
+
+        database= FirebaseDatabase.getInstance();
 
         rol = getIntent().getStringExtra("rol");
 
@@ -52,11 +75,15 @@ public class RegistroActivity extends Activity {
         foto = (ImageView) findViewById(R.id.foto);
 
         correo = (EditText)findViewById(R.id.correoElectronico);
-        contraseña = (EditText) findViewById(R.id.contraseña);
-        contraseña2 = (EditText) findViewById(R.id.confirmacionContraseña);
+        contrasena = (EditText) findViewById(R.id.contraseña);
+        contrasena2 = (EditText) findViewById(R.id.confirmacionContraseña);
 
         nombre = (EditText) findViewById(R.id.nombre);
         fechaNacimiento = (EditText) findViewById(R.id.fechaNacimiento);
+
+        genero = (Spinner) findViewById(R.id.genero);
+        nacionalidad = (EditText) findViewById(R.id.nacionalidad);
+
 
         datosAcceso = (TextView) findViewById(R.id.datosAcceso);
         datosPersonales = (TextView) findViewById(R.id.datosPersonales);
@@ -64,8 +91,41 @@ public class RegistroActivity extends Activity {
         botonRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                startActivity(intent);
+                mAuth = FirebaseAuth.getInstance();
+
+                try {
+                    if(rol.compareTo("huesped") == 0) {
+                        Huesped huesped = new Huesped(nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
+                        myRef=database.getReference(PATH_USERS_HUESPED);
+                        String key = myRef.push().getKey();
+                        myRef = database.getReference(PATH_USERS_HUESPED + key);
+                        myRef.setValue(huesped);
+
+                        mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
+                        Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                        startActivity(intent);
+                    }
+                    else if(rol.compareTo("propietarioAlojamiento") == 0) {
+                        Anfitrion propAloj = new Anfitrion("propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
+                        myRef=database.getReference(PATH_USERS_PROPIETARIOALOJAMIENTO);
+                        String key = myRef.push().getKey();
+                        myRef = database.getReference(PATH_USERS_PROPIETARIOALOJAMIENTO + key);
+                        myRef.setValue(propAloj);
+
+                        mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
+                        Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
+                        intent.putExtra("rol", propAloj.getRol());
+                        startActivity(intent);
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+               /* Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                startActivity(intent);*/
             }
         });
 
@@ -85,8 +145,8 @@ public class RegistroActivity extends Activity {
 
                     datosAcceso.setVisibility(View.GONE);
                     correo.setVisibility(View.GONE);
-                    contraseña.setVisibility(View.GONE);
-                    contraseña2.setVisibility(View.GONE);
+                    contrasena.setVisibility(View.GONE);
+                    contrasena2.setVisibility(View.GONE);
                     next.setVisibility(View.GONE);
 
                     datosPersonales.setVisibility(View.VISIBLE);
@@ -99,8 +159,6 @@ public class RegistroActivity extends Activity {
                     prev.setVisibility(View.VISIBLE);
 
                     if(rol.equals("huesped")){
-                        Spinner genero = (Spinner) findViewById(R.id.genero);
-                        EditText nacionalidad = (EditText) findViewById(R.id.nacionalidad);
                         genero.setVisibility(View.VISIBLE);
                         nacionalidad.setVisibility(View.VISIBLE);
                     }
@@ -114,8 +172,8 @@ public class RegistroActivity extends Activity {
 
                 datosAcceso.setVisibility(View.VISIBLE);
                 correo.setVisibility(View.VISIBLE);
-                contraseña.setVisibility(View.VISIBLE);
-                contraseña2.setVisibility(View.VISIBLE);
+                contrasena.setVisibility(View.VISIBLE);
+                contrasena2.setVisibility(View.VISIBLE);
                 next.setVisibility(View.VISIBLE);
 
                 datosPersonales.setVisibility(View.GONE);
@@ -127,9 +185,7 @@ public class RegistroActivity extends Activity {
                 foto.setVisibility(View.GONE);
                 prev.setVisibility(View.GONE);
 
-                if(rol.equals("huesped")){
-                    Spinner genero = (Spinner) findViewById(R.id.genero);
-                    EditText nacionalidad = (EditText) findViewById(R.id.nacionalidad);
+                if(rol.equals("huesped")) {
                     genero.setVisibility(View.GONE);
                     nacionalidad.setVisibility(View.GONE);
                 }
