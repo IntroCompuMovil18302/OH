@@ -15,11 +15,6 @@ public class Usuario {
     private String foto;
 
     public Usuario() {
-        this.rol = null;
-        this.email = null;
-        this.nombre = null;
-        this.fechaNac = null;
-        this.foto = null;
     }
 
     public Usuario(String rol, String email, String nombre, String fechaNac, String foto) {

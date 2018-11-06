@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.NotNull;
 
 public class InicioActivity extends AppCompatActivity {
 
@@ -31,7 +32,7 @@ public class InicioActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private Usuario usr;
+    private FirebaseUser user;
 
 
     TextView mensajeRol = null;
@@ -56,16 +57,26 @@ public class InicioActivity extends AppCompatActivity {
     }*/
 
     public void loadUsers() {
-        myRef = database.getReference();
+        myRef = database.getReference("usuarios");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    Usuario usr2 = singleSnapshot.getValue(Usuario.class);
-                    Log.i("BD", usr2.getEmail());
-                    if(usr2.getEmail().compareTo(correo.getText().toString()) == 0) {
-                        usr = new Usuario(usr2.getRol(), usr2.getEmail(), usr2.getNombre(), usr2.getFechaNac(), usr2.getFoto());
-                        break;
+                    //usr = singleSnapshot.getValue(Huesped.class);
+                    Log.i("sngle", singleSnapshot.getValue().toString());
+                    String mail = singleSnapshot.child("email").getValue().toString();
+                    if(mail.compareToIgnoreCase(user.getEmail()) == 0) {
+                        String rol = singleSnapshot.child("rol").getValue().toString();
+
+                        if (rol.compareTo("huesped") == 0) {
+                            Intent intent = new Intent(getApplicationContext(), ExplorarActivity.class);
+                            startActivity(intent);
+                        } else if (rol.compareTo("propietarioAlojamiento") == 0) {
+                            Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
+                            intent.putExtra("rol", "propietarioAlojamiento");
+                            startActivity(intent);
+                        } else
+                            Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -115,7 +126,6 @@ public class InicioActivity extends AppCompatActivity {
                 }*/
 
                 if(validateForm()) {
-                    loadUsers();
                     String email = correo.getText().toString();
                     String password = contraseña.getText().toString();
 
@@ -124,17 +134,8 @@ public class InicioActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        if(usr.getRol().compareTo("huesped") == 0) {
-                                            Intent intent = new Intent(getApplicationContext(), ExplorarActivity.class);
-                                            startActivity(intent);
-                                        }
-                                        else if (usr.getRol().compareTo("propietarioAlojamiento") == 0) {
-                                            Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                                            intent.putExtra("rol", usr.getRol());
-                                            startActivity(intent);
-                                        }
-                                        else
-                                            Toast.makeText(getApplicationContext(),"Función no implementada", Toast.LENGTH_SHORT).show();
+                                        user = mAuth.getCurrentUser();
+                                        loadUsers();
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Datos invalidos", Toast.LENGTH_SHORT).show();
                                     }

@@ -51,9 +51,7 @@ public class RegistroActivity extends Activity {
     private DatabaseReference myRef;
     private FirebaseAuth mAuth;
     private final int IMAGE_PICKER_REQUEST = 1;
-    public static final String PATH_USERS_HUESPED="usuarios/huesped/";
-    public static final String PATH_USERS_PROPIETARIOALOJAMIENTO="usuarios/propietarioAlojamiento/";
-    public static final String PATH_USERS_PROPIETARIONEGOCIO="usuarios/propietarioNegocio/";
+    public static final String PATH_USERS="usuarios/";
 
 
 
@@ -96,9 +94,9 @@ public class RegistroActivity extends Activity {
                 try {
                     if(rol.compareTo("huesped") == 0) {
                         Huesped huesped = new Huesped(nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
-                        myRef=database.getReference(PATH_USERS_HUESPED);
+                        myRef = database.getReference(PATH_USERS);
                         String key = myRef.push().getKey();
-                        myRef = database.getReference(PATH_USERS_HUESPED + key);
+                        myRef = database.getReference(PATH_USERS + key);
                         myRef.setValue(huesped);
 
                         mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
@@ -107,9 +105,9 @@ public class RegistroActivity extends Activity {
                     }
                     else if(rol.compareTo("propietarioAlojamiento") == 0) {
                         Anfitrion propAloj = new Anfitrion("propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
-                        myRef=database.getReference(PATH_USERS_PROPIETARIOALOJAMIENTO);
+                        myRef=database.getReference(PATH_USERS);
                         String key = myRef.push().getKey();
-                        myRef = database.getReference(PATH_USERS_PROPIETARIOALOJAMIENTO + key);
+                        myRef = database.getReference(PATH_USERS + key);
                         myRef.setValue(propAloj);
 
                         mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
