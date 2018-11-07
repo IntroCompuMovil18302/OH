@@ -18,6 +18,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="496dp"
@@ -93,17 +98,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
             <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="158dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="8dp"
+                android:id="@+id/spinnerTipo"
+                android:layout_width="161dp"
+                android:layout_height="41dp"
                 android:layout_marginStart="88dp"
-                android:layout_marginTop="52dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="8dp"
                 android:entries="@array/alojamientos"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.175"
+                app:layout_constraintHorizontal_bias="0.318"
                 app:layout_constraintStart_toEndOf="@+id/textView10"
-                app:layout_constraintTop_toBottomOf="@+id/ubicacioET" />
+                app:layout_constraintTop_toBottomOf="@+id/ubicacionET" />
 
             <TextView
                 android:id="@+id/textView10"
@@ -165,66 +170,67 @@
                 app:layout_constraintTop_toBottomOf="@+id/nombreET" />
 
             <EditText
-                android:id="@+id/ubicacioET"
+                android:id="@+id/ubicacionET"
                 android:layout_width="167dp"
                 android:layout_height="31dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="48dp"
+                android:layout_marginEnd="8dp"
                 android:textColor="@color/text"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.595"
+                app:layout_constraintHorizontal_bias="0.675"
                 app:layout_constraintStart_toEndOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/precioET" />
 
             <EditText
-                android:id="@+id/ubicacioET2"
+                android:id="@+id/cantHuespedesET"
                 android:layout_width="167dp"
-                android:layout_height="34dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="44dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:textColor="@color/text"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.486"
+                app:layout_constraintHorizontal_bias="0.538"
                 app:layout_constraintStart_toEndOf="@+id/textView11"
-                app:layout_constraintTop_toBottomOf="@+id/spinner"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerTipo"
                 app:layout_constraintVertical_bias="0.0" />
 
             <EditText
                 android:id="@+id/precioET"
                 android:layout_width="167dp"
                 android:layout_height="31dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="48dp"
+                android:layout_marginEnd="8dp"
                 android:textColor="@color/text"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.672"
+                app:layout_constraintHorizontal_bias="0.711"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
                 app:layout_constraintTop_toBottomOf="@+id/descripcionET" />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/botonAgregar"
         android:layout_width="155dp"
         android:layout_height="44dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="76dp"
         android:background="@color/button"
         android:text="Crear Alojamiento"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.089"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.design.widget.BottomNavigationView
