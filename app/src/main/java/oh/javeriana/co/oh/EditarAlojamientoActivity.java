@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.util.Log;
 import android.view.MenuItem;
 
 public class EditarAlojamientoActivity extends Activity {
+
+    Anfitrion anfitrion = null;
+    String rol = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +21,13 @@ public class EditarAlojamientoActivity extends Activity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.getMenu().getItem(0).setCheckable(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        Log.i("ROL", rol);
+        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
+            anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+        }
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -28,12 +39,16 @@ public class EditarAlojamientoActivity extends Activity {
             switch (item.getItemId()) {
                 case R.id.navigationRecord:
                     intent = new Intent(getApplicationContext(),HistorialActivity.class);
-                    intent.putExtra("rol","propietarioAlojamiento");
+                    //intent.putExtra("rol","propietarioAlojamiento");
+                    if (anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
                     startActivity(intent);
                     return true;
                 case R.id.navigationProfile:
                     intent = new Intent(getApplicationContext(),PerfilActivity.class);
-                    intent.putExtra("rol","propietarioAlojamiento");
+                  // intent.putExtra("rol","propietarioAlojamiento");
+                    if (anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
                     startActivity(intent);
                     return true;
             }

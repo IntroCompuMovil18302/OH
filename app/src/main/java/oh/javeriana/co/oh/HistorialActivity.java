@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,11 @@ public class HistorialActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getBaseContext(), ItemActivity.class);
-                intent.putExtra("rol",rol);
+               // intent.putExtra("rol",rol);
+                if(anfitrion != null)
+                    intent.putExtra("usr", anfitrion);
+                else if (huesped != null)
+                    intent.putExtra("usr", huesped);
                 startActivity(intent);
             }
         });
@@ -57,15 +62,15 @@ public class HistorialActivity extends Activity {
         BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);
         TextView tituloHistorial = findViewById(R.id.tituloHistorial);
 
-        if(!rol.equals("huesped")){
+        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") != 0){
             guest_navigation.setVisibility(View.GONE);
             host_navigation.setSelectedItemId(R.id.navigationRecord);
             host_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-            if(rol.equals("propietarioAlojamiento")) {
+           // if(rol.equals("propietarioAlojamiento")) {
                 tituloHistorial.setText("Historial de alojamientos publicados");
-            }else {
-                tituloHistorial.setText("Historial de negocios publicados");
-            }
+            //}else {
+             //   tituloHistorial.setText("Historial de negocios publicados");
+            //}
         }else{
             host_navigation.setVisibility(View.GONE);
             guest_navigation.setSelectedItemId(R.id.navigationRecord);
@@ -132,20 +137,17 @@ public class HistorialActivity extends Activity {
             Intent intent;
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
-                    intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-
+                    intent = new Intent(getApplicationContext(),MapaActivity.class);
                     if(anfitrion != null)
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
-
                     startActivity(intent);
                     return true;
                 case R.id.navigationRecord:
                     return true;
                 case R.id.navigationProfile:
                     intent = new Intent(getApplicationContext(),PerfilActivity.class);
-
                     if(anfitrion != null)
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)

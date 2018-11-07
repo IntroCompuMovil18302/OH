@@ -71,14 +71,16 @@ public class InicioActivity extends AppCompatActivity {
 
                         if (rol.compareTo("huesped") == 0) {
                             Huesped usr  = singleSnapshot.getValue(Huesped.class);
-                            Intent intent = new Intent(getApplicationContext(), ExplorarActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), MapaActivity.class);
                             intent.putExtra("usr", usr);
                             startActivity(intent);
+                            finish();
                         } else if (rol.compareTo("propietarioAlojamiento") == 0) {
                             Anfitrion usr  = singleSnapshot.getValue(Anfitrion.class);
                             Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
                             intent.putExtra("usr", usr);
                             startActivity(intent);
+                            finish();
                         } else
                             Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
                     }
@@ -105,14 +107,16 @@ public class InicioActivity extends AppCompatActivity {
 
                         if (rol.compareTo("huesped") == 0) {
                             Huesped usr  = singleSnapshot.getValue(Huesped.class);
-                            Intent intent = new Intent(getApplicationContext(), ExplorarActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), MapaActivity.class);
                             intent.putExtra("usr", usr);
                             startActivity(intent);
+                            finish();
                         } else if (rol.compareTo("propietarioAlojamiento") == 0) {
                             Anfitrion usr  = singleSnapshot.getValue(Anfitrion.class);
                             Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
                             intent.putExtra("usr", usr);
                             startActivity(intent);
+                            finish();
                         } else
                             Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
                     }

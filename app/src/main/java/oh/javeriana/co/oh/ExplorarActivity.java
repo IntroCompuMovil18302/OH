@@ -30,6 +30,15 @@ public class ExplorarActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
+        String rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        Log.i("ROL", rol);
+        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
+            huesped = (Huesped) getIntent().getSerializableExtra("usr");
+        }
+        else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
+            anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+        }
+
         search.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
                 if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -59,14 +68,7 @@ public class ExplorarActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
 
-            String rol = getIntent().getSerializableExtra("usr").getClass().getName();
-            Log.i("ROL", rol);
-            if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
-                huesped = (Huesped) getIntent().getSerializableExtra("usr");
-            }
-            else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
-                anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
-            }
+
 
             switch (item.getItemId()) {
                 case R.id.navigationExplore:

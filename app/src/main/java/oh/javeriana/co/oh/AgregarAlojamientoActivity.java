@@ -15,6 +15,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+
+
 import java.text.ParseException;
 
 public class AgregarAlojamientoActivity extends Activity {
@@ -54,17 +56,17 @@ public class AgregarAlojamientoActivity extends Activity {
                 myRef = database.getReference(PATH_ALOJAMIENTOS + key);
 
                 if(!nombreET.getText().equals("")) {
-                   if (!descripcionET.getText().equals("")){
+                    if (!descripcionET.getText().equals("")){
                         if (!precioET.getText().equals("")){
                             if (!ubicacionET.getText().equals("")){
-                                    if (!cantHuespedesET.getText().equals("")){
-                                        Alojamiento alojamiento = new Alojamiento(nombreET.getText(), descripcionET.getText(), ubicacionET.getText(), cantHuespedesET.getText(),  precioET.getText() );
-                                        myRef.setValue(alojamiento);
+                                if (!cantHuespedesET.getText().equals("")){
+                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText(), descripcionET.getText(), ubicacionET.getText(), cantHuespedesET.getText(),  precioET.getText() );
+                                    myRef.setValue(alojamiento);
 
-                                    }
+                                }
                             }
                         }
-                   }
+                    }
                 }
 
 
