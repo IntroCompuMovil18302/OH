@@ -3,6 +3,10 @@ package oh.javeriana.co.oh;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +37,9 @@ public class AgregarAlojamientoActivity extends Activity {
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
 
+    Anfitrion anfitrion = null;
+    String rol = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +52,16 @@ public class AgregarAlojamientoActivity extends Activity {
         spinnerTipo = findViewById(R.id.spinnerTipo);
         cantHuespedesET =  findViewById(R.id.cantHuespedesET);
         botonAgregar = findViewById(R.id.botonAgregar);
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.getMenu().getItem(0).setCheckable(false);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        Log.i("ROL", rol);
+        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
+            anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+        }
 
         botonAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,5 +93,31 @@ public class AgregarAlojamientoActivity extends Activity {
 
 
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Intent intent;
+            switch (item.getItemId()) {
+                case R.id.navigationRecord:
+                    intent = new Intent(getApplicationContext(),HistorialActivity.class);
+                    //intent.putExtra("rol","propietarioAlojamiento");
+                    if (anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    startActivity(intent);
+                    return true;
+                case R.id.navigationProfile:
+                    intent = new Intent(getApplicationContext(),PerfilActivity.class);
+                    // intent.putExtra("rol","propietarioAlojamiento");
+                    if (anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    startActivity(intent);
+                    return true;
+            }
+            return false;
+        }
+    };
 
 }
