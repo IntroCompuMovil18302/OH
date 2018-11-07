@@ -50,6 +50,7 @@ public class ReservarActivity extends AppCompatActivity {
                 huesped = (Huesped) getIntent().getSerializableExtra("usr");
             }
 
+
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
                     intent = new Intent(getApplicationContext(),MapaActivity.class);
