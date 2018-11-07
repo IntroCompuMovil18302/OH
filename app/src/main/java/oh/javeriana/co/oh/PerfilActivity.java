@@ -40,10 +40,10 @@ public class PerfilActivity extends Activity {
         mAuth = FirebaseAuth.getInstance();
 
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
-        if(rol.compareToIgnoreCase("huesped") == 0) {
+        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
         }
-        else if(rol.compareToIgnoreCase("propietarioAlojamiento") == 0) {
+        else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
             anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
         }
 

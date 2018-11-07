@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,10 +60,11 @@ public class ExplorarActivity extends AppCompatActivity {
             Intent intent;
 
             String rol = getIntent().getSerializableExtra("usr").getClass().getName();
-            if(rol.compareToIgnoreCase("huesped") == 0) {
+            Log.i("ROL", rol);
+            if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
                 huesped = (Huesped) getIntent().getSerializableExtra("usr");
             }
-            else if(rol.compareToIgnoreCase("propietarioAlojamiento") == 0) {
+            else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
                 anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
             }
 
