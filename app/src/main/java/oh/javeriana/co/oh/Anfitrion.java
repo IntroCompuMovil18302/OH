@@ -2,12 +2,13 @@ package oh.javeriana.co.oh;
 
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
-public class Anfitrion extends Usuario {
+public class Anfitrion implements Serializable {
     private String rol;
     private String email;
     private String nombre;

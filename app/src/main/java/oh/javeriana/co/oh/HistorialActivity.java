@@ -24,12 +24,21 @@ public class HistorialActivity extends Activity {
     String[] precio = {"$ 300000", "$ 800000", "$ 1500000", "$ 480000", "$ 270000", "$ 1246000"};
     String rol =  "";
 
+    Huesped huesped = null;
+    Anfitrion anfitrion = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial);
 
-        rol =  getIntent().getStringExtra("rol");
+        rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        if(rol.compareToIgnoreCase("huesped") == 0) {
+            huesped = (Huesped) getIntent().getSerializableExtra("usr");
+        }
+        else if(rol.compareToIgnoreCase("propietarioAlojamiento") == 0) {
+            anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+        }
 
         ListView listView = findViewById(R.id.listViewHist);
         HistorialActivity.CustomAdapter c = new HistorialActivity.CustomAdapter();
@@ -124,14 +133,24 @@ public class HistorialActivity extends Activity {
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
                     intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                    intent.putExtra("rol",rol);
+
+                    if(anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    else if (huesped != null)
+                        intent.putExtra("usr", huesped);
+
                     startActivity(intent);
                     return true;
                 case R.id.navigationRecord:
                     return true;
                 case R.id.navigationProfile:
                     intent = new Intent(getApplicationContext(),PerfilActivity.class);
-                    intent.putExtra("rol",rol);
+
+                    if(anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    else if (huesped != null)
+                        intent.putExtra("usr", huesped);
+
                     startActivity(intent);
                     return true;
             }

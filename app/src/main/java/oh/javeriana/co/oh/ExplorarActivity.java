@@ -13,6 +13,10 @@ import android.widget.EditText;
 
 public class ExplorarActivity extends AppCompatActivity {
 
+    Huesped huesped=null;
+    Anfitrion anfitrion=null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,17 +57,36 @@ public class ExplorarActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
+
+            String rol = getIntent().getSerializableExtra("usr").getClass().getName();
+            if(rol.compareToIgnoreCase("huesped") == 0) {
+                huesped = (Huesped) getIntent().getSerializableExtra("usr");
+            }
+            else if(rol.compareToIgnoreCase("propietarioAlojamiento") == 0) {
+                anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+            }
+
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
                     return true;
                 case R.id.navigationRecord:
                     intent = new Intent(getApplicationContext(),HistorialActivity.class);
-                    intent.putExtra("rol","huesped");
+
+                    if(anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    else if (huesped != null)
+                        intent.putExtra("usr", huesped);
                     startActivity(intent);
+
                     return true;
                 case R.id.navigationProfile:
                     intent = new Intent(getApplicationContext(),PerfilActivity.class);
-                    intent.putExtra("rol","huesped");
+
+                    if(anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    else if (huesped != null)
+                        intent.putExtra("usr", huesped);
+
                     startActivity(intent);
                     return true;
             }

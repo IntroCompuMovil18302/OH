@@ -1,11 +1,14 @@
 package oh.javeriana.co.oh;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
@@ -13,17 +16,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -50,7 +55,12 @@ public class RegistroActivity extends Activity {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private FirebaseAuth mAuth;
+    private Uri imageUri;
+    private StorageReference mStorageRef;
+    private ProgressDialog mProgress;
     private final int IMAGE_PICKER_REQUEST = 1;
+    private final int REQUEST_IMAGE_CAPTURE = 2;
+    private final int REQUEST_EXTERNAL_STORAGE = 3;
     public static final String PATH_USERS="usuarios/";
 
 
@@ -59,6 +69,11 @@ public class RegistroActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
+
+        String explanation = "Es necesario usar la cámara para tomar la foto";
+        tools.requestPermission(RegistroActivity.this, Manifest.permission.CAMERA, explanation, REQUEST_IMAGE_CAPTURE);
+        tools.requestPermission(RegistroActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, explanation, REQUEST_EXTERNAL_STORAGE);
+
 
         database= FirebaseDatabase.getInstance();
 
@@ -90,13 +105,15 @@ public class RegistroActivity extends Activity {
             @Override
             public void onClick(View view) {
                 mAuth = FirebaseAuth.getInstance();
+                mStorageRef = FirebaseStorage.getInstance().getReference();
 
                 try {
+                    myRef = database.getReference(PATH_USERS);
+                    String key = myRef.push().getKey();
+                    myRef = database.getReference(PATH_USERS + key);
+
                     if(rol.compareTo("huesped") == 0) {
                         Huesped huesped = new Huesped(nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
-                        myRef = database.getReference(PATH_USERS);
-                        String key = myRef.push().getKey();
-                        myRef = database.getReference(PATH_USERS + key);
                         myRef.setValue(huesped);
 
                         mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
@@ -105,25 +122,45 @@ public class RegistroActivity extends Activity {
                     }
                     else if(rol.compareTo("propietarioAlojamiento") == 0) {
                         Anfitrion propAloj = new Anfitrion("propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
-                        myRef=database.getReference(PATH_USERS);
-                        String key = myRef.push().getKey();
-                        myRef = database.getReference(PATH_USERS + key);
                         myRef.setValue(propAloj);
 
                         mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
                         Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                        intent.putExtra("rol", propAloj.getRol());
+                        intent.putExtra("rol", propAloj);
                         startActivity(intent);
                     }
                     else {
                         Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
                     }
+
+                    if(imageUri != null) {
+                        StorageReference imagesProfile = mStorageRef.child(key).child("imageProfile");
+                        imagesProfile.putFile(imageUri);
+                    }
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
-               /* Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        camara.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              String explanation = "Es necesario usar la cámara para tomar la foto";
+              tools.requestPermission(RegistroActivity.this, Manifest.permission.CAMERA, explanation, REQUEST_IMAGE_CAPTURE);
+                tools.requestPermission(RegistroActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, explanation, REQUEST_EXTERNAL_STORAGE);
+              takePicture();
+            }
+
+            private void takePicture() {
+              Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+              if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                  startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+              }
             }
         });
 
@@ -203,7 +240,7 @@ public class RegistroActivity extends Activity {
             case IMAGE_PICKER_REQUEST:
                 if(resultCode == RESULT_OK){
                     try {
-                        final Uri imageUri = data.getData();
+                        imageUri = data.getData();
                         final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                         foto.setImageBitmap(selectedImage);
@@ -215,7 +252,20 @@ public class RegistroActivity extends Activity {
                         e.printStackTrace();
                     }
                 }
-        }
+                break;
+            case REQUEST_IMAGE_CAPTURE:
+                if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                    imageUri = data.getData();
+                    Log.i("URI", imageUri.toString());
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    foto.setImageBitmap(imageBitmap);
+                    foto.setMaxHeight(106);
+                    foto.setMaxWidth(106);
+                }
+                break;
+
+            }
     }
 
 

@@ -70,11 +70,14 @@ public class InicioActivity extends AppCompatActivity {
                         String rol = singleSnapshot.child("rol").getValue().toString();
 
                         if (rol.compareTo("huesped") == 0) {
+                            Huesped usr  = singleSnapshot.getValue(Huesped.class);
                             Intent intent = new Intent(getApplicationContext(), ExplorarActivity.class);
+                            intent.putExtra("usr", usr);
                             startActivity(intent);
                         } else if (rol.compareTo("propietarioAlojamiento") == 0) {
+                            Anfitrion usr  = singleSnapshot.getValue(Anfitrion.class);
                             Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                            intent.putExtra("rol", "propietarioAlojamiento");
+                            intent.putExtra("usr", usr);
                             startActivity(intent);
                         } else
                             Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
@@ -101,11 +104,14 @@ public class InicioActivity extends AppCompatActivity {
                         String rol = singleSnapshot.child("rol").getValue().toString();
 
                         if (rol.compareTo("huesped") == 0) {
+                            Huesped usr  = singleSnapshot.getValue(Huesped.class);
                             Intent intent = new Intent(getApplicationContext(), ExplorarActivity.class);
+                            intent.putExtra("usr", usr);
                             startActivity(intent);
                         } else if (rol.compareTo("propietarioAlojamiento") == 0) {
+                            Anfitrion usr  = singleSnapshot.getValue(Anfitrion.class);
                             Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                            intent.putExtra("rol", "propietarioAlojamiento");
+                            intent.putExtra("usr", usr);
                             startActivity(intent);
                         } else
                             Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
@@ -142,21 +148,6 @@ public class InicioActivity extends AppCompatActivity {
         iniciarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if(correo.getText().toString().equals("huesped@oh.com") && contraseña.getText().toString().equals("1234")){
-                    Intent intent = new Intent(getApplicationContext(), ExplorarActivity.class);
-                    startActivity(intent);
-                }else if(correo.getText().toString().equals("alojamiento@oh.com") && contraseña.getText().toString().equals("1234")) {
-                    Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                    intent.putExtra("rol", "propietarioAlojamiento");
-                    startActivity(intent);
-                }else if(correo.getText().toString().equals("negocio@oh.com") && contraseña.getText().toString().equals("1234")){
-                    Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                    intent.putExtra("rol", "propietarioNegocio");
-                    startActivity(intent);
-                }else{
-                    Toast.makeText(getApplicationContext(),"Datos invalidos", Toast.LENGTH_SHORT).show();
-                }*/
-
                 if(validateForm()) {
                     String email = correo.getText().toString();
                     String password = contraseña.getText().toString();

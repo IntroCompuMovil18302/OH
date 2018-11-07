@@ -9,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -21,7 +22,12 @@ public class PerfilActivity extends Activity {
     Button historial;
     Button perfil;
     Button btnSignOut;
+    TextView txNombre;
+    TextView txCorreo;
+    TextView txRol;
     String rol="";
+    Huesped huesped=null;
+    Anfitrion anfitrion=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +39,13 @@ public class PerfilActivity extends Activity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        rol =  getIntent().getStringExtra("rol");
+        rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        if(rol.compareToIgnoreCase("huesped") == 0) {
+            huesped = (Huesped) getIntent().getSerializableExtra("usr");
+        }
+        else if(rol.compareToIgnoreCase("propietarioAlojamiento") == 0) {
+            anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+        }
 
         BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);
         BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);;
@@ -99,13 +111,23 @@ public class PerfilActivity extends Activity {
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
                     intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                    intent.putExtra("rol",rol);
+
+                    if(anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    else if (huesped != null)
+                        intent.putExtra("usr", huesped);
+
                     startActivity(intent);
                     return true;
 
                 case R.id.navigationRecord:
                     intent = new Intent(getApplicationContext(),HistorialActivity.class);
-                    intent.putExtra("rol",rol);
+
+                    if(anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    else if (huesped != null)
+                        intent.putExtra("usr", huesped);
+
                     startActivity(intent);
                     return true;
 
