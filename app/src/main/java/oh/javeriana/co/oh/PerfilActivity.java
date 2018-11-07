@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -50,17 +51,17 @@ public class PerfilActivity extends Activity {
         BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);
         BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);;
 
-        if(!rol.equals("huesped")){
+        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") != 0){
             guest_navigation.setVisibility(View.GONE);
             host_navigation.setSelectedItemId(R.id.navigationProfile);
             host_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-            if(rol.equals("propietarioAlojamiento")){
+           // if(rol.equals("propietarioAlojamiento")){
                 botonAgregar.setText("Agregar alojamiento");
                 botonGestionar.setText("Gestionar alojamientos");
-            }else{
-                botonAgregar.setText("Agregar Negocio");
-                botonGestionar.setText("Gestionar Negocio");
-            }
+            //}else{
+              //  botonAgregar.setText("Agregar Negocio");
+               // botonGestionar.setText("Gestionar Negocio");
+            //}
         }else{
             botonAgregar.setVisibility(View.GONE);
             botonGestionar.setVisibility(View.GONE);
@@ -73,11 +74,15 @@ public class PerfilActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent;
-                if(rol.equals("propietarioAlojamiento")){
+               // if(rol.equals("propietarioAlojamiento")){
                     intent =new Intent(getApplicationContext(),AgregarAlojamientoActivity.class );
-                }else {
-                    intent = new Intent(getApplicationContext(),CrearNegocioActivity.class);
-                }
+                if(anfitrion != null)
+                    intent.putExtra("usr", anfitrion);
+                else if (huesped != null)
+                    intent.putExtra("usr", huesped);
+                //}else {
+                  //  intent = new Intent(getApplicationContext(),CrearNegocioActivity.class);
+               // }
                 startActivity(intent);
             }
         });
@@ -85,8 +90,12 @@ public class PerfilActivity extends Activity {
         botonGestionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent2 = new Intent(view.getContext(),EditarAlojamientoActivity.class);
-                startActivity(intent2);
+                Intent intent = new Intent(view.getContext(),EditarAlojamientoActivity.class);
+                if(anfitrion != null)
+                    intent.putExtra("usr", anfitrion);
+                else if (huesped != null)
+                    intent.putExtra("usr", huesped);
+                startActivity(intent);
             }
         });
 
@@ -110,8 +119,7 @@ public class PerfilActivity extends Activity {
             Intent intent;
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
-                    intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-
+                    intent = new Intent(getApplicationContext(),MapaActivity.class);
                     if(anfitrion != null)
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)

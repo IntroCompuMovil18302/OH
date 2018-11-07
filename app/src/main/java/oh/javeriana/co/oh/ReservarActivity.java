@@ -8,10 +8,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 public class ReservarActivity extends AppCompatActivity {
+
+    Huesped huesped = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,20 +43,33 @@ public class ReservarActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
+
+            String rol = getIntent().getSerializableExtra("usr").getClass().getName();
+            Log.i("ROL", rol);
+            if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
+                huesped = (Huesped) getIntent().getSerializableExtra("usr");
+            }
+
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
-                    intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                    intent.putExtra("rol","huesped");
+                    intent = new Intent(getApplicationContext(),MapaActivity.class);
+                    if (huesped != null)
+                        intent.putExtra("usr", huesped);
+                   // intent.putExtra("rol","huesped");
                     startActivity(intent);
                     return true;
                 case R.id.navigationRecord:
                     intent = new Intent(getApplicationContext(),HistorialActivity.class);
-                    intent.putExtra("rol","huesped");
+                    //intent.putExtra("rol","huesped");
+                    if (huesped != null)
+                        intent.putExtra("usr", huesped);
                     startActivity(intent);
                     return true;
                 case R.id.navigationProfile:
                     intent = new Intent(getApplicationContext(),PerfilActivity.class);
-                    intent.putExtra("rol","huesped");
+                    //intent.putExtra("rol","huesped");
+                    if (huesped != null)
+                        intent.putExtra("usr", huesped);
                     startActivity(intent);
                     return true;
             }

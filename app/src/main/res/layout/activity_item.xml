@@ -280,8 +280,9 @@
                             android:layout_weight="1"
                             android:background="@color/text"
                             android:ems="10"
-                            android:hint="Escriba aqui su comentario"
-                            android:inputType="textMultiLine" />
+                            android:hint="Escriba aqui su comentario ..."
+                            android:inputType="textMultiLine"
+                            android:textColorHint="@color/common_google_signin_btn_text_dark_focused" />
 
                         <ImageView
                             android:id="@+id/imageView10"
