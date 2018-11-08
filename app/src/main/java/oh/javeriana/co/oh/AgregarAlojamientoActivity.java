@@ -1,6 +1,7 @@
 package oh.javeriana.co.oh;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
@@ -12,8 +13,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -29,18 +32,10 @@ import android.location.Geocoder;
 
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
 public class AgregarAlojamientoActivity extends Activity {
-    EditText nombreET;
-    EditText descripcionET;
-    EditText precioET;
-    EditText ubicacionET;
-    Spinner spinnerTipo;
-    ArrayAdapter<CharSequence>adapter;
-    EditText cantHuespedesET;
-    Button botonAgregar;
     public static final String PATH_ALOJAMIENTOS="alojamientos/";
     public static final String PATH_USERS="usuarios/";
     private FirebaseDatabase database;
@@ -49,19 +44,53 @@ public class AgregarAlojamientoActivity extends Activity {
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
     private String tipoAlojamiento;
-
     private static final double ARRIBADERLAT = 4.792509;
     private static final double ARRIBADERLONG = -73.909356;
     private static final double ABAJOIZQLAT = 4.548875;
     private static final double ABAJOIZQLONG = -74.271749;
 
+
+    EditText nombreET;
+    EditText descripcionET;
+    EditText precioET;
+    EditText ubicacionET;
+    Spinner spinnerTipo;
+    ArrayAdapter<CharSequence>adapter;
+    EditText cantHuespedesET;
+    Button botonAgregar;
+    TextView fechaInicial;
+    TextView fechaFinal;
+    final Calendar c = Calendar.getInstance();
+    final int mes = c.get(Calendar.MONTH);
+    final int dia = c.get(Calendar.DAY_OF_MONTH);
+    final int anio = c.get(Calendar.YEAR);
+
     Anfitrion anfitrion = null;
     String rol = "";
+
+    public void obtenerFecha(final int codigo){
+        DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                final int mesActual = month + 1;
+                String diaFormateado = (dayOfMonth < 10)? "0" + String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
+                String mesFormateado = (mesActual < 10)? "0" + String.valueOf(mesActual):String.valueOf(mesActual);
+                if (codigo==1)
+                    fechaInicial.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+                else
+                    fechaFinal.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+            }
+        },anio, mes, dia);
+
+        recogerFecha.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_alojamiento);
+
+        anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
 
         database= FirebaseDatabase.getInstance();
 
@@ -75,6 +104,22 @@ public class AgregarAlojamientoActivity extends Activity {
         adapter = ArrayAdapter.createFromResource(this, R.array.alojamientos, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipo.setAdapter(adapter);
+        fechaInicial = findViewById(R.id.fechaInic);
+        fechaFinal = findViewById(R.id.fechaFinal);
+
+        fechaInicial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                obtenerFecha(1);
+            }
+        });
+        fechaFinal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                obtenerFecha(2);
+            }
+        });
+
 
         spinnerTipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -111,20 +156,19 @@ public class AgregarAlojamientoActivity extends Activity {
 
 
                 if(!nombreET.getText().toString().isEmpty()) {
-                    if(!esNumero(String.valueOf(nombreET.getText()))){
+                    if(!tools.esNumero(String.valueOf(nombreET.getText()))){
                         myRef = database.getReference(PATH_ALOJAMIENTOS + nombreET.getText().toString());
                         if (!descripcionET.getText().toString().isEmpty()){
-                            if (!esNumero(String.valueOf(descripcionET.getText()))){
+                            if (!tools.esNumero(String.valueOf(descripcionET.getText()))){
                                 if (!precioET.getText().toString().isEmpty()){
-                                    if(esNumero(String.valueOf(precioET.getText()))){
+                                    if(tools.esNumero(String.valueOf(precioET.getText()))){
                                         if (!ubicacionET.getText().toString().isEmpty()){
                                             if (!cantHuespedesET.getText().toString().isEmpty()){
-                                                if (esNumero(String.valueOf(cantHuespedesET.getText()))){
+                                                if (tools.esNumero(String.valueOf(cantHuespedesET.getText()))){
                                                     Geocoder mGeocoder = new Geocoder(getBaseContext());
                                                     LatLng position=null;
                                                     try {
                                                         List<Address> addresses = mGeocoder.getFromLocationName(ubicacionET.getText().toString(), 2, ABAJOIZQLAT, ABAJOIZQLONG, ARRIBADERLAT, ARRIBADERLONG);
-
                                                         if (addresses != null && !addresses.isEmpty()) {
 
                                                             Address addressResult = addresses.get(0);
@@ -141,8 +185,12 @@ public class AgregarAlojamientoActivity extends Activity {
                                                     double precio = Double.parseDouble( precioET.getText().toString());
                                                     double latitud = position.latitude;
                                                     double longitud = position.longitude;
-                                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(), cant,precio, mAuth.getCurrentUser().getDisplayName(),tipoAlojamiento, latitud,longitud );
+
+                                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
+                                                            cant, precio, anfitrion.getId(), tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
                                                     myRef.setValue(alojamiento);
+
+                                                    Log.i("ROL", "ESTA AGREGANDO UN ALOJAMIENTO");
 
                                                 }else{
                                                     Toast.makeText(AgregarAlojamientoActivity.this, "La cantidad de huéspedes corresponde a un valor numérico", Toast.LENGTH_SHORT).show();
@@ -173,8 +221,6 @@ public class AgregarAlojamientoActivity extends Activity {
                 }else{
                     Toast.makeText(AgregarAlojamientoActivity.this, "El nombre del alojamiento no puede estar vacío", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
 
@@ -182,6 +228,7 @@ public class AgregarAlojamientoActivity extends Activity {
 
     }
 
+<<<<<<< HEAD
     private boolean esNumero(String cadena){
         try {
             Integer.parseInt(cadena);
@@ -193,6 +240,8 @@ public class AgregarAlojamientoActivity extends Activity {
 
 
 
+=======
+>>>>>>> c4c9ac7844c13d9209d09b6096f4967a4050aabe
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 

@@ -18,4 +18,13 @@ public class tools {
             ActivityCompat.requestPermissions(context, new String[]{permission}, requestId);
         }
     }
+
+    public static boolean esNumero(String cadena){
+        try {
+            Integer.parseInt(cadena);
+            return true;
+        } catch (NumberFormatException nfe){
+            return false;
+        }
+    }
 }
