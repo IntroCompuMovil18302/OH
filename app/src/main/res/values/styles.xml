@@ -22,4 +22,10 @@
         <item name="colorAccent">@color/darkBackgroud</item>
     </style>
 
+    <style name="mySpinnerItemStyle">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
 </resources>
