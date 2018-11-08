@@ -25,7 +25,7 @@ public class Alojamiento implements Serializable {
     }
 
 
-    public Alojamiento( String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String nombreUsuario ) {
+    public Alojamiento( String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String nombreUsuario, String tipoAlojamiento ) {
 
 
         //this.tipo = tipo;
@@ -35,6 +35,7 @@ public class Alojamiento implements Serializable {
         this.valorNoche = valorNoche;
         this.direccion = direccion;
         this.nombreUsuario = nombreUsuario;
+        this.tipo = tipoAlojamiento;
 
         /*Geocoder mGeocoder = new Geocoder(getBaseContext());
         String addressString = mAddress.getText().toString();

@@ -8,6 +8,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -18,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import android.location.Geocoder;
 
 
 
@@ -29,6 +32,7 @@ public class AgregarAlojamientoActivity extends Activity {
     EditText precioET;
     EditText ubicacionET;
     Spinner spinnerTipo;
+    ArrayAdapter<CharSequence>adapter;
     EditText cantHuespedesET;
     Button botonAgregar;
     public static final String PATH_ALOJAMIENTOS="alojamientos/";
@@ -38,6 +42,7 @@ public class AgregarAlojamientoActivity extends Activity {
     private DatabaseReference myRef2;
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
+    private String tipoAlojamiento;
 
     Anfitrion anfitrion = null;
     String rol = "";
@@ -46,6 +51,7 @@ public class AgregarAlojamientoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_alojamiento);
+
         database= FirebaseDatabase.getInstance();
 
         nombreET = findViewById(R.id.nombreET);
@@ -55,6 +61,21 @@ public class AgregarAlojamientoActivity extends Activity {
         spinnerTipo = findViewById(R.id.spinnerTipo);
         cantHuespedesET =  findViewById(R.id.cantHuespedesET);
         botonAgregar = findViewById(R.id.botonAgregar);
+        adapter = ArrayAdapter.createFromResource(this, R.array.alojamientos, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTipo.setAdapter(adapter);
+
+        spinnerTipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                tipoAlojamiento = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.getMenu().getItem(0).setCheckable(false);
@@ -65,6 +86,7 @@ public class AgregarAlojamientoActivity extends Activity {
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
             anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
         }
+
 
         botonAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +107,7 @@ public class AgregarAlojamientoActivity extends Activity {
                                 if (!cantHuespedesET.getText().equals("")){
                                     int cant = Integer.parseInt(cantHuespedesET.getText().toString());
                                     double precio = Double.parseDouble( precioET.getText().toString());
-                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(), cant,precio, mAuth.getUid()  );
+                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(), cant,precio, mAuth.getCurrentUser().getDisplayName(),tipoAlojamiento );
                                     myRef.setValue(alojamiento);
                                     Log.i("ROL", "ESTA AGREGANDO UN SUPER ALOJAMIENTO LA PUTA MADRE QUE ME PARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 
