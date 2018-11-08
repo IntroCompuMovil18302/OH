@@ -56,7 +56,9 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static oh.javeriana.co.oh.tools.requestPermission;
 
@@ -108,6 +110,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     private DatabaseReference myRef;
 
     ArrayList<Alojamiento> listaAlojamientos;
+    Map<Marker, Alojamiento> markers = new HashMap<>();
+    String rol="";
 
 
     @Override
@@ -120,6 +124,14 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         database= FirebaseDatabase.getInstance();
 
         myRef = database.getReference(PATH_ALOJAMIENTOS);
+
+        rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
+            huesped = (Huesped) getIntent().getSerializableExtra("usr");
+        }
+        else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
+            anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+        }
 
         botonFechaInicial = findViewById(R.id.botonFechaInicial);
         botonFechaFinal = findViewById(R.id.botonFechaFinal);
@@ -219,13 +231,16 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }
 
+                listaAlojamientos = loadSites();
+
                 for(Alojamiento a: listaAlojamientos) {
                     if (distancepoint(a.getLatitud(), a.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
                         try {
                             if (fechaInicial.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0 && fechaFinal.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0) {
                                 if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0) {
                                     LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
-                                    mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                                    markers.put(marker, a);
                                 }
                             }
                         } catch (ParseException e) {
@@ -274,11 +289,6 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double result = RADIUS_OF_EARTH_KM * c;
 
-        //Toast.makeText(getApplicationContext(),String.valueOf(Math.round(result * 100.0)/100.0),Toast.LENGTH_LONG).show();
-        /*Log.i("Mensaje ", "HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        Log.i("Distancia", String.valueOf(Math.round(result * 100.0) / 100.0));
-        Log.i("Latitud", String.valueOf(lat2));
-        Log.i("Longitud", String.valueOf(long2));*/
         return Math.round(result * 100.0) / 100.0;
 
     }
@@ -366,6 +376,28 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Alojamiento a = markers.get(marker);
+
+                Bundle bundle = new Bundle();
+                if(huesped != null)
+                    bundle.putSerializable("usr", huesped);
+                else if(anfitrion != null)
+                    bundle.putSerializable("usr", anfitrion);
+
+                bundle.putSerializable("alojamiento", a);
+
+                Intent intent = new Intent(getApplicationContext(), ItemActivity.class);
+                intent.putExtras(bundle);
+
+                startActivity(intent);
+
+                return false;
+            }
+        });
 
     }
 
