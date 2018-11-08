@@ -26,8 +26,6 @@ public class Alojamiento implements Serializable {
     public Alojamiento( String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String idUsuario,
                         String tipoAlojamiento, double latitud, double longitud, String fechaInicial, String fechaFinal) {
 
-
-        //this.tipo = tipo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.cantHuespedes = cantHuespedes;
@@ -39,21 +37,6 @@ public class Alojamiento implements Serializable {
         this.longitud = longitud;
         this.fechaInicial=fechaInicial;
         this.fechaFinal=fechaFinal;
-
-        /*Geocoder mGeocoder = new Geocoder(getBaseContext());
-        String addressString = mAddress.getText().toString();
-        if (!addressString.isEmpty()) {
-            try {
-                List<Address> addresses = mGeocoder.getFromLocationName(addressString, 2);
-                if (addresses != null && !addresses.isEmpty()) {
-                    Address addressResult = addresses.get(0);
-                    LatLng position = new LatLng(addressResult.getLatitude(), addressResult.getLongitude());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
-        //this.foto = foto;
     }
 
     public String getTipo() {

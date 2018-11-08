@@ -29,7 +29,6 @@ import android.location.Geocoder;
 
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -163,13 +162,10 @@ public class AgregarAlojamientoActivity extends Activity {
                                         if (!ubicacionET.getText().toString().isEmpty()){
                                             if (!cantHuespedesET.getText().toString().isEmpty()){
                                                 if (tools.esNumero(String.valueOf(cantHuespedesET.getText()))){
-
                                                     Geocoder mGeocoder = new Geocoder(getBaseContext());
                                                     LatLng position=null;
                                                     try {
                                                         List<Address> addresses = mGeocoder.getFromLocationName(ubicacionET.getText().toString(), 2, ABAJOIZQLAT, ABAJOIZQLONG, ARRIBADERLAT, ARRIBADERLONG);
-                                                        Log.i("LATITUD", "HOLAAAAAAAAAAAAAAA");
-
                                                         if (addresses != null && !addresses.isEmpty()) {
 
                                                             Address addressResult = addresses.get(0);
@@ -186,6 +182,7 @@ public class AgregarAlojamientoActivity extends Activity {
                                                     double precio = Double.parseDouble( precioET.getText().toString());
                                                     double latitud = position.latitude;
                                                     double longitud = position.longitude;
+
                                                     Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
                                                             cant, precio, anfitrion.getId(), tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
                                                     myRef.setValue(alojamiento);
