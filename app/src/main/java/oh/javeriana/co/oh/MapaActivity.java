@@ -1,43 +1,101 @@
 package oh.javeriana.co.oh;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import static oh.javeriana.co.oh.tools.requestPermission;
 
 public class MapaActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    Huesped huesped=null;
-    Anfitrion anfitrion=null;
+    Huesped huesped = null;
+    Anfitrion anfitrion = null;
 
     private GoogleMap mMap;
     public final Calendar c = Calendar.getInstance();
     private final int mes = c.get(Calendar.MONTH);
     private final int dia = c.get(Calendar.DAY_OF_MONTH);
     private final int anio = c.get(Calendar.YEAR);
+    private double latitudUsuario;
+    private double longitudUsuario;
+
 
     private ImageButton botonFechaInicial;
     private ImageButton botonFechaFinal;
     private TextView fechaInicial;
     private TextView fechaFinal;
 
+    private final static int LOCATION_PERMISSION = 0;
+    private static final double RADIUS_OF_EARTH_KM = 6371;
+    private static final double ARRIBADERLAT = 4.792509;
+    private static final double ARRIBADERLONG = -73.909356;
+    private static final double ABAJOIZQLAT = 4.548875;
+    private static final double ABAJOIZQLONG = -74.271749;
+
+    private static int voy;
+
+    private Marker oldmark;
+    private Marker newmark;
+    private Marker lastmark;
+
+    private EditText mAddress;
+    private TextView distance;
+
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
+    private LocationCallback mLocationCallback2;
+    //private LocationResult locationResult2;
+    private List<String> listalocations;
+    private JSONObject jso;
 
 
     @Override
@@ -52,6 +110,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         botonFechaFinal = findViewById(R.id.botonFechaFinal);
         fechaInicial = findViewById(R.id.fechaInicial);
         fechaFinal = findViewById(R.id.fechaFinal);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         botonFechaInicial.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,29 +129,181 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
         String rol = getIntent().getSerializableExtra("usr").getClass().getName();
         Log.i("ROL", rol);
-        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
+        if (rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
-        }
-        else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
+        } else if (rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
             anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
         }
+
+        mLocationRequest = createLocationRequest();
+
+        requestPermission(this, Manifest.permission.ACCESS_FINE_LOCATION,
+                "Se necesita acceder a la ubicacion", LOCATION_PERMISSION);
+
+        LocationSettingsRequest.Builder builder = new
+                LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                startLocationUpdates(); //Todas las condiciones para recibir localizaciones
+            }
+        });
+
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                int statusCode = ((ApiException) e).getStatusCode();
+                switch (statusCode) {
+                    case CommonStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied, but this can be fixed by showing the user a dialog.
+                        try {// Show the dialog by calling startResolutionForResult(), and check the result in onActivityResult().
+                            ResolvableApiException resolvable = (ResolvableApiException) e;
+                            resolvable.startResolutionForResult(MapaActivity.this, LOCATION_PERMISSION);
+                        } catch (IntentSender.SendIntentException sendEx) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. No way to fix the settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+
+        mLocationCallback = new LocationCallback() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                Location location = locationResult.getLastLocation();
+                Log.i("LOCATION", "Location update in the callback: " + location);
+                if (location != null && mMap != null) {
+                    if (voy == 0) {
+                        LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
+                        latitudUsuario = location.getLatitude();
+                        longitudUsuario = location.getLongitude();
+                        Log.i("LatitudDelUsuario", String.valueOf(latitudUsuario));
+                        Log.i("LongitudDelUsuario", String.valueOf(longitudUsuario));
+                        oldmark = mMap.addMarker(new MarkerOptions().position(user).title("Ubicación actual"));
+                        newmark = oldmark;
+                        mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
+                        voy++;
+                    } else {
+                        LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
+                        oldmark.remove();
+                        newmark = mMap.addMarker(new MarkerOptions().position(user).title("Usted"));
+                        oldmark = newmark;
+                    }
+                }
+
+                LatLng Tequendama = new LatLng(4.613079, -74.070752);
+                LatLng Ibis = new LatLng(4.614641, -74.069025);
+                LatLng Marriott = new LatLng(4.659429, -74.108398);
+                LatLng hilton = new LatLng(4.655761, -74.055403);
+                LatLng Atton = new LatLng(4.685638, -74.056165);
+
+                List<LatLng> listaLugares = new ArrayList<>();
+                listaLugares.add(Tequendama);
+                listaLugares.add(Ibis);
+                listaLugares.add(Marriott);
+                listaLugares.add(hilton);
+                listaLugares.add(Atton);
+                //Log.i("LatitudDelUsuarioFINAL",String.valueOf(mFusedLocationClient.getLastLocation().getResult().getLatitude()));
+                //Log.i("LatitudDelUsuarioFINAL", String.valueOf(latitudUsuario));
+                //Log.i("LongitudDelUsuarioFINAL",String.valueOf(longitudUsuario));
+
+                for (int i=0; i<listaLugares.size() ; i++ ){
+                    if (distancepoint(listaLugares.get(i).latitude,listaLugares.get(i).longitude,latitudUsuario,longitudUsuario)<=2){
+                        mMap.addMarker(new MarkerOptions().position(listaLugares.get(i)).title("Alojamiento"));
+                    }
+                    //mMap.addMarker(new MarkerOptions().position(listaLugares.get(i)).title("Hotel"));
+                }
+            }
+        };
 
     }
 
 
-    public void obtenerFecha(final int codigo){
+    public double distancepoint(double lat1, double long1, double lat2, double long2) {
+        double latDistance = Math.toRadians(lat1 - lat2);
+        double lngDistance = Math.toRadians(long1 - long2);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double result = RADIUS_OF_EARTH_KM * c;
+
+        //Toast.makeText(getApplicationContext(),String.valueOf(Math.round(result * 100.0)/100.0),Toast.LENGTH_LONG).show();
+        /*Log.i("Mensaje ", "HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        Log.i("Distancia", String.valueOf(Math.round(result * 100.0) / 100.0));
+        Log.i("Latitud", String.valueOf(lat2));
+        Log.i("Longitud", String.valueOf(long2));*/
+        return Math.round(result * 100.0) / 100.0;
+
+    }
+
+    protected LocationRequest createLocationRequest() {
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000); //tasa de refresco en milisegundos
+        mLocationRequest.setFastestInterval(5000); //máxima tasa de refresco
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return mLocationRequest;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case LOCATION_PERMISSION: {
+                if (resultCode == RESULT_OK) {
+                    startLocationUpdates(); //Se encendió la localización!!!
+                } else {
+                    Toast.makeText(this,
+                            "Sin acceso a localización, hardware deshabilitado!",
+                            Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private void startLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        }
+    }
+
+    private void stopLocationUpdates() {
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocationUpdates();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+
+    public void obtenerFecha(final int codigo) {
         DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 final int mesActual = month + 1;
-                String diaFormateado = (dayOfMonth < 10)? "0" + String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
-                String mesFormateado = (mesActual < 10)? "0" + String.valueOf(mesActual):String.valueOf(mesActual);
-                if (codigo==1)
+                String diaFormateado = (dayOfMonth < 10) ? "0" + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
+                String mesFormateado = (mesActual < 10) ? "0" + String.valueOf(mesActual) : String.valueOf(mesActual);
+                if (codigo == 1)
                     fechaInicial.setText(diaFormateado + "/" + mesFormateado + "/" + year);
                 else
                     fechaFinal.setText(diaFormateado + "/" + mesFormateado + "/" + year);
             }
-        },anio, mes, dia);
+        }, anio, mes, dia);
 
         recogerFecha.show();
     }
@@ -112,10 +324,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -151,5 +360,6 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             return false;
         }
     };
+
 
 }
