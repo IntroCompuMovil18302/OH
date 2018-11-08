@@ -33,6 +33,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.regex.Pattern;
 
 public class RegistroActivity extends Activity {
 
@@ -111,23 +112,52 @@ public class RegistroActivity extends Activity {
                     myRef = database.getReference(PATH_USERS);
                     String key = myRef.push().getKey();
                     myRef = database.getReference(PATH_USERS + key);
+                    String formato = "\\d{1,2}/\\d{1,2}/\\d{4}";
 
                     if(rol.compareTo("huesped") == 0) {
-                        Huesped huesped = new Huesped(key, nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
-                        myRef.setValue(huesped);
+                        if(!nombre.getText().toString().isEmpty()){
+                            if(!nacionalidad.getText().toString().isEmpty()){
+                                if(Pattern.matches(formato,fechaNacimiento.getText())){
+                                    Huesped huesped = new Huesped(key, nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
+                                    myRef.setValue(huesped);
 
-                        mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
-                        Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                        startActivity(intent);
+                                    mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
+                                    Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                                    startActivity(intent);
+                                }
+                                else{
+                                    Toast.makeText(RegistroActivity.this, "La fecha debe estar en formato dd/mm/AAAA", Toast.LENGTH_SHORT).show();
+                                }
+                            }else{
+                                Toast.makeText(RegistroActivity.this, "Su nacionalidad no puede faltar", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }else{
+                            Toast.makeText(RegistroActivity.this, "Su nombre no puede faltar", Toast.LENGTH_SHORT).show();
+                        }
+
+
+
                     }
                     else if(rol.compareTo("propietarioAlojamiento") == 0) {
-                        Anfitrion propAloj = new Anfitrion(key, "propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
-                        myRef.setValue(propAloj);
+                        if(!nombre.getText().toString().isEmpty()){
+                            if(Pattern.matches(formato,fechaNacimiento.getText())){
+                                Anfitrion propAloj = new Anfitrion(key, "propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
+                                myRef.setValue(propAloj);
 
-                        mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
-                        Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                        intent.putExtra("usr", propAloj);
-                        startActivity(intent);
+                                mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
+                                Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
+                                intent.putExtra("usr", propAloj);
+                                startActivity(intent);
+                            }else {
+                                Toast.makeText(RegistroActivity.this, "La fecha debe estar en formato dd/mm/AAAA", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(RegistroActivity.this, "Su nombre no puede faltar", Toast.LENGTH_SHORT).show();
+                        }
+
+
+
                     }
                     else {
                         Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
@@ -146,6 +176,7 @@ public class RegistroActivity extends Activity {
                 //startActivity(intent);
             }
         });
+
 
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,6 +232,8 @@ public class RegistroActivity extends Activity {
             }
         });
 
+
+
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -227,6 +260,15 @@ public class RegistroActivity extends Activity {
 
             }
         });
+    }
+
+    private boolean esNumero(String cadena){
+        try {
+            Integer.parseInt(cadena);
+            return true;
+        } catch (NumberFormatException nfe){
+            return false;
+        }
     }
 
     public boolean validarCampos(){
