@@ -15,17 +15,16 @@ public class Alojamiento implements Serializable {
     private double valorNoche;
     private int cantHuespedes;
     private String direccion;
-    private String foto1;
-    private String foto2;
-    private String foto3;
-    private String foto4;
-    private String nombreUsuario;
+    private String idUsuario;
+    private String fechaInicial;
+    private String fechaFinal;
 
     public Alojamiento() {
     }
 
 
-    public Alojamiento( String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String nombreUsuario, String tipoAlojamiento ) {
+    public Alojamiento( String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String idUsuario,
+                        String tipoAlojamiento, double latitud, double longitud, String fechaInicial, String fechaFinal) {
 
 
         //this.tipo = tipo;
@@ -34,8 +33,12 @@ public class Alojamiento implements Serializable {
         this.cantHuespedes = cantHuespedes;
         this.valorNoche = valorNoche;
         this.direccion = direccion;
-        this.nombreUsuario = nombreUsuario;
+        this.idUsuario = idUsuario;
         this.tipo = tipoAlojamiento;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.fechaInicial=fechaInicial;
+        this.fechaFinal=fechaFinal;
 
         /*Geocoder mGeocoder = new Geocoder(getBaseContext());
         String addressString = mAddress.getText().toString();
@@ -85,24 +88,8 @@ public class Alojamiento implements Serializable {
         return direccion;
     }
 
-    public String getFoto1() {
-        return foto1;
-    }
-
-    public String getFoto2() {
-        return foto2;
-    }
-
-    public String getFoto3() {
-        return foto3;
-    }
-
-    public String getFoto4() {
-        return foto4;
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
+    public String getIdUsuario() {
+        return idUsuario;
     }
 
     public void setValorNoche(double valorNoche) {
@@ -137,23 +124,25 @@ public class Alojamiento implements Serializable {
         this.direccion = direccion;
     }
 
-    public void setFoto1(String foto1) {
-        this.foto1 = foto1;
+    public void setIdUsuario(String nombreUsuario) {
+        this.idUsuario = nombreUsuario;
     }
 
-    public void setFoto2(String foto2) {
-        this.foto2 = foto2;
+    public String getFechaInicial() {
+        return fechaInicial;
     }
 
-    public void setFoto3(String foto3) {
-        this.foto3 = foto3;
+    public void setFechaInicial(String fechaInicial) {
+        this.fechaInicial = fechaInicial;
     }
 
-    public void setFoto4(String foto4) {
-        this.foto4 = foto4;
+    public String getFechaFinal() {
+        return fechaFinal;
     }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public void setFechaFinal(String fechaFinal) {
+        this.fechaFinal = fechaFinal;
     }
+
+
 }
