@@ -136,6 +136,5 @@ public class Alojamiento implements Serializable {
     public void setFechaFinal(String fechaFinal) {
         this.fechaFinal = fechaFinal;
     }
-
-
+    
 }

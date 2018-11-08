@@ -227,7 +227,16 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                 listaLugares.add(hilton);
                 listaLugares.add(Atton);
 
-                final ArrayList<Alojamiento>[] listaAlojamientos = new ArrayList[]{new ArrayList<>()};
+                ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();
+                //listaAlojamientos=loadUsers();
+                /*for (int i=0;i<listaAlojamientos.size();i++){
+                    Log.i("ENTROOOOOOOOOOOOOOOOOO", String.valueOf(listaAlojamientos.size()));
+                    Log.i("ENTROOOOOOOOOOOOOOOOOO", listaAlojamientos.get(i).getNombre());
+                    if (distancepoint(listaAlojamientos.get(i).getLatitud(),listaAlojamientos.get(i).getLongitud(),latitudUsuario,longitudUsuario)<=2){
+                        LatLng aux = new LatLng(listaAlojamientos.get(i).getLatitud() , listaAlojamientos.get(i).getLongitud());
+                        mMap.addMarker(new MarkerOptions().position(aux).title(listaAlojamientos.get(i).getNombre()));
+                    }
+                }*/
                 //Log.i("LatitudDelUsuarioFINAL",String.valueOf(mFusedLocationClient.getLastLocation().getResult().getLatitude()));
                 //Log.i("LatitudDelUsuarioFINAL", String.valueOf(latitudUsuario));
                 //Log.i("LongitudDelUsuarioFINAL",String.valueOf(longitudUsuario));
@@ -262,6 +271,40 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
+    }
+
+    public ArrayList<Alojamiento> loadUsers() {
+        //Log.i("ENTROOOOOOOOOOOOOOOOOO", "PUTO");
+
+        myRef = database.getReference("alojamientos");
+        ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("la lista", String.valueOf(dataSnapshot.getChildrenCount()));
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    //usr = singleSnapshot.getValue(Huesped.class);
+                    //Log.i("sngle", singleSnapshot.getValue().toString());
+                    double latitud = Double.parseDouble(singleSnapshot.child("latitud").getValue().toString());
+                    double longitud = Double.parseDouble(singleSnapshot.child("longitud").getValue().toString());
+                    String nombre =  singleSnapshot.child("nombre").getValue().toString();
+                    Alojamiento alojamiento = new Alojamiento();
+                    alojamiento.setLatitud(latitud);
+                    alojamiento.setLongitud(longitud);
+                    alojamiento.setNombre(nombre);
+
+                    //listaAlojamientos.add(alojamiento);
+
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("ERROR", "error en la consulta", databaseError.toException());
+            }
+        });
+
+        return(listaAlojamientos);
     }
     /*public ArrayList<Alojamiento> showData(DataSnapshot dataSnapshot){
         ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();

@@ -271,7 +271,6 @@ public class AgregarAlojamientoActivity extends Activity {
 
                                                     Toast.makeText(AgregarAlojamientoActivity.this, "Alojamiento creado exitosamente", Toast.LENGTH_SHORT).show();
                                                     AgregarAlojamientoActivity.this.finish();
-
                                                 }else{
                                                     Toast.makeText(AgregarAlojamientoActivity.this, "La cantidad de huéspedes corresponde a un valor numérico", Toast.LENGTH_SHORT).show();
                                                 }
