@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -115,26 +117,31 @@ public class RegistroActivity extends Activity {
                     String formato = "\\d{1,2}/\\d{1,2}/\\d{4}";
 
                     if(rol.compareTo("huesped") == 0) {
-                        if(!nombre.getText().toString().isEmpty()){
-                            if(!nacionalidad.getText().toString().isEmpty()){
-                                if(Pattern.matches(formato,fechaNacimiento.getText())){
-                                    Huesped huesped = new Huesped(key, nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
-                                    myRef.setValue(huesped);
 
-                                    mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
-                                    Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                                    startActivity(intent);
+                            if(!nombre.getText().toString().isEmpty()){
+                                if(!nacionalidad.getText().toString().isEmpty()){
+                                    if(Pattern.matches(formato,fechaNacimiento.getText())){
+                                        Huesped huesped = new Huesped(key, nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
+                                        myRef.setValue(huesped);
+
+                                        Task<AuthResult> task=mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
+                                        if(task.isSuccessful()){
+                                            Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                                            startActivity(intent);
+                                        }else{
+                                            Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    else{
+                                        Toast.makeText(RegistroActivity.this, "La fecha debe estar en formato dd/mm/AAAA", Toast.LENGTH_SHORT).show();
+                                    }
+                                }else{
+                                    Toast.makeText(RegistroActivity.this, "Su nacionalidad no puede faltar", Toast.LENGTH_SHORT).show();
                                 }
-                                else{
-                                    Toast.makeText(RegistroActivity.this, "La fecha debe estar en formato dd/mm/AAAA", Toast.LENGTH_SHORT).show();
-                                }
+
                             }else{
-                                Toast.makeText(RegistroActivity.this, "Su nacionalidad no puede faltar", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegistroActivity.this, "Su nombre no puede faltar", Toast.LENGTH_SHORT).show();
                             }
-
-                        }else{
-                            Toast.makeText(RegistroActivity.this, "Su nombre no puede faltar", Toast.LENGTH_SHORT).show();
-                        }
 
 
 
@@ -145,10 +152,15 @@ public class RegistroActivity extends Activity {
                                 Anfitrion propAloj = new Anfitrion(key, "propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
                                 myRef.setValue(propAloj);
 
-                                mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
-                                Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                                intent.putExtra("usr", propAloj);
-                                startActivity(intent);
+                                Task<AuthResult> task=mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
+                                if(task.isSuccessful()){
+                                    Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
+                                    intent.putExtra("usr", propAloj);
+                                    startActivity(intent);
+                                }else{
+                                    Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();
+                                }
+
                             }else {
                                 Toast.makeText(RegistroActivity.this, "La fecha debe estar en formato dd/mm/AAAA", Toast.LENGTH_SHORT).show();
                             }
