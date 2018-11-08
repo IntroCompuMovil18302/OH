@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 public class Huesped  implements Serializable {
+    private String id;
     private String rol;
     private String email;
     private String nombre;
@@ -22,9 +23,10 @@ public class Huesped  implements Serializable {
 
     }
 
-    public Huesped(String nombre, String email, String fechaNac, String foto, String genero, String nacionalidad) throws ParseException {
+    public Huesped(String id, String nombre, String email, String fechaNac, String foto, String genero, String nacionalidad) throws ParseException {
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
 
+        this.id = id;
         this.rol = "huesped";
         this.email = email;
         this.nombre = nombre;
@@ -32,6 +34,14 @@ public class Huesped  implements Serializable {
         this.foto = foto;
         this.genero = genero;
         this.nacionalidad = nacionalidad;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getRol() {
