@@ -1,5 +1,6 @@
 package oh.javeriana.co.oh;
 
+import android.location.Geocoder;
 import android.text.Editable;
 
 import java.io.Serializable;
@@ -20,11 +21,11 @@ public class Alojamiento implements Serializable {
     private String foto4;
     private String nombreUsuario;
 
-    public Alojamiento(Editable text, Editable descripcionETText, Editable ubicacionETText, Editable cantHuespedesETText, Editable precioETText) {
+    public Alojamiento() {
     }
 
 
-    public Alojamiento( String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche ) {
+    public Alojamiento( String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String nombreUsuario ) {
 
 
         //this.tipo = tipo;
@@ -33,6 +34,21 @@ public class Alojamiento implements Serializable {
         this.cantHuespedes = cantHuespedes;
         this.valorNoche = valorNoche;
         this.direccion = direccion;
+        this.nombreUsuario = nombreUsuario;
+
+        /*Geocoder mGeocoder = new Geocoder(getBaseContext());
+        String addressString = mAddress.getText().toString();
+        if (!addressString.isEmpty()) {
+            try {
+                List<Address> addresses = mGeocoder.getFromLocationName(addressString, 2);
+                if (addresses != null && !addresses.isEmpty()) {
+                    Address addressResult = addresses.get(0);
+                    LatLng position = new LatLng(addressResult.getLatitude(), addressResult.getLongitude());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }*/
         //this.foto = foto;
     }
 
@@ -88,6 +104,14 @@ public class Alojamiento implements Serializable {
         return nombreUsuario;
     }
 
+    public void setValorNoche(double valorNoche) {
+        this.valorNoche = valorNoche;
+    }
+
+    public void setCantHuespedes(int cantHuespedes) {
+        this.cantHuespedes = cantHuespedes;
+    }
+
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
@@ -106,14 +130,6 @@ public class Alojamiento implements Serializable {
 
     public void setLongitud(double longitud) {
         this.longitud = longitud;
-    }
-
-    public void setValorNoche(double valorNoche) {
-        this.valorNoche = valorNoche;
-    }
-
-    public void setCantHuespedes(int cantHuespedes) {
-        this.cantHuespedes = cantHuespedes;
     }
 
     public void setDireccion(String direccion) {

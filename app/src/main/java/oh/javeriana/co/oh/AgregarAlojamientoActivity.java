@@ -32,8 +32,10 @@ public class AgregarAlojamientoActivity extends Activity {
     EditText cantHuespedesET;
     Button botonAgregar;
     public static final String PATH_ALOJAMIENTOS="alojamientos/";
+    public static final String PATH_USERS="usuarios/";
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private DatabaseReference myRef2;
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
 
@@ -44,6 +46,7 @@ public class AgregarAlojamientoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_alojamiento);
+        database= FirebaseDatabase.getInstance();
 
         nombreET = findViewById(R.id.nombreET);
         descripcionET = findViewById(R.id.descripcionET);
@@ -68,17 +71,23 @@ public class AgregarAlojamientoActivity extends Activity {
             public void onClick(View view) {
                 mAuth = FirebaseAuth.getInstance();
                 mStorageRef = FirebaseStorage.getInstance().getReference();
+                //myRef2 = database().ref('users');
+                //myRef2 = database.getReference(PATH_USERS);
+                //String key = myRef.push().getKey();
                 myRef = database.getReference(PATH_ALOJAMIENTOS);
-                String key = myRef.push().getKey();
-                myRef = database.getReference(PATH_ALOJAMIENTOS + key);
+
 
                 if(!nombreET.getText().equals("")) {
+                    myRef = database.getReference(PATH_ALOJAMIENTOS + nombreET.getText().toString());
                     if (!descripcionET.getText().equals("")){
                         if (!precioET.getText().equals("")){
                             if (!ubicacionET.getText().equals("")){
                                 if (!cantHuespedesET.getText().equals("")){
-                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText(), descripcionET.getText(), ubicacionET.getText(), cantHuespedesET.getText(),  precioET.getText() );
+                                    int cant = Integer.parseInt(cantHuespedesET.getText().toString());
+                                    double precio = Double.parseDouble( precioET.getText().toString());
+                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(), cant,precio, mAuth.getUid()  );
                                     myRef.setValue(alojamiento);
+                                    Log.i("ROL", "ESTA AGREGANDO UN SUPER ALOJAMIENTO LA PUTA MADRE QUE ME PARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 
                                 }
                             }
