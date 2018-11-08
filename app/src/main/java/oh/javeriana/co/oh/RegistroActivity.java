@@ -124,13 +124,14 @@ public class RegistroActivity extends Activity {
                                         Huesped huesped = new Huesped(key, nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
                                         myRef.setValue(huesped);
 
-                                        Task<AuthResult> task=mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
-                                        if(task.isSuccessful()){
+                                        //Task<AuthResult> task=
+                                        mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
+                                        //if(task.isSuccessful()){
                                             Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
                                             startActivity(intent);
-                                        }else{
-                                            Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();
-                                        }
+                                        //}else{
+                                          //  Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();
+                                        //}
                                     }
                                     else{
                                         Toast.makeText(RegistroActivity.this, "La fecha debe estar en formato dd/mm/AAAA", Toast.LENGTH_SHORT).show();
@@ -152,14 +153,15 @@ public class RegistroActivity extends Activity {
                                 Anfitrion propAloj = new Anfitrion(key, "propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
                                 myRef.setValue(propAloj);
 
-                                Task<AuthResult> task=mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
-                                if(task.isSuccessful()){
+                                //Task<AuthResult> task=
+                                mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
+                                //if(task.isSuccessful()){
                                     Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
                                     intent.putExtra("usr", propAloj);
                                     startActivity(intent);
-                                }else{
-                                    Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();
-                                }
+                                //}else{
+                                  //  Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();
+                                //}
 
                             }else {
                                 Toast.makeText(RegistroActivity.this, "La fecha debe estar en formato dd/mm/AAAA", Toast.LENGTH_SHORT).show();

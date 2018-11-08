@@ -21,7 +21,7 @@
     <string name="horNoch">Horario noche</string>
     <string name="wifi">WIFI</string>
     <string name="tv">TV</string>
-    <string name="priceFilter">Precio</string>
+    <string name="priceFilter">Precio (COP) $</string>
     <string name="priceFilterInit">$ 300000</string>
     <string name="aplicar">Aplicar</string>
 

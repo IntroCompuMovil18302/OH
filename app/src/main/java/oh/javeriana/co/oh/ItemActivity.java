@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +24,8 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ItemActivity extends AppCompatActivity {
 
@@ -35,10 +39,14 @@ public class ItemActivity extends AppCompatActivity {
     Button button ;
     LinearLayout layout ;
     String pathImg = "";
+    ImageView fotos[];
     ImageView foto1;
     ImageView foto2;
     ImageView foto3;
     ImageView foto4;
+    TextView descr;
+    TextView precio;
+    CalendarView calendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +56,15 @@ public class ItemActivity extends AppCompatActivity {
 
         //rol =  getIntent().getStringExtra("rol");
         button = findViewById(R.id.button);
-        foto1 = findViewById(R.id.imageView1);
-        foto2 = findViewById(R.id.imageView2);
-        foto3 = findViewById(R.id.imageView3);
-        foto4 = findViewById(R.id.imageView4);
+        fotos = new ImageView[4];
+        fotos[0] = findViewById(R.id.imageView1);
+        fotos[1] = findViewById(R.id.imageView2);
+        fotos[2] = findViewById(R.id.imageView3);
+        fotos[3] = findViewById(R.id.imageView4);
         layout = findViewById(R.id.CommentUser);
+        descr = findViewById(R.id.txtVwDescription);
+        calendarView = findViewById(R.id.calendarView);
+        precio = findViewById(R.id.txtVwPrice);
 
         BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);
         BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);
@@ -87,6 +99,7 @@ public class ItemActivity extends AppCompatActivity {
 
         for(int i=0; i<4; i++) {
             Log.i("RUTA: ", pathImg + "image" + (i+1));
+            final int sub = i;
             StorageReference imagesRef = storageRef.child(pathImg + "image" + (i+1));
             final long ONE_MEGABYTE = 1024 * 1024;
                 imagesRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -94,7 +107,7 @@ public class ItemActivity extends AppCompatActivity {
                     public void onSuccess(byte[] bytes) {
                         // Data for "images/island.jpg" is returns, use this as needed
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        foto1.setImageBitmap(bitmap);
+                        fotos[sub].setImageBitmap(bitmap);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -102,6 +115,31 @@ public class ItemActivity extends AppCompatActivity {
                         Log.i("ERROR: ", "Error al cargar la foto");
                     }
                 });
+        }
+
+        descr.setText(alojamiento.getDescripcion());
+        precio.setText("$ (COP) " + String.valueOf(alojamiento.getValorNoche()));
+
+        try {
+            Date fi = alojamiento.getFechaInicialDate();
+            Date ff = alojamiento.getFechaFinalDate();
+
+            Log.i("Fecha", fi.toString());
+
+            Calendar c1 = Calendar.getInstance();
+            c1.setTime(fi);
+            //c1.set(fi.g, fi.getMonth()-1, fi.getDay())
+
+            Calendar c2 = Calendar.getInstance();
+            c2.setTime(ff);
+            //c2.set(ff.getYear(), ff.getMonth()-1, ff.getDay());
+
+            Log.i("Fecha", ""+fi.getYear());
+
+            calendarView.setMinDate(c1.getTimeInMillis());
+            calendarView.setMaxDate(c2.getTimeInMillis());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
 

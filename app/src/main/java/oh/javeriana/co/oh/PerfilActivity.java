@@ -165,13 +165,14 @@ public class PerfilActivity extends Activity {
             Intent intent;
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
-                    intent = new Intent(getApplicationContext(),MapaActivity.class);
+                    /*intent = new Intent(getApplicationContext(),MapaActivity.class);
                     if(anfitrion != null)
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
 
-                    startActivity(intent);
+                    startActivity(intent);*/
+                    PerfilActivity.this.finish();
                     return true;
 
                 case R.id.navigationRecord:

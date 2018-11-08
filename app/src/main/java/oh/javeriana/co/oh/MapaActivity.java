@@ -109,7 +109,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseDatabase database;
     private DatabaseReference myRef;
 
-    ArrayList<Alojamiento> listaAlojamientos;
+    ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();
+
     Map<Marker, Alojamiento> markers = new HashMap<>();
     String rol="";
 
@@ -137,7 +138,6 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         botonFechaFinal = findViewById(R.id.botonFechaFinal);
         fechaInicial = findViewById(R.id.fechaInicial);
         fechaFinal = findViewById(R.id.fechaFinal);
-        listaAlojamientos = new ArrayList<Alojamiento>();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -227,30 +227,83 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                             oldmark.remove();
                         newmark = mMap.addMarker(new MarkerOptions().position(user).title("Usted"));
                         oldmark = newmark;
+                        mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
                     }
                 }
 
-                listaAlojamientos = loadSites();
+                //listaAlojamientos = loadSites();
+                paintMarker();
 
-                for(Alojamiento a: listaAlojamientos) {
+
+                /*for(Alojamiento a: listaAlojamientos) {
                     if (distancepoint(a.getLatitud(), a.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
                         try {
+                            Log.i("FECHAS","HOLAAAAAA");
+                            Log.i("FECHAS",String.valueOf(fechaInicial.getText().toString().isEmpty()));
                             if (fechaInicial.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0 && fechaFinal.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0) {
-                                if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0) {
+                                Log.i("FECHAS","HOLAAAAAA222222222");
+                                if(String.valueOf(fechaInicial.getText().toString().isEmpty()).equals("true") && String.valueOf(fechaFinal.getText().toString().isEmpty()).equals("true")){
+                                    Log.i("FECHAS","HOLAAAA 333333");
                                     LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
                                     Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
                                     markers.put(marker, a);
                                 }
+
+                                else if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0) {
+                                    LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                                    markers.put(marker, a);
+                                }
+
+                                else{
+                                    Log.i("FECHAS","HOLAAAA 44444444");
+                                }
                             }
+
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
-                }
+                }*/
             }
         };
 
+    }
+
+    public void paintMarker() {
+        loadSites();
+
+        for(Alojamiento a: listaAlojamientos) {
+            if (distancepoint(a.getLatitud(), a.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
+                try {
+                    Log.i("FECHAS","HOLAAAAAA");
+                    Log.i("FECHAS",String.valueOf(fechaInicial.getText().toString().isEmpty()));
+                    if (fechaInicial.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0 && fechaFinal.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0) {
+                        Log.i("FECHAS","HOLAAAAAA222222222");
+                        if(String.valueOf(fechaInicial.getText().toString().isEmpty()).equals("true") && String.valueOf(fechaFinal.getText().toString().isEmpty()).equals("true")){
+                            Log.i("FECHAS","HOLAAAA 333333");
+                            LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
+                            Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                            markers.put(marker, a);
+                        }
+
+                        else if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0) {
+                            LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
+                            Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                            markers.put(marker, a);
+                        }
+
+                        else{
+                            Log.i("FECHAS","HOLAAAA 44444444");
+                        }
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public ArrayList<Alojamiento> loadSites() {
@@ -295,7 +348,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected LocationRequest createLocationRequest() {
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000); //tasa de refresco en milisegundos
+        mLocationRequest.setInterval(2000); //tasa de refresco en milisegundos
         mLocationRequest.setFastestInterval(5000); //máxima tasa de refresco
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return mLocationRequest;
@@ -331,6 +384,15 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         startLocationUpdates();
+        paintMarker();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onResume();
+        startLocationUpdates();
+        paintMarker();
+
     }
 
     @Override
