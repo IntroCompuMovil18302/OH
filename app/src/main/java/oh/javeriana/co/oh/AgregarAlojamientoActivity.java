@@ -3,7 +3,10 @@ package oh.javeriana.co.oh;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -15,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +32,9 @@ import com.google.firebase.storage.StorageReference;
 import android.location.Geocoder;
 
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 
@@ -46,6 +52,9 @@ public class AgregarAlojamientoActivity extends Activity {
     private static final double ABAJOIZQLAT = 4.548875;
     private static final double ABAJOIZQLONG = -74.271749;
 
+    private final int IMAGE_PICKER_REQUEST = 1;
+    private final int REQUEST_IMAGE_CAPTURE = 2;
+
 
     EditText nombreET;
     EditText descripcionET;
@@ -57,6 +66,14 @@ public class AgregarAlojamientoActivity extends Activity {
     Button botonAgregar;
     TextView fechaInicial;
     TextView fechaFinal;
+    Uri imageUri[];
+    ImageView fotos[];
+    ImageView foto1;
+    ImageView foto2;
+    ImageView foto3;
+    ImageView foto4;
+    int contFoto;
+
     final Calendar c = Calendar.getInstance();
     final int mes = c.get(Calendar.MONTH);
     final int dia = c.get(Calendar.DAY_OF_MONTH);
@@ -103,6 +120,68 @@ public class AgregarAlojamientoActivity extends Activity {
         spinnerTipo.setAdapter(adapter);
         fechaInicial = findViewById(R.id.fechaInic);
         fechaFinal = findViewById(R.id.fechaFinal);
+        imageUri = new Uri[4];
+        fotos = new ImageView[4];
+        fotos[0] = findViewById(R.id.foto1);
+        fotos[1] = findViewById(R.id.foto2);
+        fotos[2] = findViewById(R.id.foto3);
+        fotos[3] = findViewById(R.id.foto4);
+        contFoto = 0;
+
+        rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        Log.i("ROL", rol);
+        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
+            anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+        }
+
+        for(int i=0; i<fotos.length; i++){
+            fotos[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent pickImage = new Intent(Intent.ACTION_PICK);
+                    pickImage.setType("image/*");
+                    startActivityForResult(pickImage, IMAGE_PICKER_REQUEST);
+                }
+            });
+        }
+
+        /*foto1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fotoAux = foto1;
+                Intent pickImage = new Intent(Intent.ACTION_PICK);
+                pickImage.setType("image/*");
+                startActivityForResult(pickImage, IMAGE_PICKER_REQUEST);
+            }
+        });
+        foto2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fotoAux = foto1;
+                Intent pickImage = new Intent(Intent.ACTION_PICK);
+                pickImage.setType("image/*");
+                startActivityForResult(pickImage, IMAGE_PICKER_REQUEST);
+            }
+        });
+        foto3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fotoAux = foto1;
+                Intent pickImage = new Intent(Intent.ACTION_PICK);
+                pickImage.setType("image/*");
+                startActivityForResult(pickImage, IMAGE_PICKER_REQUEST);
+            }
+        });
+        foto4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fotoAux = foto1;
+                Intent pickImage = new Intent(Intent.ACTION_PICK);
+                pickImage.setType("image/*");
+                startActivityForResult(pickImage, IMAGE_PICKER_REQUEST);
+            }
+        });*/
+
 
         fechaInicial.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,12 +213,6 @@ public class AgregarAlojamientoActivity extends Activity {
         navigation.getMenu().getItem(0).setCheckable(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        rol = getIntent().getSerializableExtra("usr").getClass().getName();
-        Log.i("ROL", rol);
-        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
-            anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
-        }
-
 
         botonAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +227,6 @@ public class AgregarAlojamientoActivity extends Activity {
 
                 if(!nombreET.getText().toString().isEmpty()) {
                     if(!tools.esNumero(String.valueOf(nombreET.getText()))){
-                        myRef = database.getReference(PATH_ALOJAMIENTOS + nombreET.getText().toString());
                         if (!descripcionET.getText().toString().isEmpty()){
                             if (!tools.esNumero(String.valueOf(descripcionET.getText()))){
                                 if (!precioET.getText().toString().isEmpty()){
@@ -163,6 +235,8 @@ public class AgregarAlojamientoActivity extends Activity {
                                             if (!cantHuespedesET.getText().toString().isEmpty()){
                                                 if (tools.esNumero(String.valueOf(cantHuespedesET.getText()))){
                                                     Geocoder mGeocoder = new Geocoder(getBaseContext());
+                                                    String key = myRef.push().getKey();
+                                                    myRef = database.getReference(PATH_ALOJAMIENTOS + key);
                                                     LatLng position=null;
                                                     try {
                                                         List<Address> addresses = mGeocoder.getFromLocationName(ubicacionET.getText().toString(), 2, ABAJOIZQLAT, ABAJOIZQLONG, ARRIBADERLAT, ARRIBADERLONG);
@@ -183,11 +257,20 @@ public class AgregarAlojamientoActivity extends Activity {
                                                     double latitud = position.latitude;
                                                     double longitud = position.longitude;
 
-                                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
+
+                                                    Alojamiento alojamiento = new Alojamiento(key, nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
                                                             cant, precio, anfitrion.getId(), tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
                                                     myRef.setValue(alojamiento);
 
-                                                    Log.i("ROL", "ESTA AGREGANDO UN ALOJAMIENTO");
+                                                    for(int i=0; i<fotos.length; i++){
+                                                        if(imageUri[i] != null) {
+                                                            StorageReference imagesProfile = mStorageRef.child(key).child( key + "/image" + (i+1));
+                                                            imagesProfile.putFile(imageUri[i]);
+                                                        }
+                                                    }
+
+                                                    Toast.makeText(AgregarAlojamientoActivity.this, "Alojamiento creado exitosamente", Toast.LENGTH_SHORT).show();
+                                                    AgregarAlojamientoActivity.this.finish();
 
                                                 }else{
                                                     Toast.makeText(AgregarAlojamientoActivity.this, "La cantidad de huéspedes corresponde a un valor numérico", Toast.LENGTH_SHORT).show();
@@ -220,10 +303,41 @@ public class AgregarAlojamientoActivity extends Activity {
                 }
             }
         });
-
-
-
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case IMAGE_PICKER_REQUEST:
+                if(resultCode == RESULT_OK){
+                    try {
+                        imageUri[contFoto] = data.getData();
+                        final InputStream imageStream = getContentResolver().openInputStream(imageUri[contFoto]);
+                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                        fotos[contFoto].setImageBitmap(selectedImage);
+                        fotos[contFoto].setMaxHeight(106);
+                        fotos[contFoto].setMaxWidth(106);
+                        contFoto++;
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            /*case REQUEST_IMAGE_CAPTURE:
+                if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                    imageUri = data.getData();
+                    Log.i("URI", imageUri.toString());
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    foto.setImageBitmap(imageBitmap);
+                    foto.setMaxHeight(106);
+                    foto.setMaxWidth(106);
+                }
+                break;*/
+
+        }
+    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
