@@ -3,6 +3,8 @@ package oh.javeriana.co.oh;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,10 +15,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class PerfilActivity extends Activity {
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
 
     Button botonGestionar;
     Button botonAgregar;
@@ -33,6 +39,9 @@ public class PerfilActivity extends Activity {
     Anfitrion anfitrion=null;
     String pathImg="";
 
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +52,7 @@ public class PerfilActivity extends Activity {
         txNombre=findViewById(R.id.nombre);
         txCorreo=findViewById(R.id.correoElectronico);
         txRol=findViewById(R.id.rol);
-        imgProfile=findViewById(R.id.imageView);
+        imgProfile=findViewById(R.id.imageProfile);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -62,6 +71,28 @@ public class PerfilActivity extends Activity {
             txRol.setText(txRol.getText().toString() + anfitrion.getRol());
             pathImg=anfitrion.getId();
         }
+
+
+        StorageReference storageRef = storage.getReference();
+        StorageReference imagesRef = storageRef.child(pathImg+"/imageProfile");
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imagesRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imgProfile.setImageBitmap(bitmap);
+                imgProfile.setMaxHeight(106);
+                imgProfile.setMaxWidth(106);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.i("ERROR: ", "Error al cargar la foto");
+            }
+        });
+
+
 
         BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);
         BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);;
