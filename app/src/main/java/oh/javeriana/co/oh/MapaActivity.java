@@ -228,15 +228,15 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                 listaLugares.add(Atton);
 
                 ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();
-                listaAlojamientos=loadUsers();
-                for (int i=0;i<listaAlojamientos.size();i++){
+                //listaAlojamientos=loadUsers();
+                /*for (int i=0;i<listaAlojamientos.size();i++){
                     Log.i("ENTROOOOOOOOOOOOOOOOOO", String.valueOf(listaAlojamientos.size()));
                     Log.i("ENTROOOOOOOOOOOOOOOOOO", listaAlojamientos.get(i).getNombre());
                     if (distancepoint(listaAlojamientos.get(i).getLatitud(),listaAlojamientos.get(i).getLongitud(),latitudUsuario,longitudUsuario)<=2){
                         LatLng aux = new LatLng(listaAlojamientos.get(i).getLatitud() , listaAlojamientos.get(i).getLongitud());
                         mMap.addMarker(new MarkerOptions().position(aux).title(listaAlojamientos.get(i).getNombre()));
                     }
-                }
+                }*/
                 //Log.i("LatitudDelUsuarioFINAL",String.valueOf(mFusedLocationClient.getLastLocation().getResult().getLatitude()));
                 //Log.i("LatitudDelUsuarioFINAL", String.valueOf(latitudUsuario));
                 //Log.i("LongitudDelUsuarioFINAL",String.valueOf(longitudUsuario));
