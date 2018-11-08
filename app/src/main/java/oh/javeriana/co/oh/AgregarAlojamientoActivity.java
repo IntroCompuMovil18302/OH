@@ -2,6 +2,7 @@ package oh.javeriana.co.oh;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,8 +25,9 @@ import com.google.firebase.storage.StorageReference;
 import android.location.Geocoder;
 
 
-
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 public class AgregarAlojamientoActivity extends Activity {
     EditText nombreET;
@@ -43,6 +46,11 @@ public class AgregarAlojamientoActivity extends Activity {
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
     private String tipoAlojamiento;
+
+    private static final double ARRIBADERLAT = 4.792509;
+    private static final double ARRIBADERLONG = -73.909356;
+    private static final double ABAJOIZQLAT = 4.548875;
+    private static final double ABAJOIZQLONG = -74.271749;
 
     Anfitrion anfitrion = null;
     String rol = "";
@@ -109,11 +117,29 @@ public class AgregarAlojamientoActivity extends Activity {
                                         if (!ubicacionET.getText().toString().isEmpty()){
                                             if (!cantHuespedesET.getText().toString().isEmpty()){
                                                 if (esNumero(String.valueOf(cantHuespedesET.getText()))){
+                                                    Geocoder mGeocoder = new Geocoder(getBaseContext());
+                                                    LatLng position=null;
+                                                    try {
+                                                        List<Address> addresses = mGeocoder.getFromLocationName(ubicacionET.getText().toString(), 2, ABAJOIZQLAT, ABAJOIZQLONG, ARRIBADERLAT, ARRIBADERLONG);
+
+                                                        if (addresses != null && !addresses.isEmpty()) {
+
+                                                            Address addressResult = addresses.get(0);
+                                                            position = new LatLng(addressResult.getLatitude(), addressResult.getLongitude());
+                                                            Log.i("LATITUD", String.valueOf(position.latitude));
+                                                            Log.i("LONGITUD", String.valueOf(position.longitude));
+                                                        }
+
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+
                                                     int cant = Integer.parseInt(cantHuespedesET.getText().toString());
                                                     double precio = Double.parseDouble( precioET.getText().toString());
-                                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(), cant,precio, mAuth.getCurrentUser().getDisplayName(),tipoAlojamiento );
+                                                    double latitud = position.latitude;
+                                                    double longitud = position.longitude;
+                                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(), cant,precio, mAuth.getCurrentUser().getDisplayName(),tipoAlojamiento, latitud,longitud );
                                                     myRef.setValue(alojamiento);
-                                                    Log.i("ROL", "ESTA AGREGANDO UN SUPER ALOJAMIENTO LA PUTA MADRE QUE ME PARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 
                                                 }else{
                                                     Toast.makeText(AgregarAlojamientoActivity.this, "La cantidad de huéspedes corresponde a un valor numérico", Toast.LENGTH_SHORT).show();

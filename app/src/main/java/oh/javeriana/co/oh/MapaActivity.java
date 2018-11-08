@@ -45,6 +45,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
@@ -66,6 +71,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     private final int anio = c.get(Calendar.YEAR);
     private double latitudUsuario;
     private double longitudUsuario;
+    public static final String PATH_ALOJAMIENTOS="alojamientos/";
 
 
     private ImageButton botonFechaInicial;
@@ -97,6 +103,9 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     private List<String> listalocations;
     private JSONObject jso;
 
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +114,9 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        database= FirebaseDatabase.getInstance();
+
+        myRef = database.getReference(PATH_ALOJAMIENTOS);
 
         botonFechaInicial = findViewById(R.id.botonFechaInicial);
         botonFechaFinal = findViewById(R.id.botonFechaFinal);
@@ -194,9 +206,11 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                         voy++;
                     } else {
                         LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
-                        oldmark.remove();
+                        //oldmark.remove();
                         newmark = mMap.addMarker(new MarkerOptions().position(user).title("Usted"));
                         oldmark = newmark;
+                        mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
                     }
                 }
 
@@ -212,9 +226,32 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                 listaLugares.add(Marriott);
                 listaLugares.add(hilton);
                 listaLugares.add(Atton);
+
+                final ArrayList<Alojamiento>[] listaAlojamientos = new ArrayList[]{new ArrayList<>()};
                 //Log.i("LatitudDelUsuarioFINAL",String.valueOf(mFusedLocationClient.getLastLocation().getResult().getLatitude()));
                 //Log.i("LatitudDelUsuarioFINAL", String.valueOf(latitudUsuario));
                 //Log.i("LongitudDelUsuarioFINAL",String.valueOf(longitudUsuario));
+                /*myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        listaAlojamientos[0] = showData(dataSnapshot);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });/*
+
+                /*for (int j=0; j<listaAlojamientos[0].size();j++){
+                    if (distancepoint(listaAlojamientos[0].get(j).getLatitud(),listaAlojamientos[0].get(j).getLongitud(),latitudUsuario,longitudUsuario)<=2){
+                        LatLng aux = new LatLng(listaAlojamientos[0].get(j).getLatitud() , listaAlojamientos[0].get(j).getLongitud());
+                        mMap.addMarker(new MarkerOptions().position(aux).title(listaAlojamientos[0].get(j).getNombre()));
+                    }
+                }*/
+
+
 
                 for (int i=0; i<listaLugares.size() ; i++ ){
                     if (distancepoint(listaLugares.get(i).latitude,listaLugares.get(i).longitude,latitudUsuario,longitudUsuario)<=2){
@@ -226,6 +263,23 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         };
 
     }
+    /*public ArrayList<Alojamiento> showData(DataSnapshot dataSnapshot){
+        ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();
+        for (DataSnapshot ds: dataSnapshot.getChildren()){
+            Alojamiento alojamiento = new Alojamiento();
+            alojamiento.setNombre(ds.child("la cama de la princesa").getValue(Alojamiento.class).getNombre());
+            //alojamiento.setDescripcion(ds.child(alojamiento.nombre).getValue(Alojamiento.class).getDescripcion());
+            //alojamiento.setDireccion(ds.child(alojamiento.nombre).getValue(Alojamiento.class).getDireccion());
+            //alojamiento.setCantHuespedes(ds.child(alojamiento.nombre).getValue(Alojamiento.class).getCantHuespedes());
+            alojamiento.setLatitud(ds.child("la cama de la princesa").getValue(Alojamiento.class).getLatitud());
+            alojamiento.setLongitud(ds.child("la cama de la princesa").getValue(Alojamiento.class).getLongitud());
+
+            listaAlojamientos.add(alojamiento);
+        }
+        return listaAlojamientos;
+    }*/
+
+
 
 
     public double distancepoint(double lat1, double long1, double lat2, double long2) {
@@ -321,6 +375,12 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        LatLng bogota2 = new LatLng(4.397908 , -74.076066);
+        //mMap.addMarker(new MarkerOptions().position(bogota2).title("Marcador en Plaza de Bolívar"));
+        //mMap.addMarker(new MarkerOptions().position(bogota2).title("Marcador en Plaza de Bolívar").snippet("test").alpha(1f).icon(BitmapDescriptorFactory.fromResource(R.drawable.userpin)));
+        //mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(bogota2));
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
