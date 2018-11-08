@@ -53,6 +53,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -106,6 +107,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseDatabase database;
     private DatabaseReference myRef;
 
+    ArrayList<Alojamiento> listaAlojamientos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +125,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         botonFechaFinal = findViewById(R.id.botonFechaFinal);
         fechaInicial = findViewById(R.id.fechaInicial);
         fechaFinal = findViewById(R.id.fechaFinal);
+        listaAlojamientos = new ArrayList<Alojamiento>();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -192,6 +196,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             public void onLocationResult(LocationResult locationResult) {
                 Location location = locationResult.getLastLocation();
                 Log.i("LOCATION", "Location update in the callback: " + location);
+                mMap.clear();
                 if (location != null && mMap != null) {
                     if (voy == 0) {
                         LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
@@ -206,94 +211,49 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                         voy++;
                     } else {
                         LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
-                        //oldmark.remove();
+                        if(oldmark != null)
+                            oldmark.remove();
                         newmark = mMap.addMarker(new MarkerOptions().position(user).title("Usted"));
                         oldmark = newmark;
-                        mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
                     }
                 }
 
-                LatLng Tequendama = new LatLng(4.613079, -74.070752);
-                LatLng Ibis = new LatLng(4.614641, -74.069025);
-                LatLng Marriott = new LatLng(4.659429, -74.108398);
-                LatLng hilton = new LatLng(4.655761, -74.055403);
-                LatLng Atton = new LatLng(4.685638, -74.056165);
-
-                List<LatLng> listaLugares = new ArrayList<>();
-                listaLugares.add(Tequendama);
-                listaLugares.add(Ibis);
-                listaLugares.add(Marriott);
-                listaLugares.add(hilton);
-                listaLugares.add(Atton);
-
-                ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();
-                //listaAlojamientos=loadUsers();
-                /*for (int i=0;i<listaAlojamientos.size();i++){
-                    Log.i("ENTROOOOOOOOOOOOOOOOOO", String.valueOf(listaAlojamientos.size()));
-                    Log.i("ENTROOOOOOOOOOOOOOOOOO", listaAlojamientos.get(i).getNombre());
-                    if (distancepoint(listaAlojamientos.get(i).getLatitud(),listaAlojamientos.get(i).getLongitud(),latitudUsuario,longitudUsuario)<=2){
-                        LatLng aux = new LatLng(listaAlojamientos.get(i).getLatitud() , listaAlojamientos.get(i).getLongitud());
-                        mMap.addMarker(new MarkerOptions().position(aux).title(listaAlojamientos.get(i).getNombre()));
+                for(Alojamiento a: listaAlojamientos) {
+                    if (distancepoint(a.getLatitud(), a.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
+                        try {
+                            if (fechaInicial.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0 && fechaFinal.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0) {
+                                if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0) {
+                                    LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
+                                    mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                                }
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }*/
-                //Log.i("LatitudDelUsuarioFINAL",String.valueOf(mFusedLocationClient.getLastLocation().getResult().getLatitude()));
-                //Log.i("LatitudDelUsuarioFINAL", String.valueOf(latitudUsuario));
-                //Log.i("LongitudDelUsuarioFINAL",String.valueOf(longitudUsuario));
-                /*myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        listaAlojamientos[0] = showData(dataSnapshot);
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });/*
-
-                /*for (int j=0; j<listaAlojamientos[0].size();j++){
-                    if (distancepoint(listaAlojamientos[0].get(j).getLatitud(),listaAlojamientos[0].get(j).getLongitud(),latitudUsuario,longitudUsuario)<=2){
-                        LatLng aux = new LatLng(listaAlojamientos[0].get(j).getLatitud() , listaAlojamientos[0].get(j).getLongitud());
-                        mMap.addMarker(new MarkerOptions().position(aux).title(listaAlojamientos[0].get(j).getNombre()));
-                    }
-                }*/
-
-
-
-                for (int i=0; i<listaLugares.size() ; i++ ){
-                    if (distancepoint(listaLugares.get(i).latitude,listaLugares.get(i).longitude,latitudUsuario,longitudUsuario)<=2){
-                        mMap.addMarker(new MarkerOptions().position(listaLugares.get(i)).title("Alojamiento"));
-                    }
-                    //mMap.addMarker(new MarkerOptions().position(listaLugares.get(i)).title("Hotel"));
                 }
             }
         };
 
     }
 
-    public ArrayList<Alojamiento> loadUsers() {
-        //Log.i("ENTROOOOOOOOOOOOOOOOOO", "PUTO");
+    public ArrayList<Alojamiento> loadSites() {
 
         myRef = database.getReference("alojamientos");
-        ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("la lista", String.valueOf(dataSnapshot.getChildrenCount()));
+                //Log.i("la lista", String.valueOf(dataSnapshot.getChildrenCount()));
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     //usr = singleSnapshot.getValue(Huesped.class);
-                    //Log.i("sngle", singleSnapshot.getValue().toString());
+                    Log.i("sngle", singleSnapshot.getValue().toString());
                     double latitud = Double.parseDouble(singleSnapshot.child("latitud").getValue().toString());
                     double longitud = Double.parseDouble(singleSnapshot.child("longitud").getValue().toString());
                     String nombre =  singleSnapshot.child("nombre").getValue().toString();
-                    Alojamiento alojamiento = new Alojamiento();
-                    alojamiento.setLatitud(latitud);
-                    alojamiento.setLongitud(longitud);
-                    alojamiento.setNombre(nombre);
+                    Alojamiento alojamiento = singleSnapshot.getValue(Alojamiento.class);
 
-                    //listaAlojamientos.add(alojamiento);
+                    listaAlojamientos.add(alojamiento);
 
                 }
 
@@ -306,24 +266,6 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
         return(listaAlojamientos);
     }
-    /*public ArrayList<Alojamiento> showData(DataSnapshot dataSnapshot){
-        ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();
-        for (DataSnapshot ds: dataSnapshot.getChildren()){
-            Alojamiento alojamiento = new Alojamiento();
-            alojamiento.setNombre(ds.child("la cama de la princesa").getValue(Alojamiento.class).getNombre());
-            //alojamiento.setDescripcion(ds.child(alojamiento.nombre).getValue(Alojamiento.class).getDescripcion());
-            //alojamiento.setDireccion(ds.child(alojamiento.nombre).getValue(Alojamiento.class).getDireccion());
-            //alojamiento.setCantHuespedes(ds.child(alojamiento.nombre).getValue(Alojamiento.class).getCantHuespedes());
-            alojamiento.setLatitud(ds.child("la cama de la princesa").getValue(Alojamiento.class).getLatitud());
-            alojamiento.setLongitud(ds.child("la cama de la princesa").getValue(Alojamiento.class).getLongitud());
-
-            listaAlojamientos.add(alojamiento);
-        }
-        return listaAlojamientos;
-    }*/
-
-
-
 
     public double distancepoint(double lat1, double long1, double lat2, double long2) {
         double latDistance = Math.toRadians(lat1 - lat2);
@@ -420,9 +362,6 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         LatLng bogota2 = new LatLng(4.397908 , -74.076066);
-        //mMap.addMarker(new MarkerOptions().position(bogota2).title("Marcador en Plaza de Bolívar"));
-        //mMap.addMarker(new MarkerOptions().position(bogota2).title("Marcador en Plaza de Bolívar").snippet("test").alpha(1f).icon(BitmapDescriptorFactory.fromResource(R.drawable.userpin)));
-        //mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(bogota2));
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

@@ -3,8 +3,12 @@ package oh.javeriana.co.oh;
 import android.location.Geocoder;
 import android.text.Editable;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Alojamiento implements Serializable {
     private String idAloj;
@@ -123,6 +127,20 @@ public class Alojamiento implements Serializable {
 
     public String getFechaInicial() {
         return fechaInicial;
+    }
+
+    @Exclude
+    public Date getFechaInicialDate() throws ParseException {
+        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        Date date =format.parse(fechaInicial);
+        return date;
+    }
+
+    @Exclude
+    public Date getFechaFinalDate() throws ParseException {
+        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        Date date =format.parse(fechaFinal);
+        return date;
     }
 
     public void setFechaInicial(String fechaInicial) {

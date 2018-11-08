@@ -6,6 +6,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class tools {
 
     public static void requestPermission(Activity context, String permission, String explanation, int requestId){
@@ -26,5 +30,11 @@ public class tools {
         } catch (NumberFormatException nfe){
             return false;
         }
+    }
+
+    public static Date getFechaDate(String dateString) throws ParseException {
+        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        Date date =format.parse(dateString);
+        return date;
     }
 }
