@@ -264,7 +264,7 @@ public class AgregarAlojamientoActivity extends Activity {
 
                                                     for(int i=0; i<fotos.length; i++){
                                                         if(imageUri[i] != null) {
-                                                            StorageReference imagesProfile = mStorageRef.child(key).child( key + "/image" + (i+1));
+                                                            StorageReference imagesProfile = mStorageRef.child(anfitrion.getId()).child( key + "/image" + (i+1));
                                                             imagesProfile.putFile(imageUri[i]);
                                                         }
                                                     }
