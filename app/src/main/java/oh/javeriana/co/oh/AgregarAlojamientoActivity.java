@@ -99,22 +99,50 @@ public class AgregarAlojamientoActivity extends Activity {
                 myRef = database.getReference(PATH_ALOJAMIENTOS);
 
 
-                if(!nombreET.getText().equals("")) {
-                    myRef = database.getReference(PATH_ALOJAMIENTOS + nombreET.getText().toString());
-                    if (!descripcionET.getText().equals("")){
-                        if (!precioET.getText().equals("")){
-                            if (!ubicacionET.getText().equals("")){
-                                if (!cantHuespedesET.getText().equals("")){
-                                    int cant = Integer.parseInt(cantHuespedesET.getText().toString());
-                                    double precio = Double.parseDouble( precioET.getText().toString());
-                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(), cant,precio, mAuth.getCurrentUser().getDisplayName(),tipoAlojamiento );
-                                    myRef.setValue(alojamiento);
-                                    Log.i("ROL", "ESTA AGREGANDO UN SUPER ALOJAMIENTO LA PUTA MADRE QUE ME PARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+                if(!nombreET.getText().toString().isEmpty()) {
+                    if(!esNumero(String.valueOf(nombreET.getText()))){
+                        myRef = database.getReference(PATH_ALOJAMIENTOS + nombreET.getText().toString());
+                        if (!descripcionET.getText().toString().isEmpty()){
+                            if (!esNumero(String.valueOf(descripcionET.getText()))){
+                                if (!precioET.getText().toString().isEmpty()){
+                                    if(esNumero(String.valueOf(precioET.getText()))){
+                                        if (!ubicacionET.getText().toString().isEmpty()){
+                                            if (!cantHuespedesET.getText().toString().isEmpty()){
+                                                if (esNumero(String.valueOf(cantHuespedesET.getText()))){
+                                                    int cant = Integer.parseInt(cantHuespedesET.getText().toString());
+                                                    double precio = Double.parseDouble( precioET.getText().toString());
+                                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(), cant,precio, mAuth.getCurrentUser().getDisplayName(),tipoAlojamiento );
+                                                    myRef.setValue(alojamiento);
+                                                    Log.i("ROL", "ESTA AGREGANDO UN SUPER ALOJAMIENTO LA PUTA MADRE QUE ME PARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 
+                                                }else{
+                                                    Toast.makeText(AgregarAlojamientoActivity.this, "La cantidad de huéspedes corresponde a un valor numérico", Toast.LENGTH_SHORT).show();
+                                                }
+
+                                            }else{
+                                                Toast.makeText(AgregarAlojamientoActivity.this, "La cantidad de huéspedes no puede ser vacío", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }else{
+                                            Toast.makeText(AgregarAlojamientoActivity.this, "La ubicación del alojamiento no puede ser vacío", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }else{
+                                        Toast.makeText(AgregarAlojamientoActivity.this, "El precio del alojamiento corresponde a un valor numérico", Toast.LENGTH_SHORT).show();
+                                    }
+                                }else{
+                                    Toast.makeText(AgregarAlojamientoActivity.this, "El precio del alojamiento no puede ser vacío", Toast.LENGTH_SHORT).show();
                                 }
+                            }else{
+                                Toast.makeText(AgregarAlojamientoActivity.this, "La descripción del alojamiento no puede ser un valor numérico", Toast.LENGTH_SHORT).show();
                             }
+                        }else{
+                            Toast.makeText(AgregarAlojamientoActivity.this, "La descripción del alojamiento no puede ser vacía", Toast.LENGTH_SHORT).show();
                         }
+                    }else {
+                        Toast.makeText(AgregarAlojamientoActivity.this, "El nombre del alojamiento no puede ser un valor numérico", Toast.LENGTH_SHORT).show();
                     }
+
+                }else{
+                    Toast.makeText(AgregarAlojamientoActivity.this, "El nombre del alojamiento no puede estar vacío", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -123,6 +151,15 @@ public class AgregarAlojamientoActivity extends Activity {
 
 
 
+    }
+
+    private boolean esNumero(String cadena){
+        try {
+            Integer.parseInt(cadena);
+            return true;
+        } catch (NumberFormatException nfe){
+            return false;
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

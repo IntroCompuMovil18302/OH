@@ -43,11 +43,11 @@ public class InicioActivity extends AppCompatActivity {
     Button olvidarContraseña = null;
     Button crearCuenta = null;
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-    }
+    }*/
 
     @Override
     public void onStop() {

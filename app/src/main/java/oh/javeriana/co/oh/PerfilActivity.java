@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,9 +27,11 @@ public class PerfilActivity extends Activity {
     TextView txNombre;
     TextView txCorreo;
     TextView txRol;
+    ImageView imgProfile;
     String rol="";
     Huesped huesped=null;
     Anfitrion anfitrion=null;
+    String pathImg="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +40,27 @@ public class PerfilActivity extends Activity {
         botonGestionar=findViewById(R.id.gestionar);
         botonAgregar=findViewById(R.id.agregar);
         btnSignOut=findViewById(R.id.btnSignOut);
+        txNombre=findViewById(R.id.nombre);
+        txCorreo=findViewById(R.id.correoElectronico);
+        txRol=findViewById(R.id.rol);
+        imgProfile=findViewById(R.id.imageView);
 
         mAuth = FirebaseAuth.getInstance();
 
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
+            txNombre.setText(txNombre.getText().toString() + huesped.getNombre());
+            txCorreo.setText(txCorreo.getText().toString() + huesped.getEmail());
+            txRol.setText(txRol.getText().toString() + huesped.getRol());
+            pathImg=huesped.getId();
         }
         else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
             anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+            txNombre.setText(txNombre.getText().toString() + anfitrion.getNombre());
+            txCorreo.setText(txCorreo.getText().toString() + anfitrion.getEmail());
+            txRol.setText(txRol.getText().toString() + anfitrion.getRol());
+            pathImg=anfitrion.getId();
         }
 
         BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);

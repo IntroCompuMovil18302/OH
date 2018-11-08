@@ -113,7 +113,7 @@ public class RegistroActivity extends Activity {
                     myRef = database.getReference(PATH_USERS + key);
 
                     if(rol.compareTo("huesped") == 0) {
-                        Huesped huesped = new Huesped(nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
+                        Huesped huesped = new Huesped(key, nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
                         myRef.setValue(huesped);
 
                         mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
@@ -121,12 +121,12 @@ public class RegistroActivity extends Activity {
                         startActivity(intent);
                     }
                     else if(rol.compareTo("propietarioAlojamiento") == 0) {
-                        Anfitrion propAloj = new Anfitrion("propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
+                        Anfitrion propAloj = new Anfitrion(key, "propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
                         myRef.setValue(propAloj);
 
                         mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
                         Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                        intent.putExtra("rol", propAloj);
+                        intent.putExtra("usr", propAloj);
                         startActivity(intent);
                     }
                     else {
@@ -142,8 +142,8 @@ public class RegistroActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                //startActivity(intent);
             }
         });
 
