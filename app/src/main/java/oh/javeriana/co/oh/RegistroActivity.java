@@ -7,34 +7,40 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class RegistroActivity extends Activity {
@@ -54,7 +60,7 @@ public class RegistroActivity extends Activity {
     private ImageView foto;
     private String rol ="";
     private Spinner genero;
-    private EditText nacionalidad;
+    private Spinner nacionalidad;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private FirebaseAuth mAuth;
@@ -65,6 +71,9 @@ public class RegistroActivity extends Activity {
     private final int REQUEST_IMAGE_CAPTURE = 2;
     private final int REQUEST_EXTERNAL_STORAGE = 3;
     public static final String PATH_USERS="usuarios/";
+
+    ArrayList<String> nacionalidades;
+    ArrayList<String> nacionalidades2;
 
 
 
@@ -98,7 +107,7 @@ public class RegistroActivity extends Activity {
         fechaNacimiento = (EditText) findViewById(R.id.fechaNacimiento);
 
         genero = (Spinner) findViewById(R.id.genero);
-        nacionalidad = (EditText) findViewById(R.id.nacionalidad);
+        nacionalidad = (Spinner) findViewById(R.id.nacionalidad);
 
 
         datosAcceso = (TextView) findViewById(R.id.datosAcceso);
@@ -119,9 +128,9 @@ public class RegistroActivity extends Activity {
                     if(rol.compareTo("huesped") == 0) {
 
                             if(!nombre.getText().toString().isEmpty()){
-                                if(!nacionalidad.getText().toString().isEmpty()){
+                                if(!nacionalidad.getSelectedItem().toString().isEmpty()){
                                     if(Pattern.matches(formato,fechaNacimiento.getText())){
-                                        Huesped huesped = new Huesped(key, nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getText().toString());
+                                        Huesped huesped = new Huesped(key, nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getSelectedItem().toString());
                                         myRef.setValue(huesped);
 
                                         //Task<AuthResult> task=
@@ -169,9 +178,6 @@ public class RegistroActivity extends Activity {
                         }else{
                             Toast.makeText(RegistroActivity.this, "Su nombre no puede faltar", Toast.LENGTH_SHORT).show();
                         }
-
-
-
                     }
                     else {
                         Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
@@ -274,6 +280,7 @@ public class RegistroActivity extends Activity {
 
             }
         });
+        llenarNacionalidades();
     }
 
     private boolean esNumero(String cadena){
@@ -320,9 +327,61 @@ public class RegistroActivity extends Activity {
                     foto.setMaxWidth(106);
                 }
                 break;
-
             }
     }
 
+    public void llenarNacionalidades() {
+        nacionalidades = new ArrayList<String>();
+        AsyncTask<String, Void, String> tarea = new AsyncTask<String, Void, String>() {
+            public static final String REST_COUNTRIES = "http://restcountries.eu/rest/v2";
+            String query = "?fields=name;demonym";
 
+            @Override
+            protected String doInBackground(String... strings) {
+                String queryParams = "";
+                String response = "";
+                int responseCode;
+                String message;
+                HttpGet request = new HttpGet(REST_COUNTRIES + query);
+                HttpClient client = new DefaultHttpClient();
+                HttpResponse httpResponse;
+                try {
+                    httpResponse = client.execute(request);
+                    responseCode = httpResponse.getStatusLine().getStatusCode();
+                    message = httpResponse.getStatusLine().getReasonPhrase();
+                    HttpEntity entity = httpResponse.getEntity();
+                    if (entity != null) {
+                        response = EntityUtils.toString(entity);
+                    }
+                } catch (Exception e) {
+                    Log.d("ERROR", e.toString() + e.getCause());
+                }
+                return response;
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                JSONArray result;
+                try {
+                    result = new JSONArray(response);
+                    for (int i = 0; i < result.length(); i++) {
+                        JSONObject jo = (JSONObject) result.get(i);
+                        Log.d("TAG", "Json Object " + jo.toString());
+                        String name = (String) jo.get("name");
+                        String demonym = (String) jo.get("demonym");
+                        Log.i("INFO: ", name + " " + demonym);
+                        if(demonym.length()>0)
+                            nacionalidades.add(demonym);
+                    }
+
+                    ArrayAdapter<String> adaptador = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_dropdown_item_1line,nacionalidades);
+                    nacionalidad.setAdapter(adaptador);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        tarea.execute();
+    }
 }
