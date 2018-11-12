@@ -10,11 +10,9 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="473dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="534dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:background="@color/darkBackgroud"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -51,20 +49,20 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="184dp"
+            android:layout_marginTop="204dp"
             android:text="Datos personales"
             android:textColor="@color/title"
             android:textSize="25dp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.421"
+            app:layout_constraintHorizontal_bias="0.473"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="198dp"
+            android:layout_height="216dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
@@ -77,7 +75,27 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.804">
+            app:layout_constraintVertical_bias="0.761">
+
+            <EditText
+                android:id="@+id/fechaNacimiento"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Nacimiento dd/mm/yyyy"
+                android:inputType="date"
+                android:textColor="@color/text"
+                android:textSize="18dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nombre"
+                app:layout_constraintVertical_bias="0.0" />
 
             <EditText
                 android:id="@+id/nombre"
@@ -91,6 +109,7 @@
                 android:ems="10"
                 android:hint="Nombre "
                 android:inputType="textPersonName"
+                android:textColor="@color/text"
                 android:textSize="18dp"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -100,7 +119,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="72dp"
                 android:orientation="horizontal">
 
                 <EditText
@@ -124,15 +143,15 @@
                     app:layout_constraintHorizontal_bias="0.142"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/nombre"
-                    app:layout_constraintVertical_bias="0.365" />
+                    app:layout_constraintVertical_bias="0.365"
+                    tools:textColor="@color/text" />
 
                 <Spinner
                     android:id="@+id/genero"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
                     android:layout_weight="1"
                     android:entries="@array/genero"
                     android:textSize="18dp"
@@ -140,25 +159,6 @@
                     app:layout_constraintStart_toEndOf="@+id/fechaNacimiento"
                     app:layout_constraintTop_toBottomOf="@+id/nombre" />
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/fechaNacimiento"
-                android:layout_width="310dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="12dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Nacimiento dd/mm/yyyy"
-                android:inputType="date"
-                android:textSize="18dp"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nombre"
-                app:layout_constraintVertical_bias="0.0" />
 
         </LinearLayout>
 
@@ -191,6 +191,7 @@
                 android:ems="10"
                 android:hint="Correo electrónico"
                 android:inputType="textEmailAddress"
+                android:textColor="@color/text"
                 android:textSize="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.045"
@@ -210,6 +211,7 @@
                 android:ems="10"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
+                android:textColor="@color/text"
                 android:textSize="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -229,6 +231,7 @@
                 android:ems="10"
                 android:hint="Confirmación contraseña"
                 android:inputType="textPassword"
+                android:textColor="@color/text"
                 android:textSize="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.045"
@@ -313,9 +316,12 @@
             <Button
                 android:id="@+id/camara"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="46dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="1"
+                android:background="@color/button"
                 android:text="Cámara"
+                android:textAppearance="@style/TextAppearance.AppCompat"
                 android:visibility="invisible"
                 tools:layout_editor_absoluteX="177dp"
                 tools:layout_editor_absoluteY="147dp" />
@@ -323,9 +329,11 @@
             <Button
                 android:id="@+id/galeria"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="46dp"
                 android:layout_weight="1"
+                android:background="@color/button"
                 android:text="Galeria"
+                android:textAppearance="@style/TextAppearance.AppCompat"
                 android:visibility="invisible"
                 tools:layout_editor_absoluteX="75dp"
                 tools:layout_editor_absoluteY="149dp" />
