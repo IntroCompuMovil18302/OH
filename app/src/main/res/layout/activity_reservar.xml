@@ -189,7 +189,7 @@
         app:layout_constraintTop_toBottomOf="@+id/numeroHuespedes">
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/comentario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -216,7 +216,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.41"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+            app:layout_constraintTop_toBottomOf="@+id/comentario" />
 
         <TextView
             android:id="@+id/textView12"
@@ -233,7 +233,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView11"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+            app:layout_constraintTop_toBottomOf="@+id/comentario" />
     </android.support.constraint.ConstraintLayout>
 
     <Button

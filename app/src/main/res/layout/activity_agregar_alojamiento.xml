@@ -81,7 +81,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
                     <TextView
-                        android:id="@+id/textView10"
+                        android:id="@+id/comentario"
                         android:layout_width="359dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -101,7 +101,7 @@
                         android:entries="@array/alojamientos"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.318"
-                        app:layout_constraintStart_toEndOf="@+id/textView10"
+                        app:layout_constraintStart_toEndOf="@+id/comentario"
                         app:layout_constraintTop_toBottomOf="@+id/ubicacionET" />
 
                 </LinearLayout>
@@ -218,7 +218,7 @@
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView10"
+                        app:layout_constraintTop_toBottomOf="@+id/comentario"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <EditText
