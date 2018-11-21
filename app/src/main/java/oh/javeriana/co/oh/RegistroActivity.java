@@ -37,6 +37,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -143,8 +145,9 @@ public class RegistroActivity extends Activity {
                                         //Task<AuthResult> task=
                                         mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
                                         //if(task.isSuccessful()){
-                                            Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                                            startActivity(intent);
+                                        Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
+                                        intent.putExtra("usr",huesped);
+                                        startActivity(intent);
                                         //}else{
                                           //  Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();
                                         //}
@@ -325,10 +328,17 @@ public class RegistroActivity extends Activity {
                 break;
             case REQUEST_IMAGE_CAPTURE:
                 if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-                    imageUri = data.getData();
-                    Log.i("URI", imageUri.toString());
+
+                    //imageUri = data.getData();
+                   // Log.i("URI", imageUri.toString());
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    String path = MediaStore.Images.Media.insertImage(RegistroActivity.this.getContentResolver(), imageBitmap, "Title", null);
+                    imageUri= Uri.parse(path);
+
                     foto.setImageBitmap(imageBitmap);
                     foto.setMaxHeight(106);
                     foto.setMaxWidth(106);
