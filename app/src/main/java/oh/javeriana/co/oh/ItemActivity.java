@@ -78,7 +78,8 @@ public class ItemActivity extends AppCompatActivity {
         }
 
         alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
-        pathImg = alojamiento.getIdUsuario() + "/" + alojamiento.getIdAloj() + "/";
+        String idAloj = (String) getIntent().getExtras().getString("idAloj");
+        pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
 
 
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") != 0){

@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class tools {
 
-    public static void requestPermission(Activity context, String permission, String explanation, int requestId){
+    public static boolean requestPermission(Activity context, String permission, String explanation, int requestId){
         if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(context, permission)) {
@@ -21,6 +21,7 @@ public class tools {
             // request the permission.
             ActivityCompat.requestPermissions(context, new String[]{permission}, requestId);
         }
+        return true;
     }
 
     public static boolean esNumero(String cadena){

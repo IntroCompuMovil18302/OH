@@ -219,9 +219,6 @@ public class AgregarAlojamientoActivity extends Activity {
             public void onClick(View view) {
                 mAuth = FirebaseAuth.getInstance();
                 mStorageRef = FirebaseStorage.getInstance().getReference();
-                //myRef2 = database().ref('users');
-                //myRef2 = database.getReference(PATH_USERS);
-                //String key = myRef.push().getKey();
                 myRef = database.getReference(PATH_ALOJAMIENTOS);
 
 
@@ -258,7 +255,7 @@ public class AgregarAlojamientoActivity extends Activity {
                                                     double longitud = position.longitude;
 
 
-                                                    Alojamiento alojamiento = new Alojamiento(key, nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
+                                                    Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
                                                             cant, precio, anfitrion.getId(), tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
                                                     myRef.setValue(alojamiento);
 

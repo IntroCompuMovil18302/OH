@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Alojamiento implements Serializable {
-    private String idAloj;
     private String tipo;
     private String nombre;
     private String descripcion;
@@ -28,10 +27,13 @@ public class Alojamiento implements Serializable {
     }
 
 
-    public Alojamiento( String idAloj, String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String idUsuario,
-                        String tipoAlojamiento, double latitud, double longitud, String fechaInicial, String fechaFinal) {
+    /*public Alojamiento( String idAloj, String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String idUsuario,
+                        String tipoAlojamiento, double latitud, double longitud, String fechaInicial, String fechaFinal) {*/
 
-        this.idAloj = idAloj;
+
+    public Alojamiento(String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String idUsuario,
+                String tipoAlojamiento, double latitud, double longitud, String fechaInicial, String fechaFinal) {
+        //this.idAloj = idAloj;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.cantHuespedes = cantHuespedes;
@@ -43,14 +45,6 @@ public class Alojamiento implements Serializable {
         this.longitud = longitud;
         this.fechaInicial=fechaInicial;
         this.fechaFinal=fechaFinal;
-    }
-
-    public String getIdAloj() {
-        return idAloj;
-    }
-
-    public void setIdAloj(String idAloj) {
-        this.idAloj = idAloj;
     }
 
     public String getTipo() {

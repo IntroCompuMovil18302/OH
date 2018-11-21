@@ -2,6 +2,7 @@ package oh.javeriana.co.oh;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
@@ -74,13 +76,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     private final int anio = c.get(Calendar.YEAR);
     private double latitudUsuario;
     private double longitudUsuario;
-    public static final String PATH_ALOJAMIENTOS="alojamientos/";
-
-
-    private ImageButton botonFechaInicial;
-    private ImageButton botonFechaFinal;
-    private TextView fechaInicial;
-    private TextView fechaFinal;
+    public static final String PATH_ALOJAMIENTOS = "alojamientos/";
 
     private final static int LOCATION_PERMISSION = 0;
     private static final double RADIUS_OF_EARTH_KM = 6371;
@@ -91,30 +87,37 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static int voy;
 
-    private Marker oldmark;
-    private Marker newmark;
-    private Marker lastmark;
+    ImageButton botonFechaInicial;
+    ImageButton botonFechaFinal;
+    TextView fechaInicial;
+    TextView fechaFinal;
 
-    private EditText mAddress;
-    private TextView distance;
+    Marker oldmark;
+    Marker newmark;
+    Marker lastmark;
 
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationRequest mLocationRequest;
-    private LocationCallback mLocationCallback;
-    private LocationCallback mLocationCallback2;
+    EditText mAddress;
+    TextView distance;
+
+    FusedLocationProviderClient mFusedLocationClient;
+    LocationRequest mLocationRequest;
+    //LocationCallback mLocationCallback;
+    LocationCallback mLocationCallback2;
     //private LocationResult locationResult2;
-    private List<String> listalocations;
-    private JSONObject jso;
+    List<String> listalocations;
+    JSONObject jso;
 
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
 
-    ArrayList<Alojamiento> listaAlojamientos = new ArrayList<Alojamiento>();
-
-    Map<Marker, Alojamiento> markers = new HashMap<>();
-    String rol="";
+    ArrayList<Pair<String, Alojamiento>> listaAlojamientos = new ArrayList<>();
 
 
+    LatLng userLatLng;
+    Map<Marker, Pair<String, Alojamiento>> markers = new HashMap<>();
+    String rol = "";
+
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,15 +125,14 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        database= FirebaseDatabase.getInstance();
 
+
+        database = FirebaseDatabase.getInstance();
         myRef = database.getReference(PATH_ALOJAMIENTOS);
-
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
-        if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
+        if (rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
-        }
-        else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
+        } else if (rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
             anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
         }
 
@@ -139,6 +141,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         fechaInicial = findViewById(R.id.fechaInicial);
         fechaFinal = findViewById(R.id.fechaFinal);
 
+        String explanation = "Necesitamos acceder a tu ubicación para ubicarte en el mapa";
+        tools.requestPermission(MapaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, explanation, LOCATION_PERMISSION);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         botonFechaInicial.setOnClickListener(new View.OnClickListener() {
@@ -174,12 +178,12 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         SettingsClient client = LocationServices.getSettingsClient(this);
         Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+        /*task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                 startLocationUpdates(); //Todas las condiciones para recibir localizaciones
             }
-        });
+        });*/
 
         task.addOnFailureListener(this, new OnFailureListener() {
             @Override
@@ -202,33 +206,66 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        mLocationCallback = new LocationCallback() {
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                Log.i("LOCATION", "onSuccess location");
+                if (location != null) {
+                    Log.i(" LOCATION ",
+                            "Longitud: " + location.getLongitude());
+                    Log.i(" LOCATION ", "Latitud: " + location.getLatitude());
+
+                    userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(userLatLng)
+                            .title("Tu ubicación"));
+
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
+
+
+                }
+            }
+        });
+
+        paintMarker();
+
+        /*mLocationCallback = new LocationCallback() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 Location location = locationResult.getLastLocation();
-                Log.i("LOCATION", "Location update in the callback: " + location);
-                mMap.clear();
+                Location lastLocation = locationResult.getLastLocation();
+                lastLocation.setLatitude(location.getLatitude() + 0.0005);
+                lastLocation.setLongitude(location.getLongitude() + 0.0005);
+                Log.i("LOCATION1", "Location update in the callback: " + location);
+                Log.i("LOCATION2", "Location update in the callback: " + lastLocation);
+
                 if (location != null && mMap != null) {
-                    if (voy == 0) {
-                        LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
-                        latitudUsuario = location.getLatitude();
-                        longitudUsuario = location.getLongitude();
-                        Log.i("LatitudDelUsuario", String.valueOf(latitudUsuario));
-                        Log.i("LongitudDelUsuario", String.valueOf(longitudUsuario));
-                        oldmark = mMap.addMarker(new MarkerOptions().position(user).title("Ubicación actual"));
-                        newmark = oldmark;
-                        mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
-                        voy++;
-                    } else {
-                        LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
-                        if(oldmark != null)
-                            oldmark.remove();
-                        newmark = mMap.addMarker(new MarkerOptions().position(user).title("Usted"));
-                        oldmark = newmark;
-                        mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
+                    if(location.getLatitude() > lastLocation.getLongitude()+0.0005 || location.getLatitude() < lastLocation.getLongitude()-0.0005) {
+                        if(location.getLongitude() > lastLocation.getLongitude()+0.0005 || location.getLongitude() < lastLocation.getLongitude()-0.0005) {
+                            mMap.clear();
+                            if (voy == 0) {
+                                LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
+                                latitudUsuario = location.getLatitude();
+                                longitudUsuario = location.getLongitude();
+                                Log.i("LatitudDelUsuario", String.valueOf(latitudUsuario));
+                                Log.i("LongitudDelUsuario", String.valueOf(longitudUsuario));
+                                oldmark = mMap.addMarker(new MarkerOptions().position(user).title("Ubicación actual"));
+                                newmark = oldmark;
+
+                                mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
+                                voy++;
+                            } else {
+                                LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
+                                if (oldmark != null)
+                                    oldmark.remove();
+                                newmark = mMap.addMarker(new MarkerOptions().position(user).title("Usted"));
+                                oldmark = newmark;
+                                mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
+                            }
+                        }
                     }
                 }
 
@@ -236,7 +273,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                 paintMarker();
 
 
-                /*for(Alojamiento a: listaAlojamientos) {
+                for(Alojamiento a: listaAlojamientos) {
                     if (distancepoint(a.getLatitud(), a.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
                         try {
                             Log.i("FECHAS","HOLAAAAAA");
@@ -265,16 +302,19 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                             e.printStackTrace();
                         }
                     }
-                }*/
+                }
             }
-        };
+        };*/
 
     }
 
     public void paintMarker() {
         loadSites();
 
-        for(Alojamiento a: listaAlojamientos) {
+        for(Pair p: listaAlojamientos) {
+
+            Alojamiento a = (Alojamiento) p.second;
+
             if (distancepoint(a.getLatitud(), a.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
                 try {
                     Log.i("FECHAS","HOLAAAAAA");
@@ -285,13 +325,13 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.i("FECHAS","HOLAAAA 333333");
                             LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
                             Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
-                            markers.put(marker, a);
+                            markers.put(marker, p);
                         }
 
                         else if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0) {
                             LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
                             Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
-                            markers.put(marker, a);
+                            markers.put(marker, p);
                         }
 
                         else{
@@ -306,7 +346,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public ArrayList<Alojamiento> loadSites() {
+
+    public ArrayList<Pair<String, Alojamiento>> loadSites() {
 
         myRef = database.getReference("alojamientos");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -321,7 +362,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     String nombre =  singleSnapshot.child("nombre").getValue().toString();
                     Alojamiento alojamiento = singleSnapshot.getValue(Alojamiento.class);
 
-                    listaAlojamientos.add(alojamiento);
+                    listaAlojamientos.add(new Pair<>(singleSnapshot.getKey(), alojamiento));
 
                 }
 
@@ -358,7 +399,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         switch (requestCode) {
             case LOCATION_PERMISSION: {
                 if (resultCode == RESULT_OK) {
-                    startLocationUpdates(); //Se encendió la localización!!!
+                    //startLocationUpdates(); //Se encendió la localización!!!
                 } else {
                     Toast.makeText(this,
                             "Sin acceso a localización, hardware deshabilitado!",
@@ -369,7 +410,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void startLocationUpdates() {
+    /*private void startLocationUpdates() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
@@ -378,19 +419,19 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void stopLocationUpdates() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-    }
+    }*/
 
     @Override
     protected void onResume() {
         super.onResume();
-        startLocationUpdates();
+        //startLocationUpdates();
         paintMarker();
     }
 
     @Override
     protected void onRestart() {
-        super.onResume();
-        startLocationUpdates();
+        super.onRestart();
+        //startLocationUpdates();
         paintMarker();
 
     }
@@ -398,7 +439,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        stopLocationUpdates();
+        //stopLocationUpdates();
     }
 
 
@@ -442,22 +483,24 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Alojamiento a = markers.get(marker);
 
-                Bundle bundle = new Bundle();
-                if(huesped != null)
-                    bundle.putSerializable("usr", huesped);
-                else if(anfitrion != null)
-                    bundle.putSerializable("usr", anfitrion);
+                if(!marker.getPosition().equals(userLatLng)) {
+                    Bundle bundle = new Bundle();
+                    if (huesped != null)
+                        bundle.putSerializable("usr", huesped);
+                    else if (anfitrion != null)
+                        bundle.putSerializable("usr", anfitrion);
 
-                bundle.putSerializable("alojamiento", a);
+                    bundle.putString("idAloj", markers.get(marker).first);
+                    bundle.putSerializable("alojamiento", markers.get(marker).second);
 
-                Intent intent = new Intent(getApplicationContext(), ItemActivity.class);
-                intent.putExtras(bundle);
+                    Intent intent = new Intent(getApplicationContext(), ItemActivity.class);
+                    intent.putExtras(bundle);
 
-                startActivity(intent);
-
+                    startActivity(intent);
+                }
                 return false;
+
             }
         });
 
