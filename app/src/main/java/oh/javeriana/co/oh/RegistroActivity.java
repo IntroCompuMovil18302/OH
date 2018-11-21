@@ -192,14 +192,15 @@ public class RegistroActivity extends Activity {
                     else if(rol.compareTo("propietarioNegocio") == 0) {
                         if(!nombre.getText().toString().isEmpty()){
                             if(Pattern.matches(formato,fechaNacimiento.getText())){
-                                Anfitrion propAloj = new Anfitrion(key, "propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
-                                myRef.setValue(propAloj);
+                               // Anfitrion propAloj = new Anfitrion(key, "propietarioNegocio", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
+                                Propietario propNeg = new Propietario(key, "propietarioNegocio", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
+                                myRef.setValue(propNeg);
 
                                 //Task<AuthResult> task=
                                 mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
                                 //if(task.isSuccessful()){
                                 Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                                intent.putExtra("usr", propAloj);
+                                intent.putExtra("usr", propNeg);
                                 startActivity(intent);
                                 //}else{
                                 //  Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();

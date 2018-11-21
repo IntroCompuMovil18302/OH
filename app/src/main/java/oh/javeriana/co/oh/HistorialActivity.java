@@ -72,12 +72,12 @@ public class HistorialActivity extends Activity {
             guest_navigation.setVisibility(View.GONE);
             host_navigation.setSelectedItemId(R.id.navigationRecord);
             host_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-           // if(rol.equals("propietarioAlojamiento")) {
+            if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0){
                 tituloHistorial.setText("Historial de alojamientos publicados");
-            //}else {
-             //   tituloHistorial.setText("Historial de negocios publicados");
-            //}
-        }else{
+            }else {
+                tituloHistorial.setText("Historial de negocios publicados");
+            }
+        }else {
             host_navigation.setVisibility(View.GONE);
             guest_navigation.setSelectedItemId(R.id.navigationRecord);
             guest_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -113,7 +113,7 @@ public class HistorialActivity extends Activity {
             TextView txtDesc = view.findViewById(R.id.descProd);
 
             Button botonCalificar = view.findViewById(R.id.calificar);
-            if(!rol.equals("huesped")){
+            if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped")!=0){
                 botonCalificar.setVisibility(View.GONE);
             }
 
@@ -148,6 +148,8 @@ public class HistorialActivity extends Activity {
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
+                    else if (propietario != null)
+                        intent.putExtra("usr", propietario);
                     startActivity(intent);
                     return true;
                 case R.id.navigationRecord:
@@ -158,6 +160,8 @@ public class HistorialActivity extends Activity {
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
+                    else if (propietario != null)
+                        intent.putExtra("usr", propietario);
 
                     startActivity(intent);
                     return true;
