@@ -37,7 +37,7 @@ public class CrearNegocioActivity extends Activity {
     TextView horaApertura = null;
     TextView horaCierre = null;
     EditText telefono = null;
-    EditText direccion = null;
+    //EditText direccion = null;
     TextView tipo = null;
     RadioGroup grupoTipos = null;
 
@@ -60,6 +60,11 @@ public class CrearNegocioActivity extends Activity {
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
     private DatabaseReference myRef;
+
+    private int tipoNegocio;
+    private boolean servicioAdicionalNegocio;
+    private boolean wifiNegocio;
+    private String catalogoNegocio ="";
 
     public static final String PATH_NEGOCIOS="negocios/";
 
@@ -109,13 +114,10 @@ public class CrearNegocioActivity extends Activity {
             propietario = (Propietario) getIntent().getSerializableExtra("usr");
         }
 
-
-
         botonHoraApertura.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 obtenerHora(1);
-
             }
         });
 
@@ -123,6 +125,40 @@ public class CrearNegocioActivity extends Activity {
             @Override
             public void onClick(View view) {
                 obtenerHora(2);
+            }
+        });
+
+        opciones.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if(i == R.id.si){
+                    servicioAdicionalNegocio = true;
+                }else{
+                    servicioAdicionalNegocio = false;
+                }
+            }
+        });
+
+        opcionesDomicilio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if(i == R.id.siDomicilio){
+                    wifiNegocio = true;
+                }else{
+                    wifiNegocio = false;
+                }
+            }
+        });
+
+        agregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                catalogoNegocio.concat(producto.getText().toString());
+                catalogoNegocio.concat(",");
+                //Log.i("Cadena va en: ",catalogoNegocio);
+                Toast.makeText(getApplicationContext(),"Cadena va en: "+catalogoNegocio,Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(),producto.getText().toString()+ " agregado",Toast.LENGTH_LONG).show();
+                producto.setText("");
             }
         });
 
@@ -134,25 +170,29 @@ public class CrearNegocioActivity extends Activity {
                 horaApertura.setVisibility(View.GONE);
                 horaCierre.setVisibility(View.GONE);
                 telefono.setVisibility(View.GONE);
-                direccion.setVisibility(View.GONE);
+//                direccion.setVisibility(View.GONE);
                 tipo.setVisibility(View.GONE);
                 grupoTipos.setVisibility(View.GONE);
                 botonHoraCierre.setVisibility(View.GONE);
                 botonHoraApertura.setVisibility(View.GONE);
 
                 if(checkedId== R.id.cafeteria){
+                    tipoNegocio = 1;
                     agregarProductos.setText("Agrega los platos del menú");
                     servicioAdicional.setHint("¿Ofrecen servicio de wifi?");
                     producto.setHint("Plato");
                 }else if(checkedId== R.id.drogueria){
+                    tipoNegocio =2;
                     agregarProductos.setText("Agrega los productos que vendes");
                     servicioAdicional.setHint("¿Ofrecen inyectologia?");
                     producto.setHint("Producto");
                 }else if(checkedId== R.id.restaurante){
+                    tipoNegocio = 3;
                     agregarProductos.setText("Agrega los platos del menú");
                     servicioAdicional.setHint("¿Tienen menu infantil?");
                     producto.setHint("Plato");
                 }else{
+                    tipoNegocio =4;
                     agregarProductos.setText("Agrega los productos que vendes");
                     servicioAdicional.setHint("¿Reciben tarjeta de crédito?");
                     producto.setHint("Producto");
@@ -302,7 +342,7 @@ public class CrearNegocioActivity extends Activity {
             horaApertura.setVisibility(View.VISIBLE);
             horaCierre.setVisibility(View.VISIBLE);
             telefono.setVisibility(View.VISIBLE);
-            direccion.setVisibility(View.VISIBLE);
+            //direccion.setVisibility(View.VISIBLE);
             tipo.setVisibility(View.VISIBLE);
             grupoTipos.setVisibility(View.VISIBLE);
             botonHoraCierre.setVisibility(View.VISIBLE);
