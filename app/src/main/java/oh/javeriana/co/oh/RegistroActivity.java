@@ -43,6 +43,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class RegistroActivity extends Activity {
@@ -114,6 +115,12 @@ public class RegistroActivity extends Activity {
 
         datosAcceso = (TextView) findViewById(R.id.datosAcceso);
         datosPersonales = (TextView) findViewById(R.id.datosPersonales);
+
+        ArrayList<String> generos = new ArrayList<String>();
+       /* generos = R.values.strings.
+
+        ArrayAdapter<String> adaptadorSpinner =new ArrayAdapter<String>(this, R.layout.estilo_spinner, (List<String>) genero);
+        genero.setAdapter(adaptadorSpinner);*/
 
         botonRegistrarse.setOnClickListener(new View.OnClickListener() {
             @Override
