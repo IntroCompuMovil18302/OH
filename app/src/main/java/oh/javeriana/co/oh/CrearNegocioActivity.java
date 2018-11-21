@@ -1,6 +1,7 @@
 package oh.javeriana.co.oh;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -13,8 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -25,13 +28,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 public class CrearNegocioActivity extends Activity {
 
     EditText nombreNegocio = null;
-    EditText horaApertura = null;
-    EditText horaCierre = null;
+    TextView horaApertura = null;
+    TextView horaCierre = null;
     EditText telefono = null;
     EditText direccion = null;
     TextView tipo = null;
@@ -48,6 +52,9 @@ public class CrearNegocioActivity extends Activity {
     Button agregar = null;
     Button publicar = null;
 
+    ImageButton botonHoraApertura = null;
+    ImageButton botonHoraCierre = null;
+
     Propietario propietario = null;
     private FirebaseDatabase database;
     private FirebaseAuth mAuth;
@@ -57,6 +64,9 @@ public class CrearNegocioActivity extends Activity {
     public static final String PATH_NEGOCIOS="negocios/";
 
     String rol = "";
+    public final Calendar c = Calendar.getInstance();
+    final int hora = c.get(Calendar.HOUR_OF_DAY);
+    final int minuto = c.get(Calendar.MINUTE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +78,10 @@ public class CrearNegocioActivity extends Activity {
         database= FirebaseDatabase.getInstance();
 
         nombreNegocio = (EditText) findViewById(R.id.nombreNegocio);
-        horaApertura = (EditText) findViewById(R.id.horaApertura);
-        horaCierre = (EditText) findViewById(R.id.horaCierre);
+        horaApertura = (TextView) findViewById(R.id.horaApertura);
+        horaCierre = (TextView) findViewById(R.id.horaCierre);
         telefono = (EditText) findViewById(R.id.telefono);
-        direccion = (EditText) findViewById(R.id.direccion);
+        //direccion = (EditText) findViewById(R.id.direccion);
         tipo = (TextView) findViewById(R.id.tipo);
         grupoTipos = (RadioGroup) findViewById(R.id.tiposNegocio);
 
@@ -86,6 +96,9 @@ public class CrearNegocioActivity extends Activity {
         agregar =(Button) findViewById(R.id.agregar);
         publicar = (Button) findViewById(R.id.publicar);
 
+        botonHoraApertura = findViewById(R.id.botonHoraApertura);
+        botonHoraCierre = findViewById(R.id.botonHoraCierre);
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.getMenu().getItem(0).setCheckable(false);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -95,6 +108,23 @@ public class CrearNegocioActivity extends Activity {
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Propietario") == 0) {
             propietario = (Propietario) getIntent().getSerializableExtra("usr");
         }
+
+
+
+        botonHoraApertura.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                obtenerHora(1);
+
+            }
+        });
+
+        botonHoraCierre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                obtenerHora(2);
+            }
+        });
 
         grupoTipos.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -107,6 +137,8 @@ public class CrearNegocioActivity extends Activity {
                 direccion.setVisibility(View.GONE);
                 tipo.setVisibility(View.GONE);
                 grupoTipos.setVisibility(View.GONE);
+                botonHoraCierre.setVisibility(View.GONE);
+                botonHoraApertura.setVisibility(View.GONE);
 
                 if(checkedId== R.id.cafeteria){
                     agregarProductos.setText("Agrega los platos del menú");
@@ -132,11 +164,10 @@ public class CrearNegocioActivity extends Activity {
 
                 servicioAdicional.setVisibility(View.VISIBLE);
                 opciones.setVisibility(View.VISIBLE);
+                domicilios.setVisibility(View.VISIBLE);
+                opcionesDomicilio.setVisibility(View.VISIBLE);
 
-                if(checkedId!= R.id.cafeteria){
-                    domicilios.setVisibility(View.VISIBLE);
-                    opcionesDomicilio.setVisibility(View.VISIBLE);
-                }
+
 
                 publicar.setVisibility(View.VISIBLE);
 
@@ -233,6 +264,38 @@ public class CrearNegocioActivity extends Activity {
         });
     }
 
+    private void obtenerHora(final int codigo){
+        Log.i("HORA: ","AQUI");
+        TimePickerDialog recogerHora = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                String horaFormateada =  (hourOfDay < 10)? String.valueOf("0" + hourOfDay) : String.valueOf(hourOfDay);
+                String minutoFormateado = (minute < 10)? String.valueOf("0" + minute):String.valueOf(minute);
+                String AM_PM;
+                if(hourOfDay < 12) {
+                    AM_PM = "a.m.";
+                } else {
+                    AM_PM = "p.m.";
+                }
+                if(codigo==1){
+                    Log.i("HORA: ","AQUI");
+                    horaApertura.setText(horaFormateada + ":" + minutoFormateado + " " + AM_PM);
+                }
+
+                else{
+                    horaCierre.setText(horaFormateada + ":" + minutoFormateado + " " + AM_PM);
+                }
+
+
+            }
+        }, hora, minuto, false);
+
+        Log.i("HOLA","HOLA");
+
+        recogerHora.show();
+        Log.i("HOLA","HOLA");
+    }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0 && nombreNegocio.getVisibility()== View.GONE ) {
             nombreNegocio.setVisibility(View.VISIBLE);
@@ -242,6 +305,8 @@ public class CrearNegocioActivity extends Activity {
             direccion.setVisibility(View.VISIBLE);
             tipo.setVisibility(View.VISIBLE);
             grupoTipos.setVisibility(View.VISIBLE);
+            botonHoraCierre.setVisibility(View.VISIBLE);
+            botonHoraApertura.setVisibility(View.VISIBLE);
 
             agregarProductos.setVisibility(View.GONE);
             producto.setVisibility(View.GONE);

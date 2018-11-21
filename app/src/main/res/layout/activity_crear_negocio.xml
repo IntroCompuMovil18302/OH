@@ -9,12 +9,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -40,8 +42,10 @@
                     android:id="@+id/constraintLayout2"
                     android:layout_width="360dp"
                     android:layout_height="389dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="168dp"
                     android:background="@color/darkBackgroud"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -53,6 +57,7 @@
                         android:id="@+id/nombreNegocio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="32dp"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="16dp"
                         android:ems="10"
@@ -62,80 +67,149 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
-                        android:id="@+id/horaApertura"
-                        android:layout_width="148dp"
+                    <TextView
+                        android:id="@+id/textView15"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
+                        android:text="Hora apertura:"
+                        android:textColor="@color/title"
+                        android:textSize="18dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.103"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.198" />
+
+                    <TextView
+                        android:id="@+id/horaApertura"
+                        android:layout_width="113dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="164dp"
+                        android:layout_marginStart="164dp"
                         android:ems="10"
-                        android:hint="Hora de apertura"
+                        android:hint="HH:mm"
                         android:inputType="time"
+                        android:textColor="@color/text"
                         android:textSize="18dp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nombreNegocio" />
+                        tools:layout_editor_absoluteY="78dp" />
 
-                    <EditText
-                        android:id="@+id/horaCierre"
-                        android:layout_width="156dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
+                    <ImageButton
+                        android:id="@+id/botonHoraApertura"
+                        android:layout_width="32dp"
+                        android:layout_height="30dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:ems="10"
-                        android:hint="Hora de cierre"
-                        android:inputType="time"
-                        android:textSize="18dp"
+                        android:background="@color/darkBackgroud"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/time"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/horaApertura"
-                        app:layout_constraintTop_toBottomOf="@+id/nombreNegocio" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.204" />
+
+                    <TextView
+                        android:id="@+id/textView18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Hora cierre:"
+                        android:textColor="@color/title"
+                        android:textSize="18dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.095"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.315" />
+
+                    <TextView
+                        android:id="@+id/horaCierre"
+                        android:layout_width="89dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="244dp"
+                        android:ems="10"
+                        android:hint="HH:mm"
+                        android:inputType="time"
+                        android:textColor="@color/text"
+                        android:textSize="18dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        tools:layout_editor_absoluteX="164dp" />
+
+                    <ImageButton
+                        android:id="@+id/botonHoraCierre"
+                        android:layout_width="32dp"
+                        android:layout_height="30dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/darkBackgroud"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/time"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.406"
+                        app:layout_constraintStart_toEndOf="@+id/horaCierre"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.329" />
 
                     <EditText
                         android:id="@+id/telefono"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
+                        android:layout_marginLeft="32dp"
                         android:layout_marginStart="32dp"
-                        android:layout_marginTop="8dp"
                         android:ems="10"
                         android:hint="Teléfono"
                         android:inputType="phone"
                         android:textSize="18dp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/horaApertura" />
-
-                    <EditText
-                        android:id="@+id/direccion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="41dp"
-                        android:layout_marginStart="32dp"
-                        android:layout_marginTop="16dp"
-                        android:ems="10"
-                        android:hint="Dirección"
-                        android:inputType="textPersonName"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/telefono" />
+                        tools:layout_editor_absoluteY="170dp" />
 
                     <TextView
                         android:id="@+id/tipo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="32dp"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="8dp"
                         android:text="Tipo "
-                        android:textColor="@color/text"
+                        android:textColor="@color/title"
                         android:textSize="18dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.006"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.672"
+                        app:layout_constraintVertical_bias="0.6"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
                         android:id="@+id/domicilios"
-                        android:layout_width="195dp"
-                        android:layout_height="30dp"
+                        android:layout_width="193dp"
+                        android:layout_height="35dp"
                         android:layout_marginBottom="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
@@ -154,10 +228,10 @@
                     <RadioGroup
                         android:id="@+id/opcionesDomicilio"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="36dp"
                         android:layout_marginBottom="8dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginRight="16dp"
                         android:layout_marginTop="8dp"
                         android:orientation="horizontal"
                         android:visibility="invisible"
@@ -192,8 +266,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginStart="8dp"
                         android:layout_marginTop="40dp"
                         android:textColor="@color/text"
                         android:textSize="18dp"
@@ -211,6 +283,7 @@
                         android:layout_height="37dp"
                         android:layout_marginBottom="8dp"
                         android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_weight="1"
                         android:orientation="horizontal"
@@ -256,7 +329,7 @@
                         app:layout_constraintHorizontal_bias="0.777"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.462"
+                        app:layout_constraintVertical_bias="0.447"
                         tools:ignore="UnknownId" />
 
                     <EditText
@@ -318,11 +391,12 @@
                         android:id="@+id/tiposNegocio"
                         android:layout_width="161dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
+                        android:layout_marginBottom="44dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout2"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.502"
                         app:layout_constraintStart_toStartOf="parent"
                         tools:ignore="MissingConstraints">
 

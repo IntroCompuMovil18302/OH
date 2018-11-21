@@ -7,6 +7,6 @@
     <color name="darkBackgroud">#242f3d</color>
     <color name="text">#eceff1</color>
     <color name="button">#9fcccc</color>
-    <color name="title">#CDF8DC</color>
+    <color name="title">#cdf8dc</color>
     <color name="hint">#abffffff</color>
 </resources>
