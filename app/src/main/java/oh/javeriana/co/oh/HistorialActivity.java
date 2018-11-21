@@ -121,7 +121,10 @@ public class HistorialActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(),CalificarAlojamientoActivity.class);
-                    intent.putExtra("rol",rol);
+                    if(anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    else if (huesped != null)
+                        intent.putExtra("usr", huesped);
                     startActivity(intent);
                 }
             });

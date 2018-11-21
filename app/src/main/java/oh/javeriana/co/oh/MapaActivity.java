@@ -149,6 +149,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 obtenerFecha(1);
+                loadSites();
             }
         });
 
@@ -156,6 +157,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 obtenerFecha(2);
+                loadSites();
             }
         });
 
@@ -215,6 +217,9 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                             "Longitud: " + location.getLongitude());
                     Log.i(" LOCATION ", "Latitud: " + location.getLatitude());
 
+                    latitudUsuario = location.getLatitude();
+                    longitudUsuario = location.getLongitude();
+
                     userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(userLatLng)
                             .title("Tu ubicación"));
@@ -227,7 +232,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        paintMarker();
+        loadSites();
 
         /*mLocationCallback = new LocationCallback() {
             @SuppressLint("SetTextI18n")
@@ -308,8 +313,42 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    @SuppressLint("MissingPermission")
+    public void clearMap() {
+        if(mMap != null)
+            mMap.clear();
+
+        String explanation = "Necesitamos acceder a tu ubicación para ubicarte en el mapa";
+        tools.requestPermission(MapaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, explanation, LOCATION_PERMISSION);
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                Log.i("LOCATION", "onSuccess location");
+                if (location != null) {
+                    Log.i(" LOCATION ",
+                            "Longitud: " + location.getLongitude());
+                    Log.i(" LOCATION ", "Latitud: " + location.getLatitude());
+
+                    latitudUsuario = location.getLatitude();
+                    longitudUsuario = location.getLongitude();
+
+                    userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(userLatLng)
+                            .title("Tu ubicación"));
+
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
+                }
+            }
+        });
+    }
+
     public void paintMarker() {
-        loadSites();
+        clearMap();
+
+        Log.i("CURRENT", String.valueOf(latitudUsuario) + "-" + String.valueOf(longitudUsuario));
+        Log.i("LISTA", String.valueOf(listaAlojamientos.size()));
+
 
         for(Pair p: listaAlojamientos) {
 
@@ -319,23 +358,21 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                 try {
                     Log.i("FECHAS","HOLAAAAAA");
                     Log.i("FECHAS",String.valueOf(fechaInicial.getText().toString().isEmpty()));
-                    if (fechaInicial.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0 && fechaFinal.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0) {
-                        Log.i("FECHAS","HOLAAAAAA222222222");
-                        if(String.valueOf(fechaInicial.getText().toString().isEmpty()).equals("true") && String.valueOf(fechaFinal.getText().toString().isEmpty()).equals("true")){
-                            Log.i("FECHAS","HOLAAAA 333333");
-                            LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
-                            Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
-                            markers.put(marker, p);
-                        }
-
-                        else if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0) {
-                            LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
-                            Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
-                            markers.put(marker, p);
-                        }
-
-                        else{
-                            Log.i("FECHAS","HOLAAAA 44444444");
+                    if (fechaInicial.getText().toString().compareToIgnoreCase("") != 0 && fechaFinal.getText().toString().compareToIgnoreCase("") != 0) {
+                        if (fechaInicial.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0 && fechaFinal.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0) {
+                            Log.i("FECHAS", "HOLAAAAAA222222222");
+                            if (String.valueOf(fechaInicial.getText().toString().isEmpty()).equals("true") && String.valueOf(fechaFinal.getText().toString().isEmpty()).equals("true")) {
+                                Log.i("FECHAS", "HOLAAAA 333333");
+                                LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
+                                Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                                markers.put(marker, p);
+                            } else if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0) {
+                                LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
+                                Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                                markers.put(marker, p);
+                            } else {
+                                Log.i("FECHAS", "HOLAAAA 44444444");
+                            }
                         }
                     }
 
@@ -356,15 +393,16 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                 //Log.i("la lista", String.valueOf(dataSnapshot.getChildrenCount()));
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     //usr = singleSnapshot.getValue(Huesped.class);
-                    Log.i("sngle", singleSnapshot.getValue().toString());
                     double latitud = Double.parseDouble(singleSnapshot.child("latitud").getValue().toString());
                     double longitud = Double.parseDouble(singleSnapshot.child("longitud").getValue().toString());
                     String nombre =  singleSnapshot.child("nombre").getValue().toString();
                     Alojamiento alojamiento = singleSnapshot.getValue(Alojamiento.class);
 
                     listaAlojamientos.add(new Pair<>(singleSnapshot.getKey(), alojamiento));
-
+                    Log.i("Added", singleSnapshot.getKey() + singleSnapshot.getValue().toString());
                 }
+
+                paintMarker();
 
             }
             @Override
