@@ -37,6 +37,7 @@ public class PerfilActivity extends Activity {
     String rol="";
     Huesped huesped=null;
     Anfitrion anfitrion=null;
+    Propietario propietario = null;
     String pathImg="";
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -57,6 +58,7 @@ public class PerfilActivity extends Activity {
         mAuth = FirebaseAuth.getInstance();
 
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
+
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
             txNombre.setText(txNombre.getText().toString() + huesped.getNombre());
@@ -70,6 +72,14 @@ public class PerfilActivity extends Activity {
             txCorreo.setText(txCorreo.getText().toString() + anfitrion.getEmail());
             txRol.setText(txRol.getText().toString() + anfitrion.getRol());
             pathImg=anfitrion.getId();
+        }
+        else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Propietario") == 0) {
+            //anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+            propietario = (Propietario) getIntent().getSerializableExtra("usr");
+            txNombre.setText(txNombre.getText().toString() + propietario.getNombre());
+            txCorreo.setText(txCorreo.getText().toString() + propietario.getEmail());
+            txRol.setText(txRol.getText().toString() + propietario.getRol());
+            pathImg=propietario.getId();
         }
 
 
@@ -102,12 +112,13 @@ public class PerfilActivity extends Activity {
             host_navigation.setSelectedItemId(R.id.navigationProfile);
             host_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
            // if(rol.equals("propietarioAlojamiento")){
+            if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0){
                 botonAgregar.setText("Agregar alojamiento");
                 botonGestionar.setText("Gestionar alojamientos");
-            //}else{
-              //  botonAgregar.setText("Agregar Negocio");
-               // botonGestionar.setText("Gestionar Negocio");
-            //}
+            }else{
+                botonAgregar.setText("Agregar Negocio");
+                botonGestionar.setText("Gestionar Negocio");
+            }
         }else{
             botonAgregar.setVisibility(View.GONE);
             botonGestionar.setVisibility(View.GONE);
@@ -119,16 +130,18 @@ public class PerfilActivity extends Activity {
         botonAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent;
-               // if(rol.equals("propietarioAlojamiento")){
+                Intent intent = null;
+                if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion")== 0){
                     intent =new Intent(getApplicationContext(),AgregarAlojamientoActivity.class );
+                }else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Propietario")== 0){
+                    intent =new Intent(getApplicationContext(),CrearNegocioActivity.class );
+                }
                 if(anfitrion != null)
                     intent.putExtra("usr", anfitrion);
                 else if (huesped != null)
                     intent.putExtra("usr", huesped);
-                //}else {
-                  //  intent = new Intent(getApplicationContext(),CrearNegocioActivity.class);
-               // }
+                else if (propietario != null)
+                    intent.putExtra("usr", propietario);
                 startActivity(intent);
             }
         });
@@ -141,6 +154,8 @@ public class PerfilActivity extends Activity {
                     intent.putExtra("usr", anfitrion);
                 else if (huesped != null)
                     intent.putExtra("usr", huesped);
+                else if (propietario != null)
+                    intent.putExtra("usr", propietario);
                 startActivity(intent);
             }
         });
@@ -182,7 +197,8 @@ public class PerfilActivity extends Activity {
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
-
+                    else if (propietario != null)
+                        intent.putExtra("usr", propietario);
                     startActivity(intent);
                     return true;
 
