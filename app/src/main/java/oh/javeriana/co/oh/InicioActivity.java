@@ -119,7 +119,7 @@ public class InicioActivity extends AppCompatActivity {
                             intent.putExtra("usr", usr);
                             startActivity(intent);
                             finish();
-                        } else if (rol.compareTo("propietarioNegocio") == 0) {
+                        } else if (rol.compareTo("propietarioAlojamiento") == 0) {
                             Anfitrion usr  = singleSnapshot.getValue(Anfitrion.class);
                             Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
                             intent.putExtra("usr", usr);
