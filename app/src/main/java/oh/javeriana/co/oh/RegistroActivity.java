@@ -189,6 +189,29 @@ public class RegistroActivity extends Activity {
                             Toast.makeText(RegistroActivity.this, "Su nombre no puede faltar", Toast.LENGTH_SHORT).show();
                         }
                     }
+                    else if(rol.compareTo("propietarioNegocio") == 0) {
+                        if(!nombre.getText().toString().isEmpty()){
+                            if(Pattern.matches(formato,fechaNacimiento.getText())){
+                                Anfitrion propAloj = new Anfitrion(key, "propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
+                                myRef.setValue(propAloj);
+
+                                //Task<AuthResult> task=
+                                mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
+                                //if(task.isSuccessful()){
+                                Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
+                                intent.putExtra("usr", propAloj);
+                                startActivity(intent);
+                                //}else{
+                                //  Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();
+                                //}
+
+                            }else {
+                                Toast.makeText(RegistroActivity.this, "La fecha debe estar en formato dd/mm/AAAA", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(RegistroActivity.this, "Su nombre no puede faltar", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                     else {
                         Toast.makeText(getApplicationContext(), "Función no implementada", Toast.LENGTH_SHORT).show();
                     }

@@ -27,6 +27,7 @@ public class HistorialActivity extends Activity {
 
     Huesped huesped = null;
     Anfitrion anfitrion = null;
+    Propietario propietario = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,9 @@ public class HistorialActivity extends Activity {
         }
         else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
             anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+        }
+        else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Propietario") == 0) {
+            propietario = (Propietario) getIntent().getSerializableExtra("usr");
         }
 
         ListView listView = findViewById(R.id.listViewHist);
@@ -54,6 +58,8 @@ public class HistorialActivity extends Activity {
                     intent.putExtra("usr", anfitrion);
                 else if (huesped != null)
                     intent.putExtra("usr", huesped);
+                else if (propietario != null)
+                    intent.putExtra("usr", propietario);
                 startActivity(intent);
             }
         });
