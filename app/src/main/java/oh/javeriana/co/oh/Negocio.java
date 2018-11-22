@@ -16,9 +16,10 @@ public class Negocio implements Serializable {
     private String catalogo;
     private boolean servicioAdicional;
     private boolean domicilios;
+    private String foto;
 
 
-    public Negocio(String nombre, String horaApertura, String horaCierre, String telefono, int tipo, String direccion, double latitud, double longitud, String idPropietario, String catalogo, boolean servicioAdicional, boolean domicilios) {
+    public Negocio(String nombre, String horaApertura, String horaCierre, String telefono, int tipo, String direccion, double latitud, double longitud, String idPropietario, String catalogo, boolean servicioAdicional, boolean domicilios,String foto) {
         this.nombre = nombre;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
@@ -31,6 +32,7 @@ public class Negocio implements Serializable {
         this.catalogo = catalogo;
         this.servicioAdicional = servicioAdicional;
         this.domicilios = domicilios;
+        this.foto = foto;
     }
 
     public String getNombre() {
@@ -127,5 +129,13 @@ public class Negocio implements Serializable {
 
     public void setLongitud(double longitud) {
         this.longitud = longitud;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }

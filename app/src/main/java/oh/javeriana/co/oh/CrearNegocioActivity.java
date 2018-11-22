@@ -1,9 +1,14 @@
 package oh.javeriana.co.oh;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
@@ -13,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -24,6 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Calendar;
 
 public class CrearNegocioActivity extends Activity {
@@ -38,6 +47,8 @@ public class CrearNegocioActivity extends Activity {
     TextView tipo = null;
     RadioGroup grupoTipos = null;
 
+    ImageView foto = null;
+
     TextView servicioAdicional = null;
     RadioGroup opciones = null;
 
@@ -48,6 +59,8 @@ public class CrearNegocioActivity extends Activity {
     EditText producto = null;
     Button agregar = null;
     Button publicar = null;
+    Button camara = null;
+    Button galeria = null;
 
     ImageButton botonHoraApertura = null;
     ImageButton botonHoraCierre = null;
@@ -69,6 +82,13 @@ public class CrearNegocioActivity extends Activity {
     public final Calendar c = Calendar.getInstance();
     final int hora = c.get(Calendar.HOUR_OF_DAY);
     final int minuto = c.get(Calendar.MINUTE);
+
+    private final int IMAGE_PICKER_REQUEST = 1;
+    private final int REQUEST_IMAGE_CAPTURE = 2;
+    private final int REQUEST_EXTERNAL_STORAGE = 3;
+
+    private Uri imageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +122,10 @@ public class CrearNegocioActivity extends Activity {
 
         botonHoraApertura = findViewById(R.id.botonHoraApertura);
         botonHoraCierre = findViewById(R.id.botonHoraCierre);
+        camara = findViewById(R.id.camara);
+        galeria = findViewById(R.id.galeria);
+
+        foto = findViewById(R.id.foto);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.getMenu().getItem(0).setCheckable(false);
@@ -112,6 +136,32 @@ public class CrearNegocioActivity extends Activity {
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Propietario") == 0) {
             propietario = (Propietario) getIntent().getSerializableExtra("usr");
         }
+
+        camara.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String explanation = "Es necesario usar la cámara para tomar la foto";
+                tools.requestPermission(CrearNegocioActivity.this, Manifest.permission.CAMERA, explanation, REQUEST_IMAGE_CAPTURE);
+                tools.requestPermission(CrearNegocioActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, explanation, REQUEST_EXTERNAL_STORAGE);
+                takePicture();
+            }
+
+            private void takePicture() {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        });
+
+        galeria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pickImage = new Intent(Intent.ACTION_PICK);
+                pickImage.setType("image/*");
+                startActivityForResult(pickImage, IMAGE_PICKER_REQUEST);
+            }
+        });
 
         botonHoraApertura.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,7 +291,7 @@ public class CrearNegocioActivity extends Activity {
                                                                 e.printStackTrace();
                                                             }*/
 
-                         Negocio negocio = new Negocio(nombreNegocio.getText().toString(),horaApertura.getText().toString(),horaCierre.getText().toString(),telefono.getText().toString(),tipoNegocio,"carrera 7 # 40",1.2,2.3,propietario.getId(),catalogoNegocio,servicioAdicionalNegocio,domiciliosNegocio);
+                         Negocio negocio = new Negocio(nombreNegocio.getText().toString(),horaApertura.getText().toString(),horaCierre.getText().toString(),telefono.getText().toString(),tipoNegocio,"carrera 7 # 40",1.2,2.3,propietario.getId(),catalogoNegocio,servicioAdicionalNegocio,domiciliosNegocio,"");
                          myRef.setValue(negocio);
 
                                                            /* for(int i=0; i<fotos.length; i++){
@@ -250,6 +300,11 @@ public class CrearNegocioActivity extends Activity {
                                                                     imagesProfile.putFile(imageUri[i]);
                                                                 }
                                                             }*/
+
+                        if(imageUri != null) {
+                            StorageReference imagesProfile = mStorageRef.child(key).child("imageProfile");
+                            imagesProfile.putFile(imageUri);
+                        }
 
                          Toast.makeText(CrearNegocioActivity.this, "Negocio creado exitosamente", Toast.LENGTH_SHORT).show();
                          CrearNegocioActivity.this.finish();
@@ -346,4 +401,44 @@ public class CrearNegocioActivity extends Activity {
             return false;
         }
     };
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case IMAGE_PICKER_REQUEST:
+                if(resultCode == RESULT_OK){
+                    try {
+                        imageUri = data.getData();
+                        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                        foto.setImageBitmap(selectedImage);
+                        //  LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(167, 185);
+                        //image.setLayoutParams(params);
+                        foto.setMaxHeight(106);
+                        foto.setMaxWidth(106);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case REQUEST_IMAGE_CAPTURE:
+                if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+                    //imageUri = data.getData();
+                    // Log.i("URI", imageUri.toString());
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    String path = MediaStore.Images.Media.insertImage(CrearNegocioActivity.this.getContentResolver(), imageBitmap, "Title", null);
+                    imageUri= Uri.parse(path);
+
+                    foto.setImageBitmap(imageBitmap);
+                    foto.setMaxHeight(106);
+                    foto.setMaxWidth(106);
+                }
+                break;
+        }
+    }
 }
