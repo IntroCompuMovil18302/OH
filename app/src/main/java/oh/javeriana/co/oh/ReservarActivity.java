@@ -44,6 +44,7 @@ public class ReservarActivity extends AppCompatActivity {
     String pathImg = "";
     String idUsr;
     String idAloj;
+    Button btnReservar;
 
     public final Calendar c = Calendar.getInstance();
     private final int mes = c.get(Calendar.MONTH);
@@ -70,15 +71,16 @@ public class ReservarActivity extends AppCompatActivity {
         //setSelectionMode(MaterialCalendarView.SELECTION_MODE_MULTIPLE);
 
         calendarView = (CalendarView) findViewById(R.id.calendarView);
-        fechaInicial = (TextView) findViewById(R.id.fechaInicial);
-        fechaFinal = (TextView) findViewById(R.id.fechaFinal);
+        btnReservar = findViewById(R.id.botonReservar);
+        fechaInicial = (TextView) findViewById(R.id.fechaLlegada);
+        fechaFinal = (TextView) findViewById(R.id.fechaSalida);
         botonFechaInicial= (ImageButton) findViewById(R.id.botonFechaInicial);
         botonFechaFinal= (ImageButton) findViewById(R.id.botonFechaFinal);
         botonReservar = (Button) findViewById(R.id.botonReservar);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.getMenu().getItem(0).setCheckable(false);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        //navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 
         rol = getIntent().getExtras().getSerializable("usr").getClass().getName();
@@ -93,6 +95,22 @@ public class ReservarActivity extends AppCompatActivity {
         idAloj = (String) getIntent().getExtras().getString("idAloj");
         pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
 
+        btnReservar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });*/
        botonFechaInicial.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
@@ -112,6 +130,7 @@ public class ReservarActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mAuth = FirebaseAuth.getInstance();
                 mStorageRef = FirebaseStorage.getInstance().getReference();
+                database= FirebaseDatabase.getInstance();
                 myRef = database.getReference(PATH_RESERVAS);
                 String key = myRef.push().getKey();
                 myRef = database.getReference(PATH_RESERVAS + key);
