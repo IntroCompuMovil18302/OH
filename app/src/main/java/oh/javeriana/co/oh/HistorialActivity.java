@@ -29,6 +29,8 @@ public class HistorialActivity extends Activity {
     Anfitrion anfitrion = null;
     Propietario propietario = null;
     String idUsr = "";
+    String nombreAlojamiento;
+    String nombreProducto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +119,8 @@ public class HistorialActivity extends Activity {
             TextView txtPrice = view.findViewById(R.id.precioProd);
             TextView txtDesc = view.findViewById(R.id.descProd);
 
+            nombreAlojamiento = txtVwName.getText().toString();
+
             Button botonCalificar = view.findViewById(R.id.calificar);
             if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped")!=0){
                 botonCalificar.setVisibility(View.GONE);
@@ -130,6 +134,8 @@ public class HistorialActivity extends Activity {
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
+                        intent.putExtra("nombreAlo", nombreAlojamiento);
+
                     startActivity(intent);
                 }
             });

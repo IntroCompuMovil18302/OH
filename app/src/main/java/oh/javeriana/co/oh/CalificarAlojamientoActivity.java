@@ -12,11 +12,27 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class CalificarAlojamientoActivity extends AppCompatActivity {
 
+    public static final String PATH_CALIFICACIONES="calificaciones/";
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private StorageReference mStorageRef;
     Huesped huesped = null;
     String rol = "";
+    String nombreAlojamiento = "";
+    private FirebaseAuth mAuth;
+    RatingBar estrellas;
+    EditText comentario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +51,26 @@ public class CalificarAlojamientoActivity extends AppCompatActivity {
         });*/
 
        Button enviar = findViewById(R.id.enviar);
+       comentario =  findViewById(R.id.comentario);
        enviar.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
+               float numeroEstrellas;
+               numeroEstrellas = estrellas.getNumStars();
+               String comentarioS = comentario.getText().toString();
+               Log.i("ESTRELLITAS", String.valueOf(numeroEstrellas));
+               Log.i("COMENTARIO", comentarioS);
+
+
+               /*mAuth = FirebaseAuth.getInstance();
+               mStorageRef = FirebaseStorage.getInstance().getReference();
+               myRef = database.getReference(PATH_CALIFICACIONES);
+               String key = myRef.push().getKey();
+               myRef = database.getReference(PATH_CALIFICACIONES + key);*/
+               //Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
+                       //cant, precio, anfitrion.getId(), tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
+               //myRef.setValue();
+
                finish();
 
            }
@@ -48,9 +81,11 @@ public class CalificarAlojamientoActivity extends AppCompatActivity {
        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        nombreAlojamiento = getIntent().getSerializableExtra("nombreAlo").getClass().getName();
         Log.i("ROL", rol);
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
+            Log.i("NOMBREALOJA", nombreAlojamiento);
         }
 
     }
