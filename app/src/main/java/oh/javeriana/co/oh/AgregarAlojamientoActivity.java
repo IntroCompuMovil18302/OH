@@ -270,7 +270,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
             public void onClick(View view) {
                 mAuth = FirebaseAuth.getInstance();
                 mStorageRef = FirebaseStorage.getInstance().getReference();
-                myRef = database.getReference(PATH_ALOJAMIENTOS);
+                myRef = database.getReference(PATH_ALOJAMIENTOS+"/"+idUsr);
 
 
                 if(!nombreET.getText().toString().isEmpty()) {
