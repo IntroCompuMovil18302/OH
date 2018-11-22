@@ -145,8 +145,13 @@ public class RegistroActivity extends Activity {
                                         //Task<AuthResult> task=
                                         mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasena.getText().toString());
                                         //if(task.isSuccessful()){
-                                        Intent intent = new Intent(getApplicationContext(),ExplorarActivity.class);
-                                        intent.putExtra("usr",huesped);
+                                        Bundle bundle = new Bundle();
+
+                                        Intent intent = new Intent(getApplicationContext(),MapaActivity.class);
+                                        bundle.putSerializable("usr",huesped);
+                                        bundle.putString("idUsr", key);
+                                        intent.putExtras(bundle);
+
                                         startActivity(intent);
                                         //}else{
                                           //  Toast.makeText(RegistroActivity.this, "El correo ingresado ya se encuentra registrado, es necesario cambiarlo", Toast.LENGTH_SHORT).show();
