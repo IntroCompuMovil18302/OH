@@ -20,6 +20,7 @@ public class Alojamiento implements Serializable {
     private int cantHuespedes;
     private String direccion;
     private String idUsuario;
+    private String fechas;
     private String fechaInicial;
     private String fechaFinal;
 
@@ -27,7 +28,7 @@ public class Alojamiento implements Serializable {
     }
 
     public Alojamiento(String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String idUsuario,
-                String tipoAlojamiento, double latitud, double longitud, String fechaInicial, String fechaFinal) {
+                String tipoAlojamiento, double latitud, double longitud, String fechas) {
         //this.idAloj = idAloj;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -38,8 +39,9 @@ public class Alojamiento implements Serializable {
         this.tipo = tipoAlojamiento;
         this.latitud = latitud;
         this.longitud = longitud;
-        this.fechaInicial=fechaInicial;
-        this.fechaFinal=fechaFinal;
+        this.fechas = fechas;
+        this.fechaInicial = fechas;
+        this.fechaFinal = fechas;
     }
 
     public String getTipo() {

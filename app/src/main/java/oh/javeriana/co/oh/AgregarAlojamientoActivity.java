@@ -86,17 +86,12 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
     ImageButton prev;
     ImageButton prev2;
     ImageButton agrearFecha;
-    TextView fechaInicial;
-    TextView fechaFinal;
     TextView datosAlojamiento;
     TextView textHuespedes;
     TextView textTipo;
-    TextView textUbicacion;
     TextView textPrecio;
     TextView textNombre;
     TextView textDescripcion;
-    TextView labelFechaInic;
-    TextView labelFechaFin;
     Uri imageUri[];
     ImageView fotos[];
     ImageView foto1;
@@ -124,23 +119,6 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
     String rol = "";
     String unaFecha="";
 
-    public void obtenerFecha(final int codigo){
-        DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                final int mesActual = month + 1;
-                String diaFormateado = (dayOfMonth < 10)? "0" + String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
-                String mesFormateado = (mesActual < 10)? "0" + String.valueOf(mesActual):String.valueOf(mesActual);
-                if (codigo==1)
-                    fechaInicial.setText(diaFormateado + "/" + mesFormateado + "/" + year);
-                else
-                    fechaFinal.setText(diaFormateado + "/" + mesFormateado + "/" + year);
-            }
-        },anio, mes, dia);
-
-        recogerFecha.show();
-        //return recogerFecha.show();
-    }
 
     public void obtenerFecha(final TextView fecha){
         //final String unaFecha;
@@ -161,7 +139,6 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
 
 
 
-                //fechaFinal.setText(diaFormateado + "/" + mesFormateado + "/" + year);
             }
         },anio, mes, dia);
 
@@ -216,17 +193,12 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
         adapter = ArrayAdapter.createFromResource(this, R.array.alojamientos, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipo.setAdapter(adapter);
-        fechaInicial = findViewById(R.id.fechaInic);
-        fechaFinal = findViewById(R.id.fechaFinal);
         datosAlojamiento = findViewById(R.id.datosAlojamiento);
         textHuespedes = findViewById(R.id.textHuespedes);
         textTipo = findViewById(R.id.textTipo);
-        textUbicacion = findViewById(R.id.textUbicacion);
         textPrecio = findViewById(R.id.textPrecio);
         textNombre = findViewById(R.id.textNombre);
         textDescripcion = findViewById(R.id.textDescripcion);
-        labelFechaInic = findViewById(R.id.labelFechaInic);
-        labelFechaFin = findViewById(R.id.labelFechaFinal);
         linearLayout = findViewById(R.id.linearLayoutFotos);
         linerFechas = findViewById(R.id.linearFechas);
         constraintLayout = findViewById(R.id.constraintLayout);
@@ -304,20 +276,6 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
         });*/
 
 
-        fechaInicial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                obtenerFecha(1);
-            }
-        });
-        fechaFinal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                obtenerFecha(2);
-            }
-        });
-
-
         spinnerTipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -377,7 +335,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
 
 
                                                     Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
-                                                            cant, precio, idUsr, tipoAlojamiento, latitud, longitud, obtenerTodasFechas(), fechaFinal.getText().toString() );
+                                                            cant, precio, idUsr, tipoAlojamiento, latitud, longitud, obtenerTodasFechas() );
                                                     myRef.setValue(alojamiento);
 
                                                     for(int i=0; i<fotos.length; i++){
@@ -429,17 +387,12 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 cantHuespedesET.setVisibility(View.GONE);
                 textTipo.setVisibility(View.GONE);
                 spinnerTipo.setVisibility(View.GONE);
-                textUbicacion.setVisibility(View.GONE);
                 textPrecio.setVisibility(View.GONE);
                 precioET.setVisibility(View.GONE);
                 textNombre.setVisibility(View.GONE);
                 nombreET.setVisibility(View.GONE);
                 textDescripcion.setVisibility(View.GONE);
                 descripcionET.setVisibility(View.GONE);
-                labelFechaInic.setVisibility(View.GONE);
-                labelFechaFin.setVisibility(View.GONE);
-                fechaInicial.setVisibility(View.GONE);
-                fechaFinal.setVisibility(View.GONE);
                 botonAgregar.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.GONE);
 
@@ -465,17 +418,14 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 cantHuespedesET.setVisibility(View.VISIBLE);
                 textTipo.setVisibility(View.VISIBLE);
                 spinnerTipo.setVisibility(View.VISIBLE);
-                textUbicacion.setVisibility(View.VISIBLE);
                 textPrecio.setVisibility(View.VISIBLE);
                 precioET.setVisibility(View.VISIBLE);
                 textNombre.setVisibility(View.VISIBLE);
                 nombreET.setVisibility(View.VISIBLE);
                 textDescripcion.setVisibility(View.VISIBLE);
                 descripcionET.setVisibility(View.VISIBLE);
-                labelFechaInic.setVisibility(View.VISIBLE);
-                labelFechaFin.setVisibility(View.VISIBLE);
-                fechaInicial.setVisibility(View.VISIBLE);
-                fechaFinal.setVisibility(View.VISIBLE);
+
+
                 //botonAgregar.setVisibility(View.VISIBLE);
                 //foto1.setVisibility(View.VISIBLE);
                 linearLayout.setVisibility(View.VISIBLE);
@@ -501,17 +451,15 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 cantHuespedesET.setVisibility(View.GONE);
                 textTipo.setVisibility(View.GONE);
                 spinnerTipo.setVisibility(View.GONE);
-                textUbicacion.setVisibility(View.GONE);
                 textPrecio.setVisibility(View.GONE);
                 precioET.setVisibility(View.GONE);
                 textNombre.setVisibility(View.GONE);
                 nombreET.setVisibility(View.GONE);
                 textDescripcion.setVisibility(View.GONE);
                 descripcionET.setVisibility(View.GONE);
-                labelFechaInic.setVisibility(View.GONE);
-                labelFechaFin.setVisibility(View.GONE);
-                fechaInicial.setVisibility(View.GONE);
-                fechaFinal.setVisibility(View.GONE);
+
+
+
                 botonAgregar.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.GONE);
 
