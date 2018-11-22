@@ -116,6 +116,7 @@ public class PerfilActivity extends Activity {
                 botonAgregar.setText("Agregar alojamiento");
             }else{
                 botonAgregar.setText("Agregar Negocio");
+
             }
         }else{
             botonAgregar.setVisibility(View.GONE);
