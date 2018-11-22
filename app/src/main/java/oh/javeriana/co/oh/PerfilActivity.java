@@ -24,7 +24,6 @@ import com.google.firebase.storage.StorageReference;
 public class PerfilActivity extends Activity {
     FirebaseAuth mAuth;
 
-    Button botonGestionar;
     Button botonAgregar;
     Button explorar;
     Button historial;
@@ -48,7 +47,6 @@ public class PerfilActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
-        botonGestionar=findViewById(R.id.gestionar);
         botonAgregar=findViewById(R.id.agregar);
         btnSignOut=findViewById(R.id.btnSignOut);
         txNombre=findViewById(R.id.nombre);
@@ -116,14 +114,12 @@ public class PerfilActivity extends Activity {
            // if(rol.equals("propietarioAlojamiento")){
             if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0){
                 botonAgregar.setText("Agregar alojamiento");
-                botonGestionar.setText("Gestionar alojamientos");
             }else{
                 botonAgregar.setText("Agregar Negocio");
-                botonGestionar.setText("Gestionar Negocio");
+
             }
         }else{
             botonAgregar.setVisibility(View.GONE);
-            botonGestionar.setVisibility(View.GONE);
             host_navigation.setVisibility(View.GONE);
             guest_navigation.setSelectedItemId(R.id.navigationProfile);
             guest_navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -154,19 +150,7 @@ public class PerfilActivity extends Activity {
             }
         });
 
-        botonGestionar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),EditarAlojamientoActivity.class);
-                if(anfitrion != null)
-                    intent.putExtra("usr", anfitrion);
-                else if (huesped != null)
-                    intent.putExtra("usr", huesped);
-                else if (propietario != null)
-                    intent.putExtra("usr", propietario);
-                startActivity(intent);
-            }
-        });
+
 
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
