@@ -57,7 +57,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <CalendarView
-            android:id="@+id/calendarView3"
+            android:id="@+id/calendarView"
             android:layout_width="324dp"
             android:layout_height="310dp"
             android:layout_marginBottom="8dp"

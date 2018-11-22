@@ -10,8 +10,7 @@ public class Reserva implements Serializable {
     String fechaFinal;
     boolean calificado;
 
-    public Reserva(String idHuesped, String idAlojamiento, String fechaReserva, String fechaInicial, String fechaFinal, boolean calificado) {
-        this.idHuesped = idHuesped;
+    public Reserva(String idAlojamiento, String fechaReserva, String fechaInicial, String fechaFinal, boolean calificado) {
         this.idAlojamiento = idAlojamiento;
         this.fechaReserva = fechaReserva;
         this.fechaInicial = fechaInicial;
