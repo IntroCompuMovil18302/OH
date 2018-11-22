@@ -133,7 +133,7 @@ public class ReservarActivity extends AppCompatActivity {
                 database= FirebaseDatabase.getInstance();
                 myRef = database.getReference(PATH_RESERVAS);
                 String key = myRef.push().getKey();
-                myRef = database.getReference(PATH_RESERVAS + key);
+                myRef = database.getReference(PATH_RESERVAS + "/"+idUsr+"/"+key);
 
                 Reserva reserva = new Reserva(idAloj, Calendar.getInstance().getTime().toString(),fechaInicial.getText().toString(),fechaFinal.getText().toString(),false);
                 myRef.setValue(reserva);
