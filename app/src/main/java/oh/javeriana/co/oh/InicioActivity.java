@@ -69,23 +69,32 @@ public class InicioActivity extends AppCompatActivity {
                     if(mail.compareToIgnoreCase(user.getEmail()) == 0) {
                         String rol = singleSnapshot.child("rol").getValue().toString();
 
+                        Bundle bundle = new Bundle();
+                        bundle.putString("idUsr", singleSnapshot.getKey());
+
                         if (rol.compareTo("huesped") == 0) {
                             Huesped usr  = singleSnapshot.getValue(Huesped.class);
+                            bundle.putSerializable("usr", usr);
+
                             Intent intent = new Intent(getApplicationContext(), MapaActivity.class);
-                            intent.putExtra("usr", usr);
+                            intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
                         } else if (rol.compareTo("propietarioAlojamiento") == 0) {
                             Anfitrion usr  = singleSnapshot.getValue(Anfitrion.class);
+                            bundle.putSerializable("usr", usr);
+
                             Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                            intent.putExtra("usr", usr);
+                            intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
                         }
                         else if (rol.compareTo("propietarioNegocio") == 0) {
                             Propietario usr  = singleSnapshot.getValue(Propietario.class);
+                            bundle.putSerializable("usr", usr);
+
                             Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                            intent.putExtra("usr", usr);
+                            intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
                         }
@@ -113,22 +122,31 @@ public class InicioActivity extends AppCompatActivity {
                     if(mail.compareToIgnoreCase(user.getEmail()) == 0) {
                         String rol = singleSnapshot.child("rol").getValue().toString();
 
+                        Bundle bundle = new Bundle();
+                        bundle.putString("idUsr", singleSnapshot.getKey());
+
                         if (rol.compareTo("huesped") == 0) {
                             Huesped usr  = singleSnapshot.getValue(Huesped.class);
+                            bundle.putSerializable("usr", usr);
+
                             Intent intent = new Intent(getApplicationContext(), MapaActivity.class);
-                            intent.putExtra("usr", usr);
+                            intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
                         } else if (rol.compareTo("propietarioAlojamiento") == 0) {
                             Anfitrion usr  = singleSnapshot.getValue(Anfitrion.class);
+                            bundle.putSerializable("usr", usr);
+
                             Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                            intent.putExtra("usr", usr);
+                            intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
                         } else if (rol.compareTo("propietarioNegocio") == 0) {
                             Propietario usr  = singleSnapshot.getValue(Propietario.class);
+                            bundle.putSerializable("usr", usr);
+
                             Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                            intent.putExtra("usr", usr);
+                            intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
                         } else

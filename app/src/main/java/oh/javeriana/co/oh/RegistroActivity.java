@@ -139,7 +139,7 @@ public class RegistroActivity extends Activity {
                             if(!nombre.getText().toString().isEmpty()){
                                 if(!nacionalidad.getSelectedItem().toString().isEmpty()){
                                     if(Pattern.matches(formato,fechaNacimiento.getText())){
-                                        Huesped huesped = new Huesped(key, nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getSelectedItem().toString());
+                                        Huesped huesped = new Huesped(nombre.getText().toString(), correo.getText().toString(), fechaNacimiento.getText().toString(), "", (String) genero.getSelectedItem(), nacionalidad.getSelectedItem().toString());
                                         myRef.setValue(huesped);
 
                                         //Task<AuthResult> task=
@@ -169,7 +169,7 @@ public class RegistroActivity extends Activity {
                     else if(rol.compareTo("propietarioAlojamiento") == 0) {
                         if(!nombre.getText().toString().isEmpty()){
                             if(Pattern.matches(formato,fechaNacimiento.getText())){
-                                Anfitrion propAloj = new Anfitrion(key, "propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
+                                Anfitrion propAloj = new Anfitrion("propietarioAlojamiento", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
                                 myRef.setValue(propAloj);
 
                                 //Task<AuthResult> task=
@@ -192,8 +192,8 @@ public class RegistroActivity extends Activity {
                     else if(rol.compareTo("propietarioNegocio") == 0) {
                         if(!nombre.getText().toString().isEmpty()){
                             if(Pattern.matches(formato,fechaNacimiento.getText())){
-                               // Anfitrion propAloj = new Anfitrion(key, "propietarioNegocio", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
-                                Propietario propNeg = new Propietario(key, "propietarioNegocio", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
+                               // Anfitrion propAloj = new Anfitrion("propietarioNegocio", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
+                                Propietario propNeg = new Propietario("propietarioNegocio", correo.getText().toString(), nombre.getText().toString(), fechaNacimiento.getText().toString(), "");
                                 myRef.setValue(propNeg);
 
                                 //Task<AuthResult> task=

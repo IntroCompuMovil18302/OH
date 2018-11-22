@@ -28,6 +28,7 @@ public class HistorialActivity extends Activity {
     Huesped huesped = null;
     Anfitrion anfitrion = null;
     Propietario propietario = null;
+    String idUsr = "";
     String nombreAlojamiento;
     String nombreProducto;
 
@@ -37,6 +38,10 @@ public class HistorialActivity extends Activity {
         setContentView(R.layout.activity_historial);
 
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        idUsr = (String) getIntent().getExtras().getString("idUsr");
+        Log.i("IdUsr", idUsr);
+
+
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
         }
@@ -150,27 +155,29 @@ public class HistorialActivity extends Activity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
+
+            Bundle bundle = new Bundle();
+            bundle.putString("idUsr", idUsr);
+
+            if(anfitrion != null)
+                bundle.putSerializable("usr", anfitrion);
+            else if (huesped != null)
+                bundle.putSerializable("usr", huesped);
+            else if (propietario != null)
+                bundle.putSerializable("usr", propietario);
+
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
                     intent = new Intent(getApplicationContext(),MapaActivity.class);
-                    if(anfitrion != null)
-                        intent.putExtra("usr", anfitrion);
-                    else if (huesped != null)
-                        intent.putExtra("usr", huesped);
-                    else if (propietario != null)
-                        intent.putExtra("usr", propietario);
+                    intent.putExtras(bundle);
+
                     startActivity(intent);
                     return true;
                 case R.id.navigationRecord:
                     return true;
                 case R.id.navigationProfile:
                     intent = new Intent(getApplicationContext(),PerfilActivity.class);
-                    if(anfitrion != null)
-                        intent.putExtra("usr", anfitrion);
-                    else if (huesped != null)
-                        intent.putExtra("usr", huesped);
-                    else if (propietario != null)
-                        intent.putExtra("usr", propietario);
+                    intent.putExtras(bundle);
 
                     startActivity(intent);
                     return true;
