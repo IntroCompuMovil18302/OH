@@ -24,6 +24,15 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
+
+                <fragment
+                    android:id="@+id/mapa"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="488dp"
+
+                    tools:context=".MapaActivity" />
+
                 <LinearLayout
                     android:id="@+id/linearLayout8"
                     android:layout_width="match_parent"
@@ -39,7 +48,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
 
                     <TextView
-                        android:id="@+id/textView9"
+                        android:id="@+id/textUbicacion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -47,8 +56,9 @@
                         android:textColor="@color/text"
                         android:textSize="18sp"
                         android:textStyle="bold"
+                        android:visibility="invisible"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+                        app:layout_constraintTop_toBottomOf="@+id/textPrecio" />
 
                     <EditText
                         android:id="@+id/ubicacionET"
@@ -62,7 +72,7 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.675"
-                        app:layout_constraintStart_toEndOf="@+id/textView9"
+                        app:layout_constraintStart_toEndOf="@+id/textUbicacion"
                         app:layout_constraintTop_toBottomOf="@+id/precioET" />
                 </LinearLayout>
 
@@ -81,7 +91,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
                     <TextView
-                        android:id="@+id/comentario"
+                        android:id="@+id/textTipo"
                         android:layout_width="359dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -90,7 +100,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+                        app:layout_constraintTop_toBottomOf="@+id/textUbicacion" />
 
                     <Spinner
                         android:id="@+id/spinnerTipo"
@@ -101,7 +111,7 @@
                         android:entries="@array/alojamientos"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.318"
-                        app:layout_constraintStart_toEndOf="@+id/comentario"
+                        app:layout_constraintStart_toEndOf="@+id/textTipo"
                         app:layout_constraintTop_toBottomOf="@+id/ubicacionET" />
 
                 </LinearLayout>
@@ -121,7 +131,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout9">
 
                     <TextView
-                        android:id="@+id/textView7"
+                        android:id="@+id/textNombre"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -146,12 +156,12 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.593"
-                        app:layout_constraintStart_toEndOf="@+id/textView7"
+                        app:layout_constraintStart_toEndOf="@+id/textNombre"
                         app:layout_constraintTop_toTopOf="parent" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout6"
+                    android:id="@+id/linearLayoutFotos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -162,7 +172,7 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3">
+                    app:layout_constraintTop_toBottomOf="@+id/datosAlojamiento">
 
                     <ImageView
                         android:id="@+id/foto1"
@@ -204,10 +214,10 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutFotos">
 
                     <TextView
-                        android:id="@+id/textView11"
+                        android:id="@+id/textHuespedes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -218,7 +228,7 @@
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/comentario"
+                        app:layout_constraintTop_toBottomOf="@+id/textTipo"
                         app:layout_constraintVertical_bias="0.0" />
 
                     <EditText
@@ -234,14 +244,14 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.538"
-                        app:layout_constraintStart_toEndOf="@+id/textView11"
+                        app:layout_constraintStart_toEndOf="@+id/textHuespedes"
                         app:layout_constraintTop_toBottomOf="@+id/spinnerTipo"
                         app:layout_constraintVertical_bias="0.0" />
 
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/datosAlojamiento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -308,7 +318,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
 
                     <TextView
-                        android:id="@+id/textView8"
+                        android:id="@+id/textPrecio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -317,7 +327,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                        app:layout_constraintTop_toBottomOf="@+id/textDescripcion" />
 
                     <EditText
                         android:id="@+id/precioET"
@@ -331,7 +341,7 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.711"
-                        app:layout_constraintStart_toEndOf="@+id/textView8"
+                        app:layout_constraintStart_toEndOf="@+id/textPrecio"
                         app:layout_constraintTop_toBottomOf="@+id/descripcionET" />
                 </LinearLayout>
 
@@ -365,7 +375,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout10">
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/textDescripcion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -376,7 +386,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                        app:layout_constraintTop_toBottomOf="@+id/textNombre" />
 
                     <EditText
                         android:id="@+id/descripcionET"
@@ -390,7 +400,7 @@
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.35"
-                        app:layout_constraintStart_toEndOf="@+id/textView6"
+                        app:layout_constraintStart_toEndOf="@+id/textDescripcion"
                         app:layout_constraintTop_toBottomOf="@+id/nombreET" />
                 </LinearLayout>
 
@@ -428,6 +438,42 @@
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
                 </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/prev"
+                    android:layout_width="45dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="444dp"
+                    android:background="@color/background"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/prev2"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.024"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/next"
+                    android:layout_width="45dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="444dp"
+                    android:background="@color/background"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/next2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.862"
+                    app:layout_constraintStart_toEndOf="@+id/botonAgregar"
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
