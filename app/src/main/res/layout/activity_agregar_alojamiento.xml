@@ -358,17 +358,17 @@
                     android:id="@+id/botonAgregar"
                     android:layout_width="165dp"
                     android:layout_height="41dp"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="444dp"
                     android:layout_weight="1"
                     android:background="@color/button"
                     android:text="Crear Alojamiento"
                     android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.453"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintHorizontal_bias="0.502"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout11"
@@ -475,12 +475,12 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="444dp"
+                    android:layout_marginTop="440dp"
                     android:background="@color/background"
                     android:scaleType="fitCenter"
                     android:src="@drawable/next2"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.862"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/botonAgregar"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -492,13 +492,13 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="444dp"
+                    android:layout_marginTop="440dp"
                     android:background="@color/background"
                     android:scaleType="fitCenter"
                     android:src="@drawable/next2"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.862"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/botonAgregar"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -509,6 +509,7 @@
                     android:layout_marginBottom="428dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
+                    android:background="@color/background"
                     android:scaleType="fitCenter"
                     android:src="@drawable/next"
                     android:visibility="invisible"

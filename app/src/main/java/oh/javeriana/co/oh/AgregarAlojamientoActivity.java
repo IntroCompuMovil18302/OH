@@ -476,7 +476,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 labelFechaFin.setVisibility(View.VISIBLE);
                 fechaInicial.setVisibility(View.VISIBLE);
                 fechaFinal.setVisibility(View.VISIBLE);
-                botonAgregar.setVisibility(View.VISIBLE);
+                //botonAgregar.setVisibility(View.VISIBLE);
                 //foto1.setVisibility(View.VISIBLE);
                 linearLayout.setVisibility(View.VISIBLE);
 
@@ -519,6 +519,8 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 next2.setVisibility(View.GONE);
                 prev2.setVisibility(View.VISIBLE);
                 botonAgregar.setVisibility(View.VISIBLE);
+                linerFechas.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -532,6 +534,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 prev2.setVisibility(View.GONE);
                 linerFechas.setVisibility(View.GONE);
                 agrearFecha.setVisibility(View.GONE);
+                botonAgregar.setVisibility(View.GONE);
             }
         });
 
@@ -545,7 +548,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 final TextView fechaFin = new TextView(getApplicationContext());
                 final TextView nFechaIni = new TextView(getApplicationContext());
                 final TextView nFechaFin = new TextView(getApplicationContext());
-                fechaIni.setText("___/___/____/");
+                fechaIni.setText("___/___/____/     ");
                 fechaFin.setText("___/___/____/");
                 fechaIni.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -579,7 +582,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
 
 
 
-                nFechaIni.setText("Fecha Inicial          ");
+                nFechaIni.setText("Fecha Inicial    ");
                 nFechaFin.setText("Fecha Final");
                 nFechaIni.setTextColor(Color.WHITE);
                 nFechaFin.setTextColor(Color.WHITE);
