@@ -6,11 +6,15 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -20,10 +24,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,10 +44,12 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.List;
 
-public class CrearNegocioActivity extends Activity {
+public class CrearNegocioActivity extends FragmentActivity implements OnMapReadyCallback {
 
     EditText nombreNegocio = null;
     TextView horaApertura = null;
@@ -57,13 +71,17 @@ public class CrearNegocioActivity extends Activity {
 
     TextView agregarProductos = null;
     EditText producto = null;
+    EditText direccion = null;
     Button agregar = null;
     Button publicar = null;
     Button camara = null;
     Button galeria = null;
 
+    ScrollView scrollView = null;
+
     ImageButton botonHoraApertura = null;
     ImageButton botonHoraCierre = null;
+    ImageButton next = null;
 
     Propietario propietario = null;
     private FirebaseDatabase database;
@@ -75,6 +93,8 @@ public class CrearNegocioActivity extends Activity {
     private boolean servicioAdicionalNegocio;
     private boolean domiciliosNegocio;
     private String catalogoNegocio ="";
+    private double latitudNegocio;
+    private double longitudNegocio;
 
     public static final String PATH_NEGOCIOS="negocios/";
 
@@ -89,6 +109,16 @@ public class CrearNegocioActivity extends Activity {
 
     private Uri imageUri;
     String idUsr = "";
+
+    private static final double ARRIBADERLAT = 4.792509;
+    private static final double ARRIBADERLONG = -73.909356;
+    private static final double ABAJOIZQLAT = 4.548875;
+    private static final double ABAJOIZQLONG = -74.271749;
+    private GoogleMap mMap;
+    private Marker marker;
+
+    Double latMarcador;
+    Double longMarcador;
 
 
     @Override
@@ -107,7 +137,7 @@ public class CrearNegocioActivity extends Activity {
         horaCierreLabel = (TextView) findViewById(R.id.textView18);
         horaCierre = (TextView) findViewById(R.id.horaCierre);
         telefono = (EditText) findViewById(R.id.telefono);
-        //direccion = (EditText) findViewById(R.id.direccion);
+        direccion = (EditText) findViewById(R.id.direccion);
         tipo = (TextView) findViewById(R.id.tipo);
         grupoTipos = (RadioGroup) findViewById(R.id.tiposNegocio);
 
@@ -122,11 +152,14 @@ public class CrearNegocioActivity extends Activity {
         agregar =(Button) findViewById(R.id.agregar);
         publicar = (Button) findViewById(R.id.publicar);
 
+
         botonHoraApertura = findViewById(R.id.botonHoraApertura);
         botonHoraCierre = findViewById(R.id.botonHoraCierre);
         camara = findViewById(R.id.camara);
         galeria = findViewById(R.id.galeria);
+        next = findViewById(R.id.next);
 
+        scrollView = findViewById(R.id.scrollView);
         foto = findViewById(R.id.foto);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -138,6 +171,11 @@ public class CrearNegocioActivity extends Activity {
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Propietario") == 0) {
             propietario = (Propietario) getIntent().getSerializableExtra("usr");
         }
+
+        String explanation = "Es necesario usar la cámara para tomar la foto";
+        tools.requestPermission(CrearNegocioActivity.this, Manifest.permission.CAMERA, explanation, REQUEST_IMAGE_CAPTURE);
+        tools.requestPermission(CrearNegocioActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, explanation, REQUEST_EXTERNAL_STORAGE);
+
 
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,57 +299,77 @@ public class CrearNegocioActivity extends Activity {
                 domicilios.setVisibility(View.VISIBLE);
                 opcionesDomicilio.setVisibility(View.VISIBLE);
 
-
-
-                publicar.setVisibility(View.VISIBLE);
+                next.setVisibility(View.VISIBLE);
 
                 BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
                 navigation.getMenu().getItem(0).setCheckable(false);
                 navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-                publicar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mAuth = FirebaseAuth.getInstance();
-                        mStorageRef = FirebaseStorage.getInstance().getReference();
-                        myRef = database.getReference(PATH_NEGOCIOS);
-                        /*Geocoder mGeocoder = new Geocoder(getBaseContext());*/
-                        String key = myRef.push().getKey();
-                        myRef = database.getReference(PATH_NEGOCIOS + key);
-                                                           /* LatLng position=null;
-                                                            try {
-                                                                List<Address> addresses = mGeocoder.getFromLocationName(ubicacionET.getText().toString(), 2, ABAJOIZQLAT, ABAJOIZQLONG, ARRIBADERLAT, ARRIBADERLONG);
-                                                                if (addresses != null && !addresses.isEmpty()) {
+            }
+        });
 
-                                                                    Address addressResult = addresses.get(0);
-                                                                    position = new LatLng(addressResult.getLatitude(), addressResult.getLongitude());
-                                                                    Log.i("LATITUD", String.valueOf(position.latitude));
-                                                                    Log.i("LONGITUD", String.valueOf(position.longitude));
-                                                                }
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapa);
+        mapFragment.getMapAsync(this);
 
-                                                            } catch (IOException e) {
-                                                                e.printStackTrace();
-                                                            }*/
+        mapFragment.getView().setVisibility(View.GONE);
+        direccion.setVisibility(View.GONE);
 
-                         Negocio negocio = new Negocio(nombreNegocio.getText().toString(),horaApertura.getText().toString(),horaCierre.getText().toString(),telefono.getText().toString(),tipoNegocio,"carrera 7 # 40",1.2,2.3,idUsr,catalogoNegocio,servicioAdicionalNegocio,domiciliosNegocio,"");
-                         myRef.setValue(negocio);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapFragment.getView().setVisibility(View.VISIBLE);
+                publicar.setVisibility(View.VISIBLE);
+                direccion.setVisibility(View.VISIBLE);
+                galeria.setVisibility(View.GONE);
+                camara.setVisibility(View.GONE);
+                opciones.setVisibility(View.GONE);
+                opcionesDomicilio.setVisibility(View.GONE);
+                agregar.setVisibility(View.GONE);
+                next.setVisibility(View.GONE);
+                domicilios.setVisibility(View.GONE);
+                servicioAdicional.setVisibility(View.GONE);
+                agregarProductos.setVisibility(View.GONE);
+                producto.setVisibility(View.GONE);
+                foto.setVisibility(View.GONE);
+                scrollView.setVisibility(View.GONE);
 
-                                                           /* for(int i=0; i<fotos.length; i++){
-                                                                if(imageUri[i] != null) {
-                                                                    StorageReference imagesProfile = mStorageRef.child(anfitrion.getId()).child( key + "/image" + (i+1));
-                                                                    imagesProfile.putFile(imageUri[i]);
-                                                                }
-                                                            }*/
+            }
+        });
 
-                        if(imageUri != null) {
-                            StorageReference imagesProfile = mStorageRef.child(key).child("imageProfile");
-                            imagesProfile.putFile(imageUri);
-                        }
-
-                         Toast.makeText(CrearNegocioActivity.this, "Negocio creado exitosamente", Toast.LENGTH_SHORT).show();
-                         CrearNegocioActivity.this.finish();
+        publicar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth = FirebaseAuth.getInstance();
+                mStorageRef = FirebaseStorage.getInstance().getReference();
+                myRef = database.getReference(PATH_NEGOCIOS);
+                Geocoder mGeocoder = new Geocoder(getBaseContext());
+                String key = myRef.push().getKey();
+                myRef = database.getReference(PATH_NEGOCIOS + key);
+                LatLng position=null;
+                try {
+                    List<Address> addresses = mGeocoder.getFromLocationName(direccion.getText().toString(), 2, ABAJOIZQLAT, ABAJOIZQLONG, ARRIBADERLAT, ARRIBADERLONG);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address addressResult = addresses.get(0);
+                        position = new LatLng(addressResult.getLatitude(), addressResult.getLongitude());
+                        latitudNegocio = position.latitude;
+                        longitudNegocio = position.longitude;
+                        Log.i("LATITUD", String.valueOf(position.latitude));
+                        Log.i("LONGITUD", String.valueOf(position.longitude));
                     }
-                });
+                } catch (IOException e) {
+                     e.printStackTrace();
+                }
+
+                Negocio negocio = new Negocio(nombreNegocio.getText().toString(),horaApertura.getText().toString(),horaCierre.getText().toString(),telefono.getText().toString(),tipoNegocio,direccion.getText().toString(),latitudNegocio,longitudNegocio,idUsr,catalogoNegocio,servicioAdicionalNegocio,domiciliosNegocio,"");
+                myRef.setValue(negocio);
+
+                 if(imageUri != null) {
+                     StorageReference imagesProfile = mStorageRef.child(idUsr).child("imageNegocio");
+                     imagesProfile.putFile(imageUri);
+                 }
+
+                Toast.makeText(CrearNegocioActivity.this, "Negocio creado exitosamente", Toast.LENGTH_SHORT).show();
+                CrearNegocioActivity.this.finish();
             }
         });
     }
@@ -443,4 +501,40 @@ public class CrearNegocioActivity extends Activity {
                 break;
         }
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        final Geocoder geo = new Geocoder(getBaseContext());
+
+
+        LatLng bogota = new LatLng(4.65, -74.05);
+        mMap = googleMap;
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(bogota));
+
+        // MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng);
+
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if(marker != null){
+                    marker.remove();
+                }
+                marker = mMap.addMarker(new MarkerOptions().position(latLng));
+                latMarcador=marker.getPosition().latitude;
+                longMarcador=marker.getPosition().longitude;
+                try {
+                    List<Address> addresses = geo.getFromLocation(latMarcador,longMarcador,2);
+                    Address addressResult = addresses.get(0);
+                    direccion.setText(addressResult.getAddressLine(0));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //String direccion=obtenenerDireccion(latMarcador,longMarcador);
+
+            }
+        });
+    }
+
 }

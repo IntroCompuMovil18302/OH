@@ -1,5 +1,7 @@
 package oh.javeriana.co.oh;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.sql.Time;
 
@@ -33,6 +35,8 @@ public class Negocio implements Serializable {
         this.servicioAdicional = servicioAdicional;
         this.domicilios = domicilios;
         this.foto = foto;
+
+        Log.i("PRODUCTO", "AQUI");
     }
 
     public String getNombre() {
