@@ -27,12 +27,17 @@ public class ReservarActivity extends AppCompatActivity {
     String idUsr;
     String idAloj;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //setSelectionMode(MaterialCalendarView.SELECTION_MODE_MULTIPLE);
 
         calendarView = (CalendarView) findViewById(R.id.calendarView);
 
@@ -65,6 +70,7 @@ public class ReservarActivity extends AppCompatActivity {
            @Override
            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
                //calendarView.setFoc
+               //calendarView.setDateSe
            }
        });
 
