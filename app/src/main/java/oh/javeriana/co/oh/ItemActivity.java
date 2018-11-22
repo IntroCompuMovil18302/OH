@@ -37,7 +37,7 @@ public class ItemActivity extends AppCompatActivity {
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     String rol = "";
-    Button button ;
+    Button btnReservar;
     LinearLayout layout ;
     String pathImg = "";
     ImageView fotos[];
@@ -49,6 +49,7 @@ public class ItemActivity extends AppCompatActivity {
     TextView precio;
     CalendarView calendarView;
     String idUsr;
+    String idAloj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class ItemActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         //rol =  getIntent().getStringExtra("rol");
-        button = findViewById(R.id.button);
+        btnReservar = findViewById(R.id.btnReservar);
         fotos = new ImageView[4];
         fotos[0] = findViewById(R.id.imageView1);
         fotos[1] = findViewById(R.id.imageView2);
@@ -84,12 +85,31 @@ public class ItemActivity extends AppCompatActivity {
         }
 
         alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
-        String idAloj = (String) getIntent().getExtras().getString("idAloj");
+        idAloj = (String) getIntent().getExtras().getString("idAloj");
         pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
 
 
+        btnReservar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("idUsr", idUsr);
+                bundle.putString("idAloj", idAloj);
+                bundle.putSerializable("alojamiento", alojamiento);
+                if(anfitrion != null)
+                    bundle.putSerializable("usr", anfitrion);
+                else if (huesped != null)
+                    bundle.putSerializable("usr", huesped);
+
+                Intent intent = new Intent(getApplicationContext(), ReservarActivity.class);
+                intent.putExtras(intent);
+
+                startActivity(intent);
+            }
+        });
+
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") != 0){
-            button.setVisibility(View.GONE);
+            btnReservar.setVisibility(View.GONE);
             layout.setVisibility(View.GONE);
             guest_navigation.setVisibility(View.GONE);
             host_navigation.getMenu().getItem(0).setCheckable(false);

@@ -43,6 +43,7 @@ public class ReservarActivity extends AppCompatActivity {
     String rol = "";
     String pathImg = "";
     String idUsr;
+    String idAloj;
 
     public final Calendar c = Calendar.getInstance();
     private final int mes = c.get(Calendar.MONTH);
@@ -89,7 +90,7 @@ public class ReservarActivity extends AppCompatActivity {
         }
 
         alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
-        final String idAloj = (String) getIntent().getExtras().getString("idAloj");
+        idAloj = (String) getIntent().getExtras().getString("idAloj");
         pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
 
        botonFechaInicial.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +160,7 @@ public class ReservarActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
 
-            String rol = getIntent().getSerializableExtra("usr").getClass().getName();
+            rol = getIntent().getSerializableExtra("usr").getClass().getName();
             Log.i("ROL", rol);
             if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
                 huesped = (Huesped) getIntent().getSerializableExtra("usr");

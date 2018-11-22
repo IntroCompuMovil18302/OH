@@ -144,7 +144,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/txtVwDescription" />
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/btnReservar"
                     android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -166,11 +166,6 @@
 
             </android.support.constraint.ConstraintLayout>
 
-
-            <CalendarView
-                android:id="@+id/calendarView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <Space
                 android:layout_width="match_parent"
