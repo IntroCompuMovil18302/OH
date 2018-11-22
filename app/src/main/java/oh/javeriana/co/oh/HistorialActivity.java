@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
 import android.util.Pair;
+import android.util.StateSet;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +101,7 @@ public class HistorialActivity extends Activity {
         myRefAloj.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i("TAMALOJ: ", String.valueOf(idAlojamientos.size()));
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                     alojamientos.add(singleSnapshot.getValue(Alojamiento.class));
                 }
@@ -193,10 +195,9 @@ public class HistorialActivity extends Activity {
         }
 
         @Override
-        public View getView(final int i, View view, ViewGroup viewGroup) {
 
+        public View getView(int i, View view, ViewGroup viewGroup) {
             final int j = i;
-
             view = getLayoutInflater().inflate(R.layout.customlayout_hist,null);
 
             ImageView imageView = view.findViewById(R.id.imageView11);
@@ -225,6 +226,16 @@ public class HistorialActivity extends Activity {
             btnRuta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    double latAloj = alojamientos.get(j).getLatitud();
+                    double lonAloj = alojamientos.get(j).getLongitud();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("latitud", latAloj);
+                    bundle.putDouble("longitud", lonAloj);
+
+                    Intent intent = new Intent(HistorialActivity.this, RutearActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
 
                 }
             });
@@ -254,7 +265,7 @@ public class HistorialActivity extends Activity {
                         intent.putExtra("usr", huesped);
                     else if (propietario != null)
                         intent.putExtra("usr", propietario);
-                        intent.putExtra("alojamiento", alojamientos.get(i));
+                        intent.putExtra("alojamiento", alojamientos.get(j));
                     startActivity(intent);
                 }
             });

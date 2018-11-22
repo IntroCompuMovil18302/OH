@@ -123,10 +123,13 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     DatabaseReference myRef;
 
     ArrayList<Pair<String, Alojamiento>> listaAlojamientos = new ArrayList<>();
+    ArrayList<Pair<String, Negocio>> listaNegocios = new ArrayList<>();
 
 
     LatLng userLatLng;
     Map<Marker, Pair<String, Alojamiento>> markers = new HashMap<>();
+    Map<Marker, Pair<String, Negocio>> markersNeg = new HashMap<>();
+
     String rol = "";
     String idUsr;
     boolean isSearch = false;
@@ -411,7 +414,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
                             goCurrent = false;
                         }
-                        paintMarker();
+                        paintMarkerSites();
                     /*mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));*/
                     }
@@ -421,12 +424,12 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         else {
             mMap.addMarker(new MarkerOptions().position(userLatLng).title("Tu ubicación"));
             isSearch = false;
-            paintMarker();
+            paintMarkerSites();
         }
 
     }
 
-    public void paintMarker() {
+    public void paintMarkerSites() {
         Log.i("CURRENT", String.valueOf(latitudUsuario) + " - " + String.valueOf(longitudUsuario));
         Log.i("LISTA", String.valueOf(listaAlojamientos.size()));
 
@@ -479,6 +482,60 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         }
+
+        paintMarkerNegocios();
+
+    }
+
+    public void paintMarkerNegocios() {
+        Log.i("CURRENT", String.valueOf(latitudUsuario) + " - " + String.valueOf(longitudUsuario));
+        Log.i("LISTA", String.valueOf(listaNegocios.size()));
+
+        for(Pair p: listaNegocios) {
+
+            Negocio n = (Negocio) p.second;
+
+            LatLng loc = new LatLng(n.getLatitud(), n.getLongitud());
+
+            //if (distancepoint(n.getLatitud(), n.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Negocio").icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+                    markersNeg.put(marker, p);
+            //}
+        }
+    }
+
+
+    public ArrayList<Pair<String, Negocio>> loadNegocios() {
+
+        listaNegocios.clear();
+        myRef = database.getReference("negocios");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Log.i("la lista", String.valueOf(dataSnapshot.getChildrenCount()));
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    //usr = singleSnapshot.getValue(Huesped.class);
+                    double latitud = Double.parseDouble(singleSnapshot.child("latitud").getValue().toString());
+                    double longitud = Double.parseDouble(singleSnapshot.child("longitud").getValue().toString());
+                    String nombre =  singleSnapshot.child("nombre").getValue().toString();
+                    Negocio negocio = singleSnapshot.getValue(Negocio.class);
+
+                    listaNegocios.add(new Pair<>(singleSnapshot.getKey(), negocio));
+                    Log.i("Added", singleSnapshot.getKey() + singleSnapshot.getValue().toString());
+                }
+
+                clearMap();
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("ERROR", "error en la consulta", databaseError.toException());
+            }
+        });
+
+        return(listaNegocios);
     }
 
 
@@ -501,7 +558,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.i("Added", singleSnapshot.getKey() + singleSnapshot.getValue().toString());
                 }
 
-                clearMap();
+             //   clearMap();
+                loadNegocios();
 
             }
             @Override
@@ -641,16 +699,29 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     else if (anfitrion != null)
                         bundle.putSerializable("usr", anfitrion);
 
-
-                    Log.i("MARKERS", String.valueOf(markers.size()));
-                    bundle.putString("idAloj", markers.get(marker).first);
-                    bundle.putSerializable("alojamiento", markers.get(marker).second);
                     bundle.putString("idUsr", idUsr);
 
-                    Intent intent = new Intent(getApplicationContext(), ItemActivity.class);
-                    intent.putExtras(bundle);
+                    Log.i("MARKERS", String.valueOf(markers.size()));
 
-                    startActivity(intent);
+                    if(markers.containsKey(marker)) {
+                        bundle.putString("idAloj", markers.get(marker).first);
+                        bundle.putSerializable("alojamiento", markers.get(marker).second);
+                        Intent intent = new Intent(getApplicationContext(), ItemActivity.class);
+                        intent.putExtras(bundle);
+
+                        startActivity(intent);
+                    }
+                    else if(markersNeg.containsKey(marker)) {
+                        bundle.putString("idNeg", markersNeg.get(marker).first);
+                        bundle.putSerializable("negocio", markersNeg.get(marker).second);
+                        Intent intent = new Intent(getApplicationContext(), NegocioActivity.class);
+                        intent.putExtras(bundle);
+
+                        startActivity(intent);
+                    }
+
+
+
                 }
                 return false;
 
