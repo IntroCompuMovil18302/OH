@@ -544,12 +544,15 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
             public void onClick(View view) {
                 LinearLayout linearLayout = new LinearLayout(getApplicationContext());
                 LinearLayout linearTitulos = new LinearLayout(getApplicationContext());
+                LinearLayout linear = new LinearLayout(getApplicationContext());
                 final TextView fechaIni = new TextView(getApplicationContext());
                 final TextView fechaFin = new TextView(getApplicationContext());
+                final TextView guion = new TextView(getApplicationContext());
                 final TextView nFechaIni = new TextView(getApplicationContext());
                 final TextView nFechaFin = new TextView(getApplicationContext());
-                fechaIni.setText("___/___/____/     ");
+                fechaIni.setText("___/___/____/");
                 fechaFin.setText("___/___/____/");
+                guion.setText("-");
                 fechaIni.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -602,6 +605,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 //editText.setText("ffrfrfrffr");
                 linearLayout.setOrientation(LinearLayout.HORIZONTAL);
                 linearLayout.addView(fechaIni);
+                linearLayout.addView(guion);
                 linearLayout.addView(fechaFin);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -611,6 +615,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
 
 
                 linerFechas.addView(linearTitulos,layoutParams);
+               // linerFechas.addView(guion,layoutParams);
                 linerFechas.addView(linearLayout,layoutParams);
                 //linerFechas
 
