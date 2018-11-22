@@ -26,11 +26,6 @@ public class Alojamiento implements Serializable {
     public Alojamiento() {
     }
 
-
-    /*public Alojamiento( String idAloj, String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String idUsuario,
-                        String tipoAlojamiento, double latitud, double longitud, String fechaInicial, String fechaFinal) {*/
-
-
     public Alojamiento(String nombre, String descripcion, String direccion, int cantHuespedes, double valorNoche, String idUsuario,
                 String tipoAlojamiento, double latitud, double longitud, String fechaInicial, String fechaFinal) {
         //this.idAloj = idAloj;

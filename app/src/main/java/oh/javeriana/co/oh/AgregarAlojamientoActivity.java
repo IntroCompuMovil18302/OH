@@ -72,6 +72,7 @@ public class AgregarAlojamientoActivity extends Activity {
     ImageView foto2;
     ImageView foto3;
     ImageView foto4;
+    String idUsr;
     int contFoto;
 
     final Calendar c = Calendar.getInstance();
@@ -105,6 +106,10 @@ public class AgregarAlojamientoActivity extends Activity {
         setContentView(R.layout.activity_agregar_alojamiento);
 
         anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
+        idUsr = (String) getIntent().getExtras().getString("idUsr");
+
+        Log.i("IdUsr", idUsr);
+
 
         database= FirebaseDatabase.getInstance();
 
@@ -256,12 +261,12 @@ public class AgregarAlojamientoActivity extends Activity {
 
 
                                                     Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
-                                                            cant, precio, anfitrion.getId(), tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
+                                                            cant, precio, idUsr, tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
                                                     myRef.setValue(alojamiento);
 
                                                     for(int i=0; i<fotos.length; i++){
                                                         if(imageUri[i] != null) {
-                                                            StorageReference imagesProfile = mStorageRef.child(anfitrion.getId()).child( key + "/image" + (i+1));
+                                                            StorageReference imagesProfile = mStorageRef.child(idUsr).child( key + "/image" + (i+1));
                                                             imagesProfile.putFile(imageUri[i]);
                                                         }
                                                     }

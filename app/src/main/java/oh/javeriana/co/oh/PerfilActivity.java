@@ -35,6 +35,7 @@ public class PerfilActivity extends Activity {
     TextView txRol;
     ImageView imgProfile;
     String rol="";
+    String idUsr;
     Huesped huesped=null;
     Anfitrion anfitrion=null;
     Propietario propietario = null;
@@ -58,20 +59,22 @@ public class PerfilActivity extends Activity {
         mAuth = FirebaseAuth.getInstance();
 
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        idUsr = (String) getIntent().getExtras().getString("idUsr");
+        pathImg = idUsr;
+        Log.i("IdUsr", idUsr);
+
 
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
             txNombre.setText(txNombre.getText().toString() + huesped.getNombre());
             txCorreo.setText(txCorreo.getText().toString() + huesped.getEmail());
             txRol.setText(txRol.getText().toString() + huesped.getRol());
-            pathImg=huesped.getId();
         }
         else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
             anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
             txNombre.setText(txNombre.getText().toString() + anfitrion.getNombre());
             txCorreo.setText(txCorreo.getText().toString() + anfitrion.getEmail());
             txRol.setText(txRol.getText().toString() + anfitrion.getRol());
-            pathImg=anfitrion.getId();
         }
         else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Propietario") == 0) {
             //anfitrion = (Anfitrion) getIntent().getSerializableExtra("usr");
@@ -79,7 +82,6 @@ public class PerfilActivity extends Activity {
             txNombre.setText(txNombre.getText().toString() + propietario.getNombre());
             txCorreo.setText(txCorreo.getText().toString() + propietario.getEmail());
             txRol.setText(txRol.getText().toString() + propietario.getRol());
-            pathImg=propietario.getId();
         }
 
 
@@ -131,17 +133,23 @@ public class PerfilActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = null;
+                Bundle bundle = new Bundle();
+                bundle.putString("idUsr", idUsr);
+
                 if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion")== 0){
                     intent =new Intent(getApplicationContext(),AgregarAlojamientoActivity.class );
                 }else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Propietario")== 0){
                     intent =new Intent(getApplicationContext(),CrearNegocioActivity.class );
                 }
+
                 if(anfitrion != null)
-                    intent.putExtra("usr", anfitrion);
+                    bundle.putSerializable("usr", anfitrion);
                 else if (huesped != null)
-                    intent.putExtra("usr", huesped);
+                    bundle.putSerializable("usr", huesped);
                 else if (propietario != null)
-                    intent.putExtra("usr", propietario);
+                    bundle.putSerializable("usr", propietario);
+
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

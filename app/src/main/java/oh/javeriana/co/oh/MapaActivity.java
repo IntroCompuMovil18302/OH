@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -149,7 +151,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 obtenerFecha(1);
-                loadSites();
+                //loadSites();
             }
         });
 
@@ -157,7 +159,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 obtenerFecha(2);
-                loadSites();
+                //loadSites();
             }
         });
 
@@ -315,8 +317,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
     @SuppressLint("MissingPermission")
     public void clearMap() {
-        if(mMap != null)
-            mMap.clear();
+        mMap.clear();
 
         String explanation = "Necesitamos acceder a tu ubicación para ubicarte en el mapa";
         tools.requestPermission(MapaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, explanation, LOCATION_PERMISSION);
@@ -336,8 +337,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.addMarker(new MarkerOptions().position(userLatLng)
                             .title("Tu ubicación"));
 
-                    mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
+                    /*mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));*/
                 }
             }
         });
@@ -354,6 +355,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
             Alojamiento a = (Alojamiento) p.second;
 
+            LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
+
             if (distancepoint(a.getLatitud(), a.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
                 try {
                     Log.i("FECHAS","HOLAAAAAA");
@@ -361,19 +364,34 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     if (fechaInicial.getText().toString().compareToIgnoreCase("") != 0 && fechaFinal.getText().toString().compareToIgnoreCase("") != 0) {
                         if (fechaInicial.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0 && fechaFinal.getText().toString().compareToIgnoreCase("dd/mm/yyyy") != 0) {
                             Log.i("FECHAS", "HOLAAAAAA222222222");
-                            if (String.valueOf(fechaInicial.getText().toString().isEmpty()).equals("true") && String.valueOf(fechaFinal.getText().toString().isEmpty()).equals("true")) {
+                            /*if (String.valueOf(fechaInicial.getText().toString().isEmpty()).equals("true") && String.valueOf(fechaFinal.getText().toString().isEmpty()).equals("true")) {
                                 Log.i("FECHAS", "HOLAAAA 333333");
-                                LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
+                                markers.put(marker, p);
+                            } else */
+                            Log.i("FECHAS", fechaInicial.getText().toString() + " --- " + fechaFinal.getText().toString());
+                            Log.i("FECHAS", fechaInicial.getText().toString() + " vs " + a.getFechaInicial() + " --- " + fechaFinal.getText().toString() + " vs " + a.getFechaFinal());
+                            Log.i("FECHAS", String.valueOf(a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0));
+                            if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 &&
+                                    a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0 &&
+                                    tools.getFechaDate(fechaInicial.getText().toString()).compareTo((tools.getFechaDate(fechaFinal.getText().toString()))) <= 0) {
+
                                 Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
                                 markers.put(marker, p);
-                            } else if (a.getFechaInicialDate().compareTo(tools.getFechaDate(fechaInicial.getText().toString())) <= 0 && a.getFechaFinalDate().compareTo(tools.getFechaDate(fechaFinal.getText().toString())) >= 0) {
-                                LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
-                                Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
-                                markers.put(marker, p);
-                            } else {
-                                Log.i("FECHAS", "HOLAAAA 44444444");
+
+                            } else if (tools.getFechaDate(fechaInicial.getText().toString()).compareTo((tools.getFechaDate(fechaFinal.getText().toString()))) > 0){
+
+                                Toast.makeText(this, "La fecha final es menor a la inicial", Toast.LENGTH_LONG).show();
                             }
                         }
+                        else {
+                            Log.i("MARRKER", "AGREGADO");
+                            Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                            markers.put(marker, p);
+                        }
+                    }else {
+                        Log.i("MARRKER", "AGREGADO");
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(loc).title("Alojamiento"));
+                        markers.put(marker, p);
                     }
 
                 } catch (ParseException e) {
@@ -463,14 +481,14 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         //startLocationUpdates();
-        paintMarker();
+        //paintMarker();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         //startLocationUpdates();
-        paintMarker();
+        //paintMarker();
 
     }
 
@@ -482,9 +500,13 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     public void obtenerFecha(final int codigo) {
-        DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+        DatePickerDialog.OnDateSetListener dateList = new DatePickerDialog.OnDateSetListener() {
+
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            public void onDateSet(DatePicker view, int year, int month,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
                 final int mesActual = month + 1;
                 String diaFormateado = (dayOfMonth < 10) ? "0" + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
                 String mesFormateado = (mesActual < 10) ? "0" + String.valueOf(mesActual) : String.valueOf(mesActual);
@@ -492,8 +514,17 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     fechaInicial.setText(diaFormateado + "/" + mesFormateado + "/" + year);
                 else
                     fechaFinal.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+
+                loadSites();
             }
-        }, anio, mes, dia);
+
+        };
+
+        DatePickerDialog recogerFecha = new DatePickerDialog(this, dateList, anio, mes, dia);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            recogerFecha.setOnDateSetListener(dateList);
+        }
 
         recogerFecha.show();
     }
@@ -529,6 +560,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     else if (anfitrion != null)
                         bundle.putSerializable("usr", anfitrion);
 
+
+                    Log.i("MARKERS", String.valueOf(markers.size()));
                     bundle.putString("idAloj", markers.get(marker).first);
                     bundle.putSerializable("alojamiento", markers.get(marker).second);
 

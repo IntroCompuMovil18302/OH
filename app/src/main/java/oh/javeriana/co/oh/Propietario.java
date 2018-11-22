@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Propietario  implements Serializable {
 
-    private String id;
+    //private String id;
     private String rol;
     private String email;
     private String nombre;
@@ -21,23 +21,16 @@ public class Propietario  implements Serializable {
     }
 
 
-    public Propietario(String id, String rol, String email, String nombre, String fechaNac, String foto) {
+    //public Propietario(String id, String rol, String email, String nombre, String fechaNac, String foto) {
+    public Propietario(String rol, String email, String nombre, String fechaNac, String foto) {
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
 
-        this.id = id;
+        //this.id = id;
         this.rol = rol;
         this.email = email;
         this.nombre = nombre;
         this.fechaNac = fechaNac;
         this.foto = foto;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getRol() {
