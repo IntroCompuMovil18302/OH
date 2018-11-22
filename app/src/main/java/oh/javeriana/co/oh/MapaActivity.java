@@ -7,19 +7,24 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -57,6 +62,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -93,6 +99,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     ImageButton botonFechaFinal;
     TextView fechaInicial;
     TextView fechaFinal;
+    FloatingActionButton botonBuscar;
+    EditText textDir;
 
     Marker oldmark;
     Marker newmark;
@@ -119,6 +127,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     Map<Marker, Pair<String, Alojamiento>> markers = new HashMap<>();
     String rol = "";
     String idUsr;
+    boolean isSearch = false;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -145,6 +154,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         botonFechaFinal = findViewById(R.id.botonFechaFinal);
         fechaInicial = findViewById(R.id.fechaInicial);
         fechaFinal = findViewById(R.id.fechaFinal);
+        botonBuscar = findViewById(R.id.buscarDir);
+        textDir = findViewById(R.id.textDireccion);
 
         String explanation = "Necesitamos acceder a tu ubicación para ubicarte en el mapa";
         tools.requestPermission(MapaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, explanation, LOCATION_PERMISSION);
@@ -163,6 +174,45 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 obtenerFecha(2);
                 //loadSites();
+            }
+        });
+
+        botonBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(textDir.getVisibility() == View.INVISIBLE)
+                    textDir.setVisibility(View.VISIBLE);
+                else
+                    textDir.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        textDir.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                try {
+                    if(actionId == EditorInfo.IME_ACTION_DONE) {
+                        isSearch = true;
+                        Geocoder mGeocoder = new Geocoder(getBaseContext());
+                        List<Address> addresses = mGeocoder.getFromLocationName(textDir.getText().toString(), 2, ABAJOIZQLAT, ABAJOIZQLONG, ARRIBADERLAT, ARRIBADERLONG);
+                        if (addresses != null && !addresses.isEmpty()) {
+
+                            Address addressResult = addresses.get(0);
+                            userLatLng = new LatLng(addressResult.getLatitude(), addressResult.getLongitude());
+                            latitudUsuario = userLatLng.latitude;
+                            longitudUsuario = userLatLng.longitude;
+                            loadSites();
+                            mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
+                        }
+
+                        textDir.setVisibility(View.INVISIBLE);
+                        textDir.setText("");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
             }
         });
 
@@ -322,35 +372,42 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     public void clearMap() {
         mMap.clear();
 
-        String explanation = "Necesitamos acceder a tu ubicación para ubicarte en el mapa";
-        tools.requestPermission(MapaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, explanation, LOCATION_PERMISSION);
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                Log.i("LOCATION", "onSuccess location");
-                if (location != null) {
-                    Log.i(" LOCATION ",
-                            "Longitud: " + location.getLongitude());
-                    Log.i(" LOCATION ", "Latitud: " + location.getLatitude());
+        if(!isSearch) {
+            String explanation = "Necesitamos acceder a tu ubicación para ubicarte en el mapa";
+            tools.requestPermission(MapaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, explanation, LOCATION_PERMISSION);
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    Log.i("LOCATION", "onSuccess location");
+                    if (location != null) {
+                        Log.i(" LOCATION ",
+                                "Longitud: " + location.getLongitude());
+                        Log.i(" LOCATION ", "Latitud: " + location.getLatitude());
 
-                    latitudUsuario = location.getLatitude();
-                    longitudUsuario = location.getLongitude();
+                        latitudUsuario = location.getLatitude();
+                        longitudUsuario = location.getLongitude();
 
-                    userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(userLatLng)
-                            .title("Tu ubicación"));
+                        userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(userLatLng)
+                                .title("Tu ubicación"));
 
                     /*mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));*/
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            mMap.addMarker(new MarkerOptions().position(userLatLng).title("Tu ubicación"));
+            isSearch = false;
+        }
+
     }
 
     public void paintMarker() {
         clearMap();
 
-        Log.i("CURRENT", String.valueOf(latitudUsuario) + "-" + String.valueOf(longitudUsuario));
+        Log.i("CURRENT", String.valueOf(latitudUsuario) + " - " + String.valueOf(longitudUsuario));
         Log.i("LISTA", String.valueOf(listaAlojamientos.size()));
 
 
@@ -360,7 +417,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
             LatLng loc = new LatLng(a.getLatitud(), a.getLongitud());
 
-            if (distancepoint(a.getLatitud(), a.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
+           if (distancepoint(a.getLatitud(), a.getLongitud(), latitudUsuario, longitudUsuario) <= 2) {
                 try {
                     Log.i("FECHAS","HOLAAAAAA");
                     Log.i("FECHAS",String.valueOf(fechaInicial.getText().toString().isEmpty()));
@@ -407,6 +464,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
 
     public ArrayList<Pair<String, Alojamiento>> loadSites() {
 
+        listaAlojamientos.clear();
         myRef = database.getReference("alojamientos");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -587,26 +645,27 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
+            Bundle bundle = new Bundle();
+
+            bundle.putString("idUsr", idUsr);
+
+            if(anfitrion != null)
+                bundle.putSerializable("usr", anfitrion);
+            else if (huesped != null)
+                bundle.putSerializable("usr", huesped);
 
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
                     return true;
                 case R.id.navigationRecord:
                     intent = new Intent(getApplicationContext(),HistorialActivity.class);
-                    if(anfitrion != null)
-                        intent.putExtra("usr", anfitrion);
-                    else if (huesped != null)
-                        intent.putExtra("usr", huesped);
-                    startActivity(intent);
+                    intent.putExtras(bundle);
 
+                    startActivity(intent);
                     return true;
                 case R.id.navigationProfile:
                     intent = new Intent(getApplicationContext(),PerfilActivity.class);
-
-                    if(anfitrion != null)
-                        intent.putExtra("usr", anfitrion);
-                    else if (huesped != null)
-                        intent.putExtra("usr", huesped);
+                    intent.putExtras(bundle);
 
                     startActivity(intent);
                     return true;
