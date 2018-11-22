@@ -56,7 +56,7 @@ public class HistorialActivity extends Activity {
         HistorialActivity.CustomAdapter c = new HistorialActivity.CustomAdapter();
         listView.setAdapter(c);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getBaseContext(), ItemActivity.class);
@@ -69,7 +69,7 @@ public class HistorialActivity extends Activity {
                     intent.putExtra("usr", propietario);
                 startActivity(intent);
             }
-        });
+        });*/
 
         BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);
         BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);

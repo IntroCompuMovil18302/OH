@@ -44,7 +44,6 @@ public class ReservarActivity extends AppCompatActivity {
     String pathImg = "";
     String idUsr;
     String idAloj;
-    Button btnReservar;
 
     public final Calendar c = Calendar.getInstance();
     private final int mes = c.get(Calendar.MONTH);
@@ -71,7 +70,6 @@ public class ReservarActivity extends AppCompatActivity {
         //setSelectionMode(MaterialCalendarView.SELECTION_MODE_MULTIPLE);
 
         calendarView = (CalendarView) findViewById(R.id.calendarView);
-        btnReservar = findViewById(R.id.botonReservar);
         fechaInicial = (TextView) findViewById(R.id.fechaLlegada);
         fechaFinal = (TextView) findViewById(R.id.fechaSalida);
         botonFechaInicial= (ImageButton) findViewById(R.id.botonFechaInicial);
@@ -94,13 +92,6 @@ public class ReservarActivity extends AppCompatActivity {
         alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
         idAloj = (String) getIntent().getExtras().getString("idAloj");
         pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
-
-        btnReservar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
 
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -139,6 +130,18 @@ public class ReservarActivity extends AppCompatActivity {
                 myRef.setValue(reserva);
 
                 ReservarActivity.this.finish();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("idUsr", idUsr);
+                bundle.putString("idAloj", idAloj);
+                bundle.putSerializable("alojamiento", alojamiento);
+                if (huesped != null)
+                    bundle.putSerializable("usr", huesped);
+                Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
+                intent.putExtras(bundle);
+
+                //startActivity(intent);
+
             }
         });
 
