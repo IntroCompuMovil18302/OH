@@ -40,8 +40,8 @@ public class CalificarAlojamientoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calificar_alojamiento);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        estrellas = findViewById(R.id.ratingBar);
         setSupportActionBar(toolbar);
+        database= FirebaseDatabase.getInstance();
 
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -52,41 +52,46 @@ public class CalificarAlojamientoActivity extends AppCompatActivity {
             }
         });*/
 
-       Button enviar = findViewById(R.id.enviar);
-       comentario =  findViewById(R.id.comentario);
-       enviar.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               float numeroEstrellas;
-               numeroEstrellas = estrellas.getNumStars();
-               String comentarioS = comentario.getText().toString();
-               Toast.makeText(getApplicationContext(),"Estrelllitas#"+String.valueOf(numeroEstrellas)+" Comentario: "+comentarioS,Toast.LENGTH_LONG).show();//Log.i("ESTRELLITAS", String.valueOf(numeroEstrellas));
-               //Log.i("COMENTARIO", comentarioS);
+        Button enviar = findViewById(R.id.enviar);
+        comentario =  findViewById(R.id.comentario);
+        estrellas = findViewById(R.id.ratingBar);
+        enviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                float numeroEstrellas;
+                numeroEstrellas = estrellas.getRating();
+                String comentarioS = comentario.getText().toString();
+                //Toast.makeText(getApplicationContext(),"Estrelllitas#"+String.valueOf(numeroEstrellas)+" Comentario: "+comentarioS,Toast.LENGTH_LONG).show();//Log.i("ESTRELLITAS", String.valueOf(numeroEstrellas));
+                //Toast.makeText(getApplicationContext(),"NOMBREUSUARIO#"+huesped.getNombre()+" NOMBREALOJA: "+nombreAlojamiento,Toast.LENGTH_LONG).show();
+                //Log.i("COMENTARIO", comentarioS);
 
 
-               /*mAuth = FirebaseAuth.getInstance();
-               mStorageRef = FirebaseStorage.getInstance().getReference();
-               myRef = database.getReference(PATH_CALIFICACIONES);
-               String key = myRef.push().getKey();
-               myRef = database.getReference(PATH_CALIFICACIONES + key);*/
-               //Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
-                       //cant, precio, anfitrion.getId(), tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
-               //myRef.setValue();
+                mAuth = FirebaseAuth.getInstance();
+                mStorageRef = FirebaseStorage.getInstance().getReference();
+                myRef = database.getReference(PATH_CALIFICACIONES);
+                String key = myRef.push().getKey();
+                myRef = database.getReference(PATH_CALIFICACIONES + key);
+                Calificacion calificacion = new Calificacion(huesped.getNombre(),nombreAlojamiento, numeroEstrellas,comentarioS);
+                myRef.setValue(calificacion);
+                //Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
+                //cant, precio, anfitrion.getId(), tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
+                //myRef.setValue();
 
-               finish();
+                //finish();
 
-           }
-       });
+            }
+        });
 
-       BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-       navigation.getMenu().getItem(0).setCheckable(false);
-       navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.getMenu().getItem(0).setCheckable(false);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
-        nombreAlojamiento = getIntent().getSerializableExtra("nombreAlo").getClass().getName();
+        nombreAlojamiento = getIntent().getStringExtra("nombreAlo");
         Log.i("ROL", rol);
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
+            //nombreAlojamiento =(String) getIntent().getSerializableExtra("nombreAlo");
             Log.i("NOMBREALOJA", nombreAlojamiento);
         }
 
@@ -101,14 +106,14 @@ public class CalificarAlojamientoActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
                     intent = new Intent(getApplicationContext(),MapaActivity.class);
-                   // intent.putExtra("rol","huesped");
+                    // intent.putExtra("rol","huesped");
                     if (huesped != null)
                         intent.putExtra("usr", huesped);
                     startActivity(intent);
                     return true;
                 case R.id.navigationRecord:
                     intent = new Intent(getApplicationContext(),HistorialActivity.class);
-                   // intent.putExtra("rol","huesped");
+                    // intent.putExtra("rol","huesped");
                     if (huesped != null)
                         intent.putExtra("usr", huesped);
                     startActivity(intent);
@@ -117,7 +122,7 @@ public class CalificarAlojamientoActivity extends AppCompatActivity {
                     intent = new Intent(getApplicationContext(),PerfilActivity.class);
                     if (huesped != null)
                         intent.putExtra("usr", huesped);
-                   // intent.putExtra("rol","huesped");
+                    // intent.putExtra("rol","huesped");
                     startActivity(intent);
                     return true;
             }
