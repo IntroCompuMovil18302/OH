@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -58,8 +59,8 @@ public class CalificarAlojamientoActivity extends AppCompatActivity {
                float numeroEstrellas;
                numeroEstrellas = estrellas.getNumStars();
                String comentarioS = comentario.getText().toString();
-               Log.i("ESTRELLITAS", String.valueOf(numeroEstrellas));
-               Log.i("COMENTARIO", comentarioS);
+               Toast.makeText(getApplicationContext(),"Estrelllitas#"+String.valueOf(numeroEstrellas)+" Comentario: "+comentarioS,Toast.LENGTH_LONG).show();//Log.i("ESTRELLITAS", String.valueOf(numeroEstrellas));
+               //Log.i("COMENTARIO", comentarioS);
 
 
                /*mAuth = FirebaseAuth.getInstance();
