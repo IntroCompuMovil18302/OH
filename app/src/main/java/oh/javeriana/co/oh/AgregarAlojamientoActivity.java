@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +19,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -38,7 +47,7 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 
-public class AgregarAlojamientoActivity extends Activity {
+public class AgregarAlojamientoActivity extends FragmentActivity implements OnMapReadyCallback {
     public static final String PATH_ALOJAMIENTOS="alojamientos/";
     public static final String PATH_USERS="usuarios/";
     private FirebaseDatabase database;
@@ -51,6 +60,8 @@ public class AgregarAlojamientoActivity extends Activity {
     private static final double ARRIBADERLONG = -73.909356;
     private static final double ABAJOIZQLAT = 4.548875;
     private static final double ABAJOIZQLONG = -74.271749;
+    private GoogleMap mMap;
+    private Marker marker;
 
     private final int IMAGE_PICKER_REQUEST = 1;
     private final int REQUEST_IMAGE_CAPTURE = 2;
@@ -64,8 +75,19 @@ public class AgregarAlojamientoActivity extends Activity {
     ArrayAdapter<CharSequence>adapter;
     EditText cantHuespedesET;
     Button botonAgregar;
+    ImageButton next;
+    ImageButton prev;
     TextView fechaInicial;
     TextView fechaFinal;
+    TextView datosAlojamiento;
+    TextView textHuespedes;
+    TextView textTipo;
+    TextView textUbicacion;
+    TextView textPrecio;
+    TextView textNombre;
+    TextView textDescripcion;
+    TextView labelFechaInic;
+    TextView labelFechaFin;
     Uri imageUri[];
     ImageView fotos[];
     ImageView foto1;
@@ -74,6 +96,10 @@ public class AgregarAlojamientoActivity extends Activity {
     ImageView foto4;
     String idUsr;
     int contFoto;
+    LinearLayout linearLayout;
+
+    Double latMarcador;
+    Double longMarcador;
 
     final Calendar c = Calendar.getInstance();
     final int mes = c.get(Calendar.MONTH);
@@ -120,11 +146,31 @@ public class AgregarAlojamientoActivity extends Activity {
         spinnerTipo = findViewById(R.id.spinnerTipo);
         cantHuespedesET =  findViewById(R.id.cantHuespedesET);
         botonAgregar = findViewById(R.id.botonAgregar);
+        next = findViewById(R.id.next);
+        prev = findViewById(R.id.prev);
         adapter = ArrayAdapter.createFromResource(this, R.array.alojamientos, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipo.setAdapter(adapter);
         fechaInicial = findViewById(R.id.fechaInic);
         fechaFinal = findViewById(R.id.fechaFinal);
+        datosAlojamiento = findViewById(R.id.datosAlojamiento);
+        textHuespedes = findViewById(R.id.textHuespedes);
+        textTipo = findViewById(R.id.textTipo);
+        textUbicacion = findViewById(R.id.textUbicacion);
+        textPrecio = findViewById(R.id.textPrecio);
+        textNombre = findViewById(R.id.textNombre);
+        textDescripcion = findViewById(R.id.textDescripcion);
+        labelFechaInic = findViewById(R.id.labelFechaInic);
+        labelFechaFin = findViewById(R.id.labelFechaFinal);
+        linearLayout = findViewById(R.id.linearLayoutFotos);
+
+
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapa);
+        mapFragment.getMapAsync(this);
+
+        mapFragment.getView().setVisibility(View.GONE);
+
+
         imageUri = new Uri[4];
         fotos = new ImageView[4];
         fotos[0] = findViewById(R.id.foto1);
@@ -304,6 +350,73 @@ public class AgregarAlojamientoActivity extends Activity {
                 }
             }
         });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datosAlojamiento.setVisibility(View.GONE);
+                textHuespedes.setVisibility(View.GONE);
+                cantHuespedesET.setVisibility(View.GONE);
+                textTipo.setVisibility(View.GONE);
+                spinnerTipo.setVisibility(View.GONE);
+                textUbicacion.setVisibility(View.GONE);
+                ubicacionET.setVisibility(View.GONE);
+                textPrecio.setVisibility(View.GONE);
+                precioET.setVisibility(View.GONE);
+                textNombre.setVisibility(View.GONE);
+                nombreET.setVisibility(View.GONE);
+                textDescripcion.setVisibility(View.GONE);
+                descripcionET.setVisibility(View.GONE);
+                labelFechaInic.setVisibility(View.GONE);
+                labelFechaFin.setVisibility(View.GONE);
+                fechaInicial.setVisibility(View.GONE);
+                fechaFinal.setVisibility(View.GONE);
+                botonAgregar.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.GONE);
+
+                prev.setVisibility(View.VISIBLE);
+                // mapa.setVisibility(View.VISIBLE);
+                // mMap.setVisibility(view.gone)
+                next.setVisibility(View.GONE);
+                //mapFragment.setVi;
+
+                mapFragment.getView().setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                datosAlojamiento.setVisibility(View.VISIBLE);
+                textHuespedes.setVisibility(View.VISIBLE);
+                cantHuespedesET.setVisibility(View.VISIBLE);
+                textTipo.setVisibility(View.VISIBLE);
+                spinnerTipo.setVisibility(View.VISIBLE);
+                textUbicacion.setVisibility(View.VISIBLE);
+                ubicacionET.setVisibility(View.VISIBLE);
+                textPrecio.setVisibility(View.VISIBLE);
+                precioET.setVisibility(View.VISIBLE);
+                textNombre.setVisibility(View.VISIBLE);
+                nombreET.setVisibility(View.VISIBLE);
+                textDescripcion.setVisibility(View.VISIBLE);
+                descripcionET.setVisibility(View.VISIBLE);
+                labelFechaInic.setVisibility(View.VISIBLE);
+                labelFechaFin.setVisibility(View.VISIBLE);
+                fechaInicial.setVisibility(View.VISIBLE);
+                fechaFinal.setVisibility(View.VISIBLE);
+                botonAgregar.setVisibility(View.VISIBLE);
+                //foto1.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+
+                mapFragment.getView().setVisibility(View.GONE);
+                next.setVisibility(View.VISIBLE);
+                prev.setVisibility(View.GONE);
+                // mapa.setVisibility(View.GONE);
+
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -366,4 +479,38 @@ public class AgregarAlojamientoActivity extends Activity {
         }
     };
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        final Geocoder geo = new Geocoder(getBaseContext());
+
+
+        LatLng bogota = new LatLng(4.65, -74.05);
+        mMap = googleMap;
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(bogota));
+
+        // MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng);
+
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if(marker != null){
+                    marker.remove();
+                }
+                marker = mMap.addMarker(new MarkerOptions().position(latLng));
+                latMarcador=marker.getPosition().latitude;
+                longMarcador=marker.getPosition().longitude;
+                try {
+                    List<Address> addresses = geo.getFromLocation(latMarcador,longMarcador,2);
+                    Address addressResult = addresses.get(0);
+                    ubicacionET.setText(addressResult.getAddressLine(0));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //String direccion=obtenenerDireccion(latMarcador,longMarcador);
+
+            }
+        });
+    }
 }
