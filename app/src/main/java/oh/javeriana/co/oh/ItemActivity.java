@@ -102,7 +102,7 @@ public class ItemActivity extends AppCompatActivity {
                     bundle.putSerializable("usr", huesped);
 
                 Intent intent = new Intent(getApplicationContext(), ReservarActivity.class);
-                intent.putExtras(intent);
+                intent.putExtras(bundle);
 
                 startActivity(intent);
             }
@@ -175,17 +175,6 @@ public class ItemActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-    }
-
-    public void onClick(View v){
-        Intent intent = new Intent(getApplicationContext(),ReservarActivity.class);
-        if(anfitrion != null)
-            intent.putExtra("usr", anfitrion);
-        else if (huesped != null)
-            intent.putExtra("usr", huesped);
-        else if (propietario != null)
-            intent.putExtra("usr", propietario);
-        startActivity(intent);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

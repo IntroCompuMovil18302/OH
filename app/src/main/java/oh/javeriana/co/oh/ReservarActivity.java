@@ -72,8 +72,8 @@ public class ReservarActivity extends AppCompatActivity {
 
         calendarView = (CalendarView) findViewById(R.id.calendarView);
         btnReservar = findViewById(R.id.botonReservar);
-        fechaInicial = (TextView) findViewById(R.id.fechaInicial);
-        fechaFinal = (TextView) findViewById(R.id.fechaFinal);
+        fechaInicial = (TextView) findViewById(R.id.fechaLlegada);
+        fechaFinal = (TextView) findViewById(R.id.fechaSalida);
         botonFechaInicial= (ImageButton) findViewById(R.id.botonFechaInicial);
         botonFechaFinal= (ImageButton) findViewById(R.id.botonFechaFinal);
         botonReservar = (Button) findViewById(R.id.botonReservar);
@@ -130,6 +130,7 @@ public class ReservarActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mAuth = FirebaseAuth.getInstance();
                 mStorageRef = FirebaseStorage.getInstance().getReference();
+                database= FirebaseDatabase.getInstance();
                 myRef = database.getReference(PATH_RESERVAS);
                 String key = myRef.push().getKey();
                 myRef = database.getReference(PATH_RESERVAS + key);
