@@ -48,6 +48,7 @@ public class ItemActivity extends AppCompatActivity {
     TextView descr;
     TextView precio;
     CalendarView calendarView;
+    String idUsr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,8 @@ public class ItemActivity extends AppCompatActivity {
         BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);
 
         rol = getIntent().getExtras().getSerializable("usr").getClass().getName();
+        idUsr = (String) getIntent().getExtras().getString("idUsr");
+
         Log.i("ROL", rol);
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getExtras().getSerializable("usr");

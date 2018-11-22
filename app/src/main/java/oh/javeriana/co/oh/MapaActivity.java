@@ -118,6 +118,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng userLatLng;
     Map<Marker, Pair<String, Alojamiento>> markers = new HashMap<>();
     String rol = "";
+    String idUsr;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -132,6 +133,8 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference(PATH_ALOJAMIENTOS);
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
+        idUsr = (String) getIntent().getExtras().getString("idUsr");
+
         if (rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getSerializableExtra("usr");
         } else if (rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0) {
@@ -564,6 +567,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.i("MARKERS", String.valueOf(markers.size()));
                     bundle.putString("idAloj", markers.get(marker).first);
                     bundle.putSerializable("alojamiento", markers.get(marker).second);
+                    bundle.putString("idUsr", idUsr);
 
                     Intent intent = new Intent(getApplicationContext(), ItemActivity.class);
                     intent.putExtras(bundle);

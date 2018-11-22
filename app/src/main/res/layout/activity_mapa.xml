@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="590dp"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/guest_navigation">
 

@@ -88,6 +88,7 @@ public class CrearNegocioActivity extends Activity {
     private final int REQUEST_EXTERNAL_STORAGE = 3;
 
     private Uri imageUri;
+    String idUsr = "";
 
 
     @Override
@@ -96,6 +97,7 @@ public class CrearNegocioActivity extends Activity {
         setContentView(R.layout.activity_crear_negocio);
 
         propietario = (Propietario) getIntent().getSerializableExtra("usr");
+        idUsr = (String) getIntent().getSerializableExtra("idUsr");
 
         database= FirebaseDatabase.getInstance();
 
@@ -291,7 +293,7 @@ public class CrearNegocioActivity extends Activity {
                                                                 e.printStackTrace();
                                                             }*/
 
-                         Negocio negocio = new Negocio(nombreNegocio.getText().toString(),horaApertura.getText().toString(),horaCierre.getText().toString(),telefono.getText().toString(),tipoNegocio,"carrera 7 # 40",1.2,2.3,propietario.getId(),catalogoNegocio,servicioAdicionalNegocio,domiciliosNegocio,"");
+                         Negocio negocio = new Negocio(nombreNegocio.getText().toString(),horaApertura.getText().toString(),horaCierre.getText().toString(),telefono.getText().toString(),tipoNegocio,"carrera 7 # 40",1.2,2.3,idUsr,catalogoNegocio,servicioAdicionalNegocio,domiciliosNegocio,"");
                          myRef.setValue(negocio);
 
                                                            /* for(int i=0; i<fotos.length; i++){
