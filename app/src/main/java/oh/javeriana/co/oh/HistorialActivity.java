@@ -164,6 +164,9 @@ public class HistorialActivity extends Activity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+
+            final int j = i;
+
             view = getLayoutInflater().inflate(R.layout.customlayout_hist,null);
 
             ImageView imageView = view.findViewById(R.id.imageView11);
@@ -180,7 +183,7 @@ public class HistorialActivity extends Activity {
             else
                 txtDesc.setText(alojamientos.get(i).getDescripcion());
 
-            nombreAlojamiento = txtVwName.getText().toString();
+
             btnRuta = view.findViewById(R.id.ruta);
 
             Button botonCalificar = view.findViewById(R.id.calificar);
@@ -203,7 +206,7 @@ public class HistorialActivity extends Activity {
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
-                        intent.putExtra("nombreAlo", nombreAlojamiento);
+                        intent.putExtra("nombreAlo", alojamientos.get(j).getNombre());
 
                     startActivity(intent);
                 }
