@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,6 +51,8 @@ public class HistorialActivity extends Activity {
     FirebaseDatabase database;
     DatabaseReference myRef;
     DatabaseReference myRefAloj;
+    ListView listView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,9 @@ public class HistorialActivity extends Activity {
         setContentView(R.layout.activity_historial);
 
         database= FirebaseDatabase.getInstance();
+        listView = findViewById(R.id.listViewHist);
+
+
 
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
         idUsr = (String) getIntent().getExtras().getString("idUsr");
@@ -75,6 +81,8 @@ public class HistorialActivity extends Activity {
         else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Propietario") == 0) {
             propietario = (Propietario) getIntent().getSerializableExtra("usr");
         }
+
+
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -96,9 +104,11 @@ public class HistorialActivity extends Activity {
                     alojamientos.add(singleSnapshot.getValue(Alojamiento.class));
                 }
 
-                ListView listView = findViewById(R.id.listViewHist);
+
                 HistorialActivity.CustomAdapter c = new HistorialActivity.CustomAdapter();
                 listView.setAdapter(c);
+
+
             }
 
             @Override
@@ -107,7 +117,26 @@ public class HistorialActivity extends Activity {
             }
         });
 
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                Toast.makeText(getApplicationContext(),"Estrelllitas#",Toast.LENGTH_LONG).show();;
+                Intent intent = new Intent(getBaseContext(), ItemActivity.class);
+                // intent.putExtra("rol",rol);
+                if(anfitrion != null)
+                    intent.putExtra("usr", anfitrion);
+                else if (huesped != null)
+                    intent.putExtra("usr", huesped);
+                else if (propietario != null)
+                    intent.putExtra("usr", propietario);
+                startActivity(intent);
+            }
+
+        });
+        /*
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getBaseContext(), ItemActivity.class);
@@ -147,6 +176,7 @@ public class HistorialActivity extends Activity {
 
         Button btnRuta;
 
+
         @Override
         public int getCount() {
             return images.length;
@@ -163,7 +193,7 @@ public class HistorialActivity extends Activity {
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
+        public View getView(final int i, View view, ViewGroup viewGroup) {
 
             final int j = i;
 
@@ -187,6 +217,7 @@ public class HistorialActivity extends Activity {
             btnRuta = view.findViewById(R.id.ruta);
 
             Button botonCalificar = view.findViewById(R.id.calificar);
+            Button verAloja = view.findViewById(R.id.botonVer);
             if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped")!=0){
                 botonCalificar.setVisibility(View.GONE);
             }
@@ -208,6 +239,22 @@ public class HistorialActivity extends Activity {
                         intent.putExtra("usr", huesped);
                         intent.putExtra("nombreAlo", alojamientos.get(j).getNombre());
 
+                    startActivity(intent);
+                }
+            });
+
+            verAloja.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), ItemActivity.class);
+                    // intent.putExtra("rol",rol);
+                    if(anfitrion != null)
+                        intent.putExtra("usr", anfitrion);
+                    else if (huesped != null)
+                        intent.putExtra("usr", huesped);
+                    else if (propietario != null)
+                        intent.putExtra("usr", propietario);
+                        intent.putExtra("alojamiento", alojamientos.get(i));
                     startActivity(intent);
                 }
             });

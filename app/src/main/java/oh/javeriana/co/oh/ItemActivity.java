@@ -19,13 +19,20 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class ItemActivity extends AppCompatActivity {
 
@@ -35,6 +42,7 @@ public class ItemActivity extends AppCompatActivity {
     Propietario propietario=null;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
+    public static final String PATH_CALIFICACIONES="calificaciones/";
 
     String rol = "";
     Button btnReservar;
@@ -50,6 +58,10 @@ public class ItemActivity extends AppCompatActivity {
     //CalendarView calendarView;
     String idUsr;
     String idAloj;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
+    DatabaseReference myRefAloj;
+    List<Calificacion> calificaciones = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +81,8 @@ public class ItemActivity extends AppCompatActivity {
         //calendarView = findViewById(R.id.calendarView);
         precio = findViewById(R.id.txtVwPrice);
 
+        database= FirebaseDatabase.getInstance();
+
         BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);
         BottomNavigationView host_navigation = (BottomNavigationView) findViewById(R.id.host_navigation);
 
@@ -87,6 +101,27 @@ public class ItemActivity extends AppCompatActivity {
         alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
         idAloj = (String) getIntent().getExtras().getString("idAloj");
         pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
+
+        myRef = database.getReference(PATH_CALIFICACIONES + idUsr + "/");
+        //myRefAloj = database.getReference(PATH_ALOJAMIENTOS );
+
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    //if (singleSnapshot.child(singleSnapshot.getValue(Calificacion.class)){
+                    calificaciones.add(singleSnapshot.getValue(Calificacion.class));
+
+                    //}
+                    //idAlojamientos.add(singleSnapshot.child(singleSnapshot.getKey()).toString());
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("ERROR", "error en la consulta", databaseError.toException());
+            }
+        });
 
 
         btnReservar.setOnClickListener(new View.OnClickListener() {

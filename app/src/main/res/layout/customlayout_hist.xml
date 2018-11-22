@@ -54,8 +54,10 @@
         android:id="@+id/calificar"
         android:layout_width="347dp"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/imageView11"
         android:layout_below="@+id/imageView11"
+        android:layout_alignStart="@+id/imageView11"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="18dp"
         android:background="@color/button"
         android:text="Calificar" />
 
@@ -63,9 +65,22 @@
         android:id="@+id/ruta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/propProd"
         android:layout_alignEnd="@+id/descProd"
+        android:layout_alignBottom="@+id/propProd"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="15dp"
         android:background="@color/button"
         android:text="Ruta" />
+
+    <Button
+        android:id="@+id/botonVer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/descProd"
+        android:layout_alignBottom="@+id/imageView11"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="-7dp"
+        android:background="@color/button"
+        android:text="Ver" />
 
 </RelativeLayout>
