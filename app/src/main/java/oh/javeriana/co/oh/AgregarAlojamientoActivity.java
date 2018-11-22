@@ -201,6 +201,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
 
         database= FirebaseDatabase.getInstance();
 
+
         nombreET = findViewById(R.id.nombreET);
         descripcionET = findViewById(R.id.descripcionET);
         precioET = findViewById(R.id.precioET);
@@ -429,7 +430,6 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 textTipo.setVisibility(View.GONE);
                 spinnerTipo.setVisibility(View.GONE);
                 textUbicacion.setVisibility(View.GONE);
-                ubicacionET.setVisibility(View.GONE);
                 textPrecio.setVisibility(View.GONE);
                 precioET.setVisibility(View.GONE);
                 textNombre.setVisibility(View.GONE);
@@ -450,6 +450,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 next.setVisibility(View.GONE);
                 //mapFragment.setVi;
 
+                ubicacionET.setVisibility(View.VISIBLE);
                 mapFragment.getView().setVisibility(View.VISIBLE);
 
             }
@@ -465,7 +466,6 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 textTipo.setVisibility(View.VISIBLE);
                 spinnerTipo.setVisibility(View.VISIBLE);
                 textUbicacion.setVisibility(View.VISIBLE);
-                ubicacionET.setVisibility(View.VISIBLE);
                 textPrecio.setVisibility(View.VISIBLE);
                 precioET.setVisibility(View.VISIBLE);
                 textNombre.setVisibility(View.VISIBLE);
@@ -487,6 +487,9 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 // mapa.setVisibility(View.GONE);
                 prev2.setVisibility(View.GONE);
 
+                ubicacionET.setVisibility(View.GONE);
+
+
             }
         });
 
@@ -499,7 +502,6 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 textTipo.setVisibility(View.GONE);
                 spinnerTipo.setVisibility(View.GONE);
                 textUbicacion.setVisibility(View.GONE);
-                ubicacionET.setVisibility(View.GONE);
                 textPrecio.setVisibility(View.GONE);
                 precioET.setVisibility(View.GONE);
                 textNombre.setVisibility(View.GONE);
@@ -514,6 +516,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 linearLayout.setVisibility(View.GONE);
 
                 mapFragment.getView().setVisibility(View.GONE);
+                ubicacionET.setVisibility(View.GONE);
                 prev.setVisibility(View.GONE);
                 agrearFecha.setVisibility(View.VISIBLE);
                 next2.setVisibility(View.GONE);

@@ -12,7 +12,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="505dp">
+        android:layout_height="582dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,59 +31,27 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constrain"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="583dp"
                 android:layout_weight="1">
 
 
-                <fragment
-                    android:id="@+id/mapa"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="488dp"
-
-                    tools:context=".MapaActivity" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayout8"
+                <EditText
+                    android:id="@+id/ubicacionET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/common_google_signin_btn_text_dark_default"
+                    android:hint="Dirección"
+                    android:textColorHint="@color/common_google_signin_btn_text_dark_focused"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.023"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
-
-                    <TextView
-                        android:id="@+id/textUbicacion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Ubicación:"
-                        android:textColor="@color/text"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textPrecio" />
-
-                    <EditText
-                        android:id="@+id/ubicacionET"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:textColor="@color/text"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.675"
-                        app:layout_constraintStart_toEndOf="@+id/textUbicacion"
-                        app:layout_constraintTop_toBottomOf="@+id/precioET" />
-                </LinearLayout>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout7"
@@ -96,12 +64,13 @@
                     android:layout_weight="1"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
                     <TextView
                         android:id="@+id/textTipo"
-                        android:layout_width="359dp"
+                        android:layout_width="411dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Tipo:"
@@ -177,9 +146,10 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="36dp"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/datosAlojamiento">
 
@@ -215,15 +185,16 @@
                 <LinearLayout
                     android:id="@+id/linearLayout4"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutFotos">
+                    tools:layout_editor_absoluteY="230dp">
 
                     <TextView
                         android:id="@+id/textHuespedes"
@@ -267,55 +238,18 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="72dp"
                     android:text="Datos del alojamiento "
                     android:textColor="@color/title"
                     android:textSize="25sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.504"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
-                    android:id="@+id/linearLayout12"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout11">
-
-                    <TextView
-                        android:id="@+id/labelFechaInic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.45"
-                        android:text="Fecha inicial:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/labelFechaFinal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="Fecha final:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/linearLayout9"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
@@ -323,8 +257,9 @@
                     android:layout_weight="1"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
+                    tools:layout_editor_absoluteY="309dp">
 
                     <TextView
                         android:id="@+id/textPrecio"
@@ -360,13 +295,12 @@
                     android:layout_height="41dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="444dp"
+                    android:layout_marginTop="504dp"
                     android:layout_weight="1"
                     android:background="@color/button"
                     android:text="Crear Alojamiento"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.502"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -414,41 +348,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/nombreET" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearLayout13"
-                    android:layout_width="match_parent"
-                    android:layout_height="22dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout12">
-
-                    <TextView
-                        android:id="@+id/fechaInic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:inputType="date"
-                        android:text="___/___/____/"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/fechaFinal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:inputType="date"
-                        android:text="___/___/____/"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
                 <ImageButton
                     android:id="@+id/prev"
                     android:layout_width="45dp"
@@ -457,13 +356,13 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="444dp"
+                    android:layout_marginTop="504dp"
                     android:background="@color/background"
                     android:scaleType="fitCenter"
                     android:src="@drawable/prev2"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.024"
+                    app:layout_constraintHorizontal_bias="0.022"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -475,12 +374,12 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="440dp"
+                    android:layout_marginTop="504dp"
                     android:background="@color/background"
                     android:scaleType="fitCenter"
                     android:src="@drawable/next2"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.87"
                     app:layout_constraintStart_toEndOf="@+id/botonAgregar"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -492,13 +391,13 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="440dp"
+                    android:layout_marginTop="504dp"
                     android:background="@color/background"
                     android:scaleType="fitCenter"
                     android:src="@drawable/next2"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.868"
                     app:layout_constraintStart_toEndOf="@+id/botonAgregar"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -511,7 +410,7 @@
                     android:layout_marginRight="16dp"
                     android:background="@color/background"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/next"
+                    android:src="@drawable/plus"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -524,13 +423,13 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="320dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="444dp"
+                    android:layout_marginTop="504dp"
                     android:background="@color/background"
                     android:scaleType="fitCenter"
                     android:src="@drawable/prev2"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.727"
+                    app:layout_constraintHorizontal_bias="0.763"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -540,14 +439,32 @@
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/host_navigation" />
+
+    <fragment
+        android:id="@+id/mapa"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="488dp"
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".MapaActivity" />
 
 </LinearLayout>

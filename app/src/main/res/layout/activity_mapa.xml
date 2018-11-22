@@ -11,8 +11,8 @@
         android:id="@+id/btnActualPos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="300dp"
-        android:layout_marginTop="450dp"
+        android:layout_marginLeft="355dp"
+        android:layout_marginTop="540dp"
         android:clickable="true"
         app:backgroundTint="@color/button"
         map:srcCompat="@android:drawable/ic_menu_compass" />
@@ -53,14 +53,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="510dp"
+        android:layout_marginTop="590dp"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/guest_navigation">
 
     </android.support.design.widget.BottomNavigationView>
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="338dp"
+        android:layout_width="385dp"
         android:layout_height="71dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -68,7 +68,7 @@
         android:background="@color/common_google_signin_btn_text_dark_default">
 
         <LinearLayout
-            android:layout_width="330dp"
+            android:layout_width="385dp"
             android:layout_height="66dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
@@ -79,7 +79,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:layout_width="324dp"
+                android:layout_width="385dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -100,7 +100,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="324dp"
+                android:layout_width="385dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
