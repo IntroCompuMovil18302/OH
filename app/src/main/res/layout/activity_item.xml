@@ -47,6 +47,7 @@
                         android:layout_weight="1"
                         android:background="#FFFFFF"
                         android:padding="2dp"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/alojamiento" />
 
                     <ImageView
@@ -56,6 +57,7 @@
                         android:layout_weight="1"
                         android:background="#FFFFFF"
                         android:padding="2dp"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/negocios" />
 
                     <ImageView
