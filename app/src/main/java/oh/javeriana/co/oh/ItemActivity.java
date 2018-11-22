@@ -77,7 +77,7 @@ public class ItemActivity extends AppCompatActivity {
         Log.i("ROL", rol);
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getExtras().getSerializable("usr");
-        }else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0){
+        }else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Anfitrion") == 0){
             anfitrion = (Anfitrion) getIntent().getExtras().getSerializable("usr");
         }else{
             propietario = (Propietario) getIntent().getExtras().getSerializable("usr");
