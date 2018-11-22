@@ -21,6 +21,10 @@ public class Negocio implements Serializable {
     private String foto;
 
 
+    public Negocio(){
+
+    }
+
     public Negocio(String nombre, String horaApertura, String horaCierre, String telefono, int tipo, String direccion, double latitud, double longitud, String idPropietario, String catalogo, boolean servicioAdicional, boolean domicilios,String foto) {
         this.nombre = nombre;
         this.horaApertura = horaApertura;

@@ -32,6 +32,7 @@ public class ItemActivity extends AppCompatActivity {
     Huesped huesped=null;
     Anfitrion anfitrion=null;
     Alojamiento alojamiento=null;
+    Negocio negocio=null;
     Propietario propietario=null;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -50,6 +51,9 @@ public class ItemActivity extends AppCompatActivity {
     //CalendarView calendarView;
     String idUsr;
     String idAloj;
+    String idNeg;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +88,17 @@ public class ItemActivity extends AppCompatActivity {
             propietario = (Propietario) getIntent().getExtras().getSerializable("usr");
         }
 
-        alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
-        idAloj = (String) getIntent().getExtras().getString("idAloj");
-        pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
+        if(getIntent().getExtras().getSerializable("alojamiento").getClass().getName().compareToIgnoreCase("oh.javeriana.co.oh.Alojamiento") == 0) {
+            alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
+            idAloj = (String) getIntent().getExtras().getString("idAloj");
+            pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
+        }
+        else if(getIntent().getExtras().getSerializable("alojamiento").getClass().getName().compareToIgnoreCase("oh.javeriana.co.oh.Negocio") == 0) {
+            negocio = (Negocio) getIntent().getExtras().getSerializable("alojamiento");
+            idNeg = (String) getIntent().getExtras().getString("idAloj");
+            pathImg = negocio.getIdPropietario() + "/" + idNeg + "/";
+        }
+
 
 
         btnReservar.setOnClickListener(new View.OnClickListener() {
@@ -143,28 +155,32 @@ public class ItemActivity extends AppCompatActivity {
                     }
                 });
         }
-
-        descr.setText(alojamiento.getDescripcion());
-        precio.setText("$ (COP) " + String.valueOf(alojamiento.getValorNoche()));
-
         try {
-            Date fi = alojamiento.getFechaInicialDate();
-            Date ff = alojamiento.getFechaFinalDate();
+            if(alojamiento != null) {
+                descr.setText(alojamiento.getDescripcion());
+                precio.setText("$ (COP) " + String.valueOf(alojamiento.getValorNoche()));
+                Date fi = alojamiento.getFechaInicialDate();
+                Date ff = alojamiento.getFechaFinalDate();
 
-            Log.i("Fecha", fi.toString());
+                Log.i("Fecha", fi.toString());
 
-            Calendar c1 = Calendar.getInstance();
-            c1.setTime(fi);
-            //c1.set(fi.g, fi.getMonth()-1, fi.getDay())
+                Calendar c1 = Calendar.getInstance();
+                c1.setTime(fi);
+                //c1.set(fi.g, fi.getMonth()-1, fi.getDay())
 
-            Calendar c2 = Calendar.getInstance();
-            c2.setTime(ff);
-            //c2.set(ff.getYear(), ff.getMonth()-1, ff.getDay());
+                Calendar c2 = Calendar.getInstance();
+                c2.setTime(ff);
+                //c2.set(ff.getYear(), ff.getMonth()-1, ff.getDay());
 
-            Log.i("Fecha", ""+fi.getYear());
+                Log.i("Fecha", ""+fi.getYear());
 
-  //          calendarView.setMinDate(c1.getTimeInMillis());
-    //        calendarView.setMaxDate(c2.getTimeInMillis());
+                //          calendarView.setMinDate(c1.getTimeInMillis());
+                //        calendarView.setMaxDate(c2.getTimeInMillis());
+            }
+            else if(negocio != null) {
+                descr.setText(negocio.getCatalogo());
+                precio.setText("");
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
