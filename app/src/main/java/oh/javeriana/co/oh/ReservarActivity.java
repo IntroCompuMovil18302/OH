@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ public class ReservarActivity extends AppCompatActivity {
     String pathImg = "";
     String idUsr;
     String idAloj;
+    Button btnReservar;
 
 
 
@@ -40,6 +42,7 @@ public class ReservarActivity extends AppCompatActivity {
         //setSelectionMode(MaterialCalendarView.SELECTION_MODE_MULTIPLE);
 
         calendarView = (CalendarView) findViewById(R.id.calendarView);
+        btnReservar = findViewById(R.id.botonReservar);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.getMenu().getItem(0).setCheckable(false);
@@ -57,6 +60,15 @@ public class ReservarActivity extends AppCompatActivity {
         alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
         idAloj = (String) getIntent().getExtras().getString("idAloj");
         pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
+
+
+        btnReservar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
