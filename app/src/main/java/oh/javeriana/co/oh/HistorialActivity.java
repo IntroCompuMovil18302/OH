@@ -94,6 +94,8 @@ public class HistorialActivity extends Activity {
 
     class CustomAdapter extends BaseAdapter {
 
+        Button btnRuta;
+
         @Override
         public int getCount() {
             return images.length;
@@ -120,11 +122,19 @@ public class HistorialActivity extends Activity {
             TextView txtDesc = view.findViewById(R.id.descProd);
 
             nombreAlojamiento = txtVwName.getText().toString();
+            btnRuta = view.findViewById(R.id.ruta);
 
             Button botonCalificar = view.findViewById(R.id.calificar);
             if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped")!=0){
                 botonCalificar.setVisibility(View.GONE);
             }
+
+            btnRuta.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
 
             botonCalificar.setOnClickListener(new View.OnClickListener() {
                 @Override

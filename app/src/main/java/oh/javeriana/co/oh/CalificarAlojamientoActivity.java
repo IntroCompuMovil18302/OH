@@ -40,6 +40,7 @@ public class CalificarAlojamientoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calificar_alojamiento);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        estrellas = findViewById(R.id.ratingBar);
         setSupportActionBar(toolbar);
 
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

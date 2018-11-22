@@ -69,6 +69,9 @@
             android:label="@string/title_activity_mapa" />
         <activity android:name=".ConsumidorRestActivity" />
         <activity android:name=".NegocioActivity" />
+        <activity
+            android:name=".RutearActivity"
+            android:label="@string/title_activity_rutear"></activity>
     </application>
 
 </manifest>
