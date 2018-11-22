@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,29 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class HistorialActivity extends Activity {
 
-    int [] images = {R.drawable.alojamiento, R.drawable.alojamiento, R.drawable.alojamiento, R.drawable.alojamiento, R.drawable.alojamiento, R.drawable.alojamiento};
-    String[] names = {"Aloja1", "Aloja2", "Aloja3", "Aloja4", "Aloja5", "Aloja6"};
+    List<String> idAlojamientos = new ArrayList<>();
+    List<Alojamiento> alojamientos = new ArrayList<>();
+
+    int [] images = {R.drawable.alojamiento, R.drawable.alojamiento};
+    /*String[] names = {"Aloja1", "Aloja2", "Aloja3", "Aloja4", "Aloja5", "Aloja6"};
     String[] prop = {"Propietario1", "Propietario2", "Propietario3", "Propietario4", "Propietario5", "Propietario6"};
     String[] descr = {"Breve descripción del ítem", "Breve descripción del ítem", "Breve descripción del ítem", "Breve descripción del ítem", "Breve descripción del ítem", "Breve descripción del ítem"};
-    String[] precio = {"$ 300000", "$ 800000", "$ 1500000", "$ 480000", "$ 270000", "$ 1246000"};
+    String[] precio = {"$ 300000", "$ 800000", "$ 1500000", "$ 480000", "$ 270000", "$ 1246000"};*/
     String rol =  "";
+
+    public static final String PATH_RESERVAS = "reservas/";
+    public static final String PATH_ALOJAMIENTOS = "alojamientos/";
 
     Huesped huesped = null;
     Anfitrion anfitrion = null;
@@ -31,15 +47,23 @@ public class HistorialActivity extends Activity {
     String idUsr = "";
     String nombreAlojamiento;
     String nombreProducto;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
+    DatabaseReference myRefAloj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial);
 
+        database= FirebaseDatabase.getInstance();
+
         rol = getIntent().getSerializableExtra("usr").getClass().getName();
         idUsr = (String) getIntent().getExtras().getString("idUsr");
         Log.i("IdUsr", idUsr);
+
+        myRef = database.getReference(PATH_RESERVAS + idUsr + "/");
+        myRefAloj = database.getReference(PATH_ALOJAMIENTOS );
 
 
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
@@ -52,9 +76,36 @@ public class HistorialActivity extends Activity {
             propietario = (Propietario) getIntent().getSerializableExtra("usr");
         }
 
-        ListView listView = findViewById(R.id.listViewHist);
-        HistorialActivity.CustomAdapter c = new HistorialActivity.CustomAdapter();
-        listView.setAdapter(c);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    idAlojamientos.add(singleSnapshot.child(singleSnapshot.getKey()).toString());
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("ERROR", "error en la consulta", databaseError.toException());
+            }
+        });
+
+        myRefAloj.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    alojamientos.add(singleSnapshot.getValue(Alojamiento.class));
+                }
+
+                ListView listView = findViewById(R.id.listViewHist);
+                HistorialActivity.CustomAdapter c = new HistorialActivity.CustomAdapter();
+                listView.setAdapter(c);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -122,9 +173,12 @@ public class HistorialActivity extends Activity {
             TextView txtDesc = view.findViewById(R.id.descProd);
 
             imageView.setImageResource(images[i]);
-            txtVwName.setText(names[i]);
-            txtVwProp.setText(prop[i]);
-            txtDesc.setText(descr[i]);
+            txtVwName.setText(alojamientos.get(i).getNombre());
+            txtVwProp.setText(alojamientos.get(i).getFechaFinal());
+            if(alojamientos.get(i).getDescripcion().length() > 20)
+                txtDesc.setText(alojamientos.get(i).getDescripcion().substring(0, 20) + "...");
+            else
+                txtDesc.setText(alojamientos.get(i).getDescripcion());
 
             nombreAlojamiento = txtVwName.getText().toString();
             btnRuta = view.findViewById(R.id.ruta);
