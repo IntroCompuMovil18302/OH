@@ -163,6 +163,8 @@ public class ItemActivity extends AppCompatActivity {
             intent.putExtra("usr", anfitrion);
         else if (huesped != null)
             intent.putExtra("usr", huesped);
+        else if (propietario != null)
+            intent.putExtra("usr", propietario);
         startActivity(intent);
     }
 
@@ -179,6 +181,8 @@ public class ItemActivity extends AppCompatActivity {
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
+                    else
+                        intent.putExtra("usr",propietario);
                     startActivity(intent);
                     return true;
                 case R.id.navigationRecord:
@@ -187,6 +191,8 @@ public class ItemActivity extends AppCompatActivity {
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
+                    else
+                        intent.putExtra("usr",propietario);
                     startActivity(intent);
                     return true;
                 case R.id.navigationProfile:
@@ -195,6 +201,8 @@ public class ItemActivity extends AppCompatActivity {
                         intent.putExtra("usr", anfitrion);
                     else if (huesped != null)
                         intent.putExtra("usr", huesped);
+                    else
+                        intent.putExtra("usr",propietario);
                     startActivity(intent);
                     return true;
             }
