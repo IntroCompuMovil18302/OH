@@ -25,6 +25,7 @@ public class ReservarActivity extends AppCompatActivity {
     String rol = "";
     String pathImg = "";
     String idUsr;
+    String idAloj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class ReservarActivity extends AppCompatActivity {
         }
 
         alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
-        String idAloj = (String) getIntent().getExtras().getString("idAloj");
+        idAloj = (String) getIntent().getExtras().getString("idAloj");
         pathImg = alojamiento.getIdUsuario() + "/" + idAloj + "/";
 
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -76,7 +77,7 @@ public class ReservarActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
 
-            String rol = getIntent().getSerializableExtra("usr").getClass().getName();
+            rol = getIntent().getSerializableExtra("usr").getClass().getName();
             Log.i("ROL", rol);
             if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
                 huesped = (Huesped) getIntent().getSerializableExtra("usr");
