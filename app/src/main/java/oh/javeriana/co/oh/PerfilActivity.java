@@ -186,27 +186,28 @@ public class PerfilActivity extends Activity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
+            Bundle bundle = new Bundle();
+
+            bundle.putString("idUsr", idUsr);
+            if(anfitrion != null)
+                bundle.putSerializable("usr", anfitrion);
+            else if (huesped != null)
+                bundle.putSerializable("usr", huesped);
+            else if (propietario != null)
+                bundle.putSerializable("usr", propietario);
+
             switch (item.getItemId()) {
                 case R.id.navigationExplore:
-                    /*intent = new Intent(getApplicationContext(),MapaActivity.class);
-                    if(anfitrion != null)
-                        intent.putExtra("usr", anfitrion);
-                    else if (huesped != null)
-                        intent.putExtra("usr", huesped);
+                    intent = new Intent(getApplicationContext(),MapaActivity.class);
+                    intent.putExtras(bundle);
 
-                    startActivity(intent);*/
-                    PerfilActivity.this.finish();
+                    startActivity(intent);
                     return true;
 
                 case R.id.navigationRecord:
                     intent = new Intent(getApplicationContext(),HistorialActivity.class);
-
-                    if(anfitrion != null)
-                        intent.putExtra("usr", anfitrion);
-                    else if (huesped != null)
-                        intent.putExtra("usr", huesped);
-                    else if (propietario != null)
-                        intent.putExtra("usr", propietario);
+                    intent.putExtras(bundle);
+                    
                     startActivity(intent);
                     return true;
 

@@ -172,6 +172,7 @@ public class HistorialActivity extends Activity {
                     intent.putExtras(bundle);
 
                     startActivity(intent);
+                    finish();
                     return true;
                 case R.id.navigationRecord:
                     return true;
