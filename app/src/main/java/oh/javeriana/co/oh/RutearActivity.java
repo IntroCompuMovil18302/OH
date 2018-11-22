@@ -89,7 +89,8 @@ public class RutearActivity extends FragmentActivity implements OnMapReadyCallba
                     usrMark = mMap.addMarker(new MarkerOptions().position(userLatLng).title("Tu ubicación"));
                     goalMark = mMap.addMarker(new MarkerOptions().position(goal).title("Alojamiento"));
 
-                    String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+usrMark.getPosition().latitude+","+usrMark.getPosition().longitude+"&destination="+goalMark.getPosition().latitude+","+goalMark.getPosition().longitude+ "&key=" + "AIzaSyCD3_5vFwy-QFyFsomsi-WMxUUUcW5TtQQ";
+                    String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+usrMark.getPosition().latitude+","+usrMark.getPosition().longitude+"&destination="+goalMark.getPosition().latitude+","+goalMark.getPosition().longitude+ "&key=" + "AIzaSyBhHTgsUynwhanscYcaDWNTpGQSbdZiAhI";
+                    Log.i("URL:", url);
                     RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                     StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                         @Override
