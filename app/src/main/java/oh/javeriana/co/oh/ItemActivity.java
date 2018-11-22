@@ -32,6 +32,7 @@ public class ItemActivity extends AppCompatActivity {
     Huesped huesped=null;
     Anfitrion anfitrion=null;
     Alojamiento alojamiento=null;
+    Propietario propietario=null;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -73,8 +74,10 @@ public class ItemActivity extends AppCompatActivity {
         Log.i("ROL", rol);
         if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0) {
             huesped = (Huesped) getIntent().getExtras().getSerializable("usr");
-        }else{
+        }else if(rol.compareToIgnoreCase("oh.javeriana.co.oh.Huesped") == 0){
             anfitrion = (Anfitrion) getIntent().getExtras().getSerializable("usr");
+        }else{
+            propietario = (Propietario) getIntent().getExtras().getSerializable("usr");
         }
 
         alojamiento = (Alojamiento) getIntent().getExtras().getSerializable("alojamiento");
