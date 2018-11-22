@@ -47,7 +47,7 @@ public class ItemActivity extends AppCompatActivity {
     ImageView foto4;
     TextView descr;
     TextView precio;
-    CalendarView calendarView;
+    //CalendarView calendarView;
     String idUsr;
     String idAloj;
 
@@ -66,7 +66,7 @@ public class ItemActivity extends AppCompatActivity {
         fotos[3] = findViewById(R.id.imageView4);
         layout = findViewById(R.id.CommentUser);
         descr = findViewById(R.id.txtVwDescription);
-        calendarView = findViewById(R.id.calendarView);
+        //calendarView = findViewById(R.id.calendarView);
         precio = findViewById(R.id.txtVwPrice);
 
         BottomNavigationView guest_navigation = (BottomNavigationView) findViewById(R.id.guest_navigation);
@@ -163,8 +163,8 @@ public class ItemActivity extends AppCompatActivity {
 
             Log.i("Fecha", ""+fi.getYear());
 
-            calendarView.setMinDate(c1.getTimeInMillis());
-            calendarView.setMaxDate(c2.getTimeInMillis());
+  //          calendarView.setMinDate(c1.getTimeInMillis());
+    //        calendarView.setMaxDate(c2.getTimeInMillis());
         } catch (ParseException e) {
             e.printStackTrace();
         }

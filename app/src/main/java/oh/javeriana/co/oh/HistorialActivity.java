@@ -121,6 +121,11 @@ public class HistorialActivity extends Activity {
             TextView txtPrice = view.findViewById(R.id.precioProd);
             TextView txtDesc = view.findViewById(R.id.descProd);
 
+            imageView.setImageResource(images[i]);
+            txtVwName.setText(names[i]);
+            txtVwProp.setText(prop[i]);
+            txtDesc.setText(descr[i]);
+
             nombreAlojamiento = txtVwName.getText().toString();
             btnRuta = view.findViewById(R.id.ruta);
 
@@ -150,10 +155,7 @@ public class HistorialActivity extends Activity {
                 }
             });
 
-            imageView.setImageResource(images[i]);
-            txtVwName.setText(names[i]);
-            txtVwProp.setText(prop[i]);
-            txtDesc.setText(descr[i]);
+
 
             return view;
         }
