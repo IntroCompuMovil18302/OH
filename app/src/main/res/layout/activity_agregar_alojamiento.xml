@@ -19,7 +19,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:id="@+id/linearFechas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/constrain"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -56,7 +66,6 @@
                         android:textColor="@color/text"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:visibility="invisible"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textPrecio" />
 
@@ -348,17 +357,18 @@
                 <Button
                     android:id="@+id/botonAgregar"
                     android:layout_width="165dp"
-                    android:layout_height="44dp"
+                    android:layout_height="41dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
                     android:layout_weight="1"
                     android:background="@color/button"
                     android:text="Crear Alojamiento"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.452"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout13" />
+                    app:layout_constraintHorizontal_bias="0.453"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout11"
@@ -407,7 +417,7 @@
                 <LinearLayout
                     android:id="@+id/linearLayout13"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="22dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
@@ -465,13 +475,62 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="428dp"
+                    android:layout_marginTop="444dp"
                     android:background="@color/background"
                     android:scaleType="fitCenter"
                     android:src="@drawable/next2"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.6"
+                    app:layout_constraintHorizontal_bias="0.862"
                     app:layout_constraintStart_toEndOf="@+id/botonAgregar"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/next2"
+                    android:layout_width="45dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="444dp"
+                    android:background="@color/background"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/next2"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.862"
+                    app:layout_constraintStart_toEndOf="@+id/botonAgregar"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/agregarFecha"
+                    android:layout_width="45dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="428dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/next"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/prev2"
+                    android:layout_width="45dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="320dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="320dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="444dp"
+                    android:background="@color/background"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/prev2"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.727"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </android.support.constraint.ConstraintLayout>

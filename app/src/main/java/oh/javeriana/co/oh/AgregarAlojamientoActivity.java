@@ -5,12 +5,16 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Constraints;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +49,7 @@ import android.location.Geocoder;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -76,7 +82,10 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
     EditText cantHuespedesET;
     Button botonAgregar;
     ImageButton next;
+    ImageButton next2;
     ImageButton prev;
+    ImageButton prev2;
+    ImageButton agrearFecha;
     TextView fechaInicial;
     TextView fechaFinal;
     TextView datosAlojamiento;
@@ -97,6 +106,10 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
     String idUsr;
     int contFoto;
     LinearLayout linearLayout;
+    LinearLayout linerFechas;
+    ConstraintLayout constraintLayout;
+    TextView mTextView;
+    ScrollView scroll;
 
     Double latMarcador;
     Double longMarcador;
@@ -105,9 +118,11 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
     final int mes = c.get(Calendar.MONTH);
     final int dia = c.get(Calendar.DAY_OF_MONTH);
     final int anio = c.get(Calendar.YEAR);
+    List<String> listaFechas;
 
     Anfitrion anfitrion = null;
     String rol = "";
+    String unaFecha="";
 
     public void obtenerFecha(final int codigo){
         DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -124,6 +139,53 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
         },anio, mes, dia);
 
         recogerFecha.show();
+        //return recogerFecha.show();
+    }
+
+    public void obtenerFecha(final TextView fecha){
+        //final String unaFecha;
+        DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                final int mesActual = month + 1;
+                String diaFormateado = (dayOfMonth < 10)? "0" + String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
+                String mesFormateado = (mesActual < 10)? "0" + String.valueOf(mesActual):String.valueOf(mesActual);
+
+                fecha.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+
+                Log.i("Tagggggg222", fecha.getText().toString());
+                unaFecha = fecha.getText().toString();
+                listaFechas.add(fecha.getText().toString());
+
+
+
+
+
+                //fechaFinal.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+            }
+        },anio, mes, dia);
+
+        recogerFecha.show();
+        // return fecha.setText(diaFormateado + "/" + mesFormateado + "/" + year);
+        //Log.i("Tagggggg",unaFecha);
+        // return unaFecha;
+    }
+
+    public String obtenerTodasFechas(){
+        int i;
+        String cadena = "";
+        for(i=0; i<listaFechas.size();i++){
+
+            cadena=cadena+listaFechas.get(i);
+            if(i % 2 == 0){
+                cadena=cadena+"-";
+            }
+            else {
+                cadena=cadena+",";
+            }
+
+        }
+        return  cadena;
     }
 
     @Override
@@ -147,7 +209,9 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
         cantHuespedesET =  findViewById(R.id.cantHuespedesET);
         botonAgregar = findViewById(R.id.botonAgregar);
         next = findViewById(R.id.next);
+        next2 = findViewById(R.id.next2);
         prev = findViewById(R.id.prev);
+        prev2 = findViewById(R.id.prev2);
         adapter = ArrayAdapter.createFromResource(this, R.array.alojamientos, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipo.setAdapter(adapter);
@@ -163,7 +227,12 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
         labelFechaInic = findViewById(R.id.labelFechaInic);
         labelFechaFin = findViewById(R.id.labelFechaFinal);
         linearLayout = findViewById(R.id.linearLayoutFotos);
-
+        linerFechas = findViewById(R.id.linearFechas);
+        constraintLayout = findViewById(R.id.constraintLayout);
+        agrearFecha = findViewById(R.id.agregarFecha);
+        mTextView = new TextView(getApplicationContext());
+        scroll = findViewById(R.id.scroll);
+        listaFechas = new ArrayList<>();
 
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapa);
         mapFragment.getMapAsync(this);
@@ -272,7 +341,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 mStorageRef = FirebaseStorage.getInstance().getReference();
                 myRef = database.getReference(PATH_ALOJAMIENTOS);
 
-
+                Log.i("eddefr",obtenerTodasFechas());
                 if(!nombreET.getText().toString().isEmpty()) {
                     if(!tools.esNumero(String.valueOf(nombreET.getText()))){
                         if (!descripcionET.getText().toString().isEmpty()){
@@ -307,7 +376,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
 
 
                                                     Alojamiento alojamiento = new Alojamiento(nombreET.getText().toString(), descripcionET.getText().toString(), ubicacionET.getText().toString(),
-                                                            cant, precio, idUsr, tipoAlojamiento, latitud, longitud, fechaInicial.getText().toString(), fechaFinal.getText().toString() );
+                                                            cant, precio, idUsr, tipoAlojamiento, latitud, longitud, obtenerTodasFechas(), fechaFinal.getText().toString() );
                                                     myRef.setValue(alojamiento);
 
                                                     for(int i=0; i<fotos.length; i++){
@@ -375,6 +444,7 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 linearLayout.setVisibility(View.GONE);
 
                 prev.setVisibility(View.VISIBLE);
+                next2.setVisibility(View.VISIBLE);
                 // mapa.setVisibility(View.VISIBLE);
                 // mMap.setVisibility(view.gone)
                 next.setVisibility(View.GONE);
@@ -413,11 +483,142 @@ public class AgregarAlojamientoActivity extends FragmentActivity implements OnMa
                 mapFragment.getView().setVisibility(View.GONE);
                 next.setVisibility(View.VISIBLE);
                 prev.setVisibility(View.GONE);
+                next2.setVisibility(View.GONE);
                 // mapa.setVisibility(View.GONE);
+                prev2.setVisibility(View.GONE);
+
+            }
+        });
+
+        next2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datosAlojamiento.setVisibility(View.GONE);
+                textHuespedes.setVisibility(View.GONE);
+                cantHuespedesET.setVisibility(View.GONE);
+                textTipo.setVisibility(View.GONE);
+                spinnerTipo.setVisibility(View.GONE);
+                textUbicacion.setVisibility(View.GONE);
+                ubicacionET.setVisibility(View.GONE);
+                textPrecio.setVisibility(View.GONE);
+                precioET.setVisibility(View.GONE);
+                textNombre.setVisibility(View.GONE);
+                nombreET.setVisibility(View.GONE);
+                textDescripcion.setVisibility(View.GONE);
+                descripcionET.setVisibility(View.GONE);
+                labelFechaInic.setVisibility(View.GONE);
+                labelFechaFin.setVisibility(View.GONE);
+                fechaInicial.setVisibility(View.GONE);
+                fechaFinal.setVisibility(View.GONE);
+                botonAgregar.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.GONE);
+
+                mapFragment.getView().setVisibility(View.GONE);
+                prev.setVisibility(View.GONE);
+                agrearFecha.setVisibility(View.VISIBLE);
+                next2.setVisibility(View.GONE);
+                prev2.setVisibility(View.VISIBLE);
+                botonAgregar.setVisibility(View.VISIBLE);
+            }
+        });
+
+        prev2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mapFragment.getView().setVisibility(View.VISIBLE);
+                prev.setVisibility(View.VISIBLE);
+                next2.setVisibility(View.VISIBLE);
+                prev2.setVisibility(View.GONE);
+                linerFechas.setVisibility(View.GONE);
+                agrearFecha.setVisibility(View.GONE);
+            }
+        });
+
+        agrearFecha.setOnClickListener(new View.OnClickListener() {
+            String miFecha1, miFecha2;
+            @Override
+            public void onClick(View view) {
+                LinearLayout linearLayout = new LinearLayout(getApplicationContext());
+                LinearLayout linearTitulos = new LinearLayout(getApplicationContext());
+                final TextView fechaIni = new TextView(getApplicationContext());
+                final TextView fechaFin = new TextView(getApplicationContext());
+                final TextView nFechaIni = new TextView(getApplicationContext());
+                final TextView nFechaFin = new TextView(getApplicationContext());
+                fechaIni.setText("___/___/____/");
+                fechaFin.setText("___/___/____/");
+                fechaIni.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        obtenerFecha(fechaIni);
+                        Log.i("fffffff",unaFecha);
+                        miFecha1= unaFecha;
+
+                    }
+
+                });
+                //  Log.i("FEchaaaaaaa",fechaIni.getText().toString());
+                fechaFin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.i("gggggg",unaFecha);
+                        obtenerFecha(fechaFin);
+                        Log.i("-----",fechaFin.getText().toString());
+                        miFecha2=unaFecha;
+                        //     Log.i("FEchaaaaaaa",fechaFin.getText().toString());
+                    }
+                });
+
+                fechaIni.setInputType(4);
+                fechaFin.setInputType(4);
+                //fechaIni.setTextColor(@colors/white");
+                //fechaFin.setTextColor(Integer.parseInt("@android:color/white"));
+                fechaIni.setTextSize(20);
+                fechaFin.setTextSize(21);
+
+
+
+
+                nFechaIni.setText("Fecha Inicial          ");
+                nFechaFin.setText("Fecha Final");
+                nFechaIni.setTextColor(Color.WHITE);
+                nFechaFin.setTextColor(Color.WHITE);
+                fechaFin.setTextColor(Color.WHITE);
+                fechaIni.setTextColor(Color.WHITE);
+
+
+                //nFechaFin.setTe
+
+
+
+                linearTitulos.setOrientation(LinearLayout.HORIZONTAL);
+                linearTitulos.addView(nFechaIni);
+                linearTitulos.addView(nFechaFin);
+                //fecha.setOnClickListener();
+                //fecha.inpu
+                //editText.setText("ffrfrfrffr");
+                linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                linearLayout.addView(fechaIni);
+                linearLayout.addView(fechaFin);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                layoutParams.setMargins(30, 20, 30, 0);
+
+
+
+                linerFechas.addView(linearTitulos,layoutParams);
+                linerFechas.addView(linearLayout,layoutParams);
+                //linerFechas
+
+                String miFechita=miFecha1+"-"+miFecha2;
+                Log.i("fechitaaaaaa",miFechita);
+                //listaFechas.add(miFechita);
 
             }
         });
     }
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
