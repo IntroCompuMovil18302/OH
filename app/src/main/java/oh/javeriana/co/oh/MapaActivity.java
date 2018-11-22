@@ -130,6 +130,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     String rol = "";
     String idUsr;
     boolean isSearch = false;
+    boolean goCurrent = false;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -167,31 +168,25 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         botonFechaInicial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isSearch = true;
                 obtenerFecha(1);
-                //loadSites();
             }
         });
 
         botonFechaFinal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isSearch = true;
                 obtenerFecha(2);
-                //loadSites();
             }
         });
 
         botonPosActual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    isSearch = false;
-                    loadSites();
-                    TimeUnit.SECONDS.sleep(1);
-                    mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                isSearch = false;
+                goCurrent = true;
+                loadSites();
 
                 //loadSites();
             }
@@ -411,6 +406,12 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                         mMap.addMarker(new MarkerOptions().position(userLatLng)
                                 .title("Tu ubicación"));
 
+                        if(goCurrent) {
+                            mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
+                            goCurrent = false;
+                        }
+                        paintMarker();
                     /*mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));*/
                     }
@@ -420,13 +421,12 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         else {
             mMap.addMarker(new MarkerOptions().position(userLatLng).title("Tu ubicación"));
             isSearch = false;
+            paintMarker();
         }
 
     }
 
     public void paintMarker() {
-        clearMap();
-
         Log.i("CURRENT", String.valueOf(latitudUsuario) + " - " + String.valueOf(longitudUsuario));
         Log.i("LISTA", String.valueOf(listaAlojamientos.size()));
 
@@ -501,7 +501,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.i("Added", singleSnapshot.getKey() + singleSnapshot.getValue().toString());
                 }
 
-                paintMarker();
+                clearMap();
 
             }
             @Override

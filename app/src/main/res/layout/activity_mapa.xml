@@ -38,7 +38,7 @@
         android:id="@+id/textDireccion"
         android:layout_width="261dp"
         android:layout_height="39dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="70dp"
         android:layout_marginTop="110dp"
         android:background="@color/common_google_signin_btn_text_dark_default"
         android:ems="10"

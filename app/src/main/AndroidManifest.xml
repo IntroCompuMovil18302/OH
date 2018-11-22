@@ -68,7 +68,7 @@
             android:name=".MapaActivity"
             android:label="@string/title_activity_mapa" />
         <activity android:name=".ConsumidorRestActivity" />
-        <activity android:name=".NegocioActivity"></activity>
+        <activity android:name=".NegocioActivity" />
     </application>
 
 </manifest>
