@@ -207,7 +207,7 @@ public class PerfilActivity extends Activity {
                 case R.id.navigationRecord:
                     intent = new Intent(getApplicationContext(),HistorialActivity.class);
                     intent.putExtras(bundle);
-                    
+
                     startActivity(intent);
                     return true;
 

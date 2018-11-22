@@ -69,6 +69,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static oh.javeriana.co.oh.tools.requestPermission;
 
@@ -100,6 +101,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
     TextView fechaInicial;
     TextView fechaFinal;
     FloatingActionButton botonBuscar;
+    FloatingActionButton botonPosActual;
     EditText textDir;
 
     Marker oldmark;
@@ -156,6 +158,7 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
         fechaFinal = findViewById(R.id.fechaFinal);
         botonBuscar = findViewById(R.id.buscarDir);
         textDir = findViewById(R.id.textDireccion);
+        botonPosActual = findViewById(R.id.btnActualPos);
 
         String explanation = "Necesitamos acceder a tu ubicación para ubicarte en el mapa";
         tools.requestPermission(MapaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, explanation, LOCATION_PERMISSION);
@@ -173,6 +176,23 @@ public class MapaActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 obtenerFecha(2);
+                //loadSites();
+            }
+        });
+
+        botonPosActual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    isSearch = false;
+                    loadSites();
+                    TimeUnit.SECONDS.sleep(1);
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 //loadSites();
             }
         });
