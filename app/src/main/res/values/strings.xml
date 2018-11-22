@@ -57,6 +57,7 @@
     <string name="fechaInicial">dd/mm/yyyy</string>
     <string name="fechaFinal">dd/mm/yyyy</string>
     <string name="title_activity_rutear_actiity">RutearActiity</string>
+    <string name="title_activity_rutear">Map</string>
 
 
 </resources>

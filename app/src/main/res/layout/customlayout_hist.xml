@@ -9,7 +9,7 @@
 
     <ImageView
         android:id="@+id/imageView11"
-        android:layout_width="149dp"
+        android:layout_width="107dp"
         android:layout_height="104dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -32,7 +32,7 @@
 
     <TextView
         android:id="@+id/propProd"
-        android:layout_width="105dp"
+        android:layout_width="112dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/nomProd"
         android:layout_toEndOf="@+id/imageView11"
@@ -44,7 +44,7 @@
     <TextView
         android:id="@+id/descProd"
         android:layout_width="match_parent"
-        android:layout_height="41dp"
+        android:layout_height="42dp"
         android:layout_below="@+id/propProd"
         android:layout_toEndOf="@+id/imageView11"
         android:layout_toRightOf="@+id/imageView11"
@@ -52,11 +52,20 @@
 
     <Button
         android:id="@+id/calificar"
-        android:layout_width="100dp"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/propProd"
-        android:layout_toEndOf="@+id/nomProd"
+        android:layout_alignStart="@+id/imageView11"
+        android:layout_below="@+id/imageView11"
         android:background="@color/button"
         android:text="Calificar" />
+
+    <Button
+        android:id="@+id/ruta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/propProd"
+        android:layout_alignEnd="@+id/descProd"
+        android:background="@color/button"
+        android:text="Ruta" />
 
 </RelativeLayout>
